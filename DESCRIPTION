@@ -18,7 +18,10 @@ Imports:
     lubridate
 RoxygenNote: 6.1.1
 Collate: 
+    'Error_Handling.R'
+    'Pipes.R'
     'Evaluation_Functions.R'
-    'utils-pipe.R'
-    'Format_Functions.R'
+    'Formatting.R'
     'Missing_Values.R'
+Suggests: 
+    testthat
