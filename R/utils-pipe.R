@@ -1,13 +1,4 @@
-#' Pipe Operators
-#'
-#' See \code{magrittr::\link[magrittr]{\%$\%}}
-#'   or \code{magrittr::\link[magrittr]{\%<>\%}}
-#'   or \code{magrittr::\link[magrittr]{\%>\%}}
-#'   or \code{magrittr::\link[magrittr]{\%T>\%}} for details.
-#'
-#' @name Pipes
-#' @rdname pipe
-#' @keywords internal
+# Import pipe operators for use inside the package
 #' @importFrom magrittr %$%
 #' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
