@@ -57,3 +57,78 @@ latex_table <- function(data) {
     as.character() %>%
     return()
 }
+
+
+
+
+#' Convert a vector to a padded character column
+#'
+#' @param vec Vector to pad values of
+#' @param header Optional name of vector to add to top of return value
+#' @param padWith Character to pad output vector with
+#' @param alignment Alignment of text in output (one of 'R', 'L', 'C')
+#'
+#' @return A character vector padded with spaces to give uniform width.
+#' @export
+#'
+#' @examples
+#' pad_vector(c(1, 2, 300))
+#' pad_vector(c(1, 2), header = "Header")
+#' pad_vector(c(1, 2, 300), padWith = "_")
+#' pad_vector(c(1, 200, 3), alignment = "L")
+#' pad_vector(c(100, 2, 30), alignment = "C")
+#'
+pad_vector <- function(vec, header = NA, padWith = " ", alignment = "R") {
+
+  # If a header was passed, add it as fhe first element
+  if (!is.na(header)) vec <- c(header, vec)
+
+  # Convert the vector to character, count the number of characters in each element,
+  #   find the maximum width, and create a vector holding the padding
+  width <- as.character(vec) %>% nchar()
+  maxWidth <- max(width)
+  paddedVec <- strrep(padWith, maxWidth - width)
+
+  # Pad the vector, aligning the values to either the left, center, or right
+  if (alignment == "L") {
+    paddedVec %<>% paste0(vec, .)
+  } else if (alignment == "C") {
+    paddedVec <- strrep(padWith, maxWidth - width) %>% paste0(vec)
+    paddedVec <- paste0(strrep(padWith, floor((maxWidth - width) / 2)),
+                        vec,
+                        strrep(padWith, ceiling((maxWidth - width) / 2)))
+  } else {
+    if (alignment != "R") message("Invalid alignment option chosen. Defaulting to \"R\".")
+    paddedVec %<>% paste0(., vec)
+  }
+
+  # If a header was passed, add a row of dashes between it and the rest of the vector
+  if (!is.na(header)) return(paddedVec %>% {c(.[1], strrep("-", maxWidth), .[-1])})
+  return(paddedVec)
+
+}
+
+
+#' Returns a data frame in plain text with padded (equal width) columns
+#'
+#' @param data A data frame to convert to plain text
+#' @param sep Characters to bs used as column seperators
+#' @param catOut Whether or not to print the value to standard output
+#'
+#' @return If catOut, nothing, else a string containing the table in plain text form.
+#' @export
+#'
+#' @examples
+#' plain_text_table(head(mtcars))
+#' plain_text_table(head(cars))
+#' plain_text_table(data.frame(a = 1:2, b = 3:4))
+#' plain_text_table(head(mtcars), sep = "+")
+#' plain_text_table(head(mtcars), catOut = FALSE)
+#'
+plain_text_table <- function(data, sep = " | ", catOut = TRUE) {
+  plainTextTbl <- mapply(pad_vector, vec = data, header = names(data)) %>%
+    apply(1, paste0, collapse = sep) %>%
+    paste0(collapse = "\n")
+  if (catOut) cat(plainTextTbl)
+  else return(plainTextTbl)
+}
