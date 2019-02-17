@@ -14,9 +14,11 @@ Imports:
     dplyr (>= 0.7.8),
     magrittr,
     knitr (>= 1.21),
-    scales (>= 1.0.0)
+    scales (>= 1.0.0),
+    lubridate
 RoxygenNote: 6.1.1
 Collate: 
     'Evaluation_Functions.R'
     'utils-pipe.R'
     'Format_Functions.R'
+    'Missing_Values.R'

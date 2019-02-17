@@ -2,6 +2,8 @@
 
 export(format_percent)
 export(latex_table)
+export(percent_missing_vals)
+export(replace_missing)
 importFrom(magrittr,"%$%")
 importFrom(magrittr,"%<>%")
 importFrom(magrittr,"%>%")

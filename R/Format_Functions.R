@@ -2,7 +2,7 @@
 #' @include utils-pipe.R
 NULL
 
-# Avoid "undefined variable" notes
+# Avoid "undefined variable" notes in package checking
 globalVariables(c("."))
 
 

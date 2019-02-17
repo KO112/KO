@@ -4,14 +4,14 @@
 \alias{gini_weighted_normalized}
 \title{Normalized Weighted Gini}
 \usage{
-gini_weighted_normalized(solution, weights = NULL, submission)
+gini_weighted_normalized(solution, weights = 1, predictions)
 }
 \arguments{
 \item{solution}{Numerical vector of actual response.}
 
 \item{weights}{Weights to assign to each prediction.}
 
-\item{submission}{Predictions to score against the solution.}
+\item{predictions}{Predictions to score against the solution.}
 }
 \value{
 Normalized weighted Gini index.
