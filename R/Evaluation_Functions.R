@@ -1,5 +1,6 @@
-# Include external operators
-#' @include utils-pipe.R
+# Include other functions in package
+#' @include Pipes.R
+#' @include Error_Handling.R
 NULL
 
 # Avoid "undefined variable" notes in package checking
@@ -11,12 +12,12 @@ globalVariables(c("Lorentz", "random", "cumPosFound"))
 #' Calculate the weighted Gini index of predictions against the solutions.
 #'
 #' @param solution Numerical vector of actual response.
-#' @param weights Weights to assign to each prediction.
 #' @param predictions Predictions to score against the solution.
+#' @param weights Weights to assign to each prediction.
 #'
 #' @return Weighted Gini index.
 #'
-gini_weighted <- function(solution, weights = 1, predictions) {
+gini_weighted <- function(solution, predictions, weights = 1) {
 
   # Create a data frame of the solution, weights, predictions, arranging by the predictions
   data.frame(
@@ -45,11 +46,11 @@ gini_weighted <- function(solution, weights = 1, predictions) {
 #' Calculate the normalized weighted Gini index of predictions against the solutions.
 #'
 #' @param solution Numerical vector of actual response.
-#' @param weights Weights to assign to each prediction.
 #' @param predictions Predictions to score against the solution.
+#' @param weights Weights to assign to each prediction.
 #'
 #' @return Normalized weighted Gini index.
 #'
-gini_weighted_normalized <- function(solution, weights = 1, predictions) {
-  gini_weighted(solution, weights, predictions) / gini_weighted(solution, weights, solution)
+gini_weighted_normalized <- function(solution, predictions, weights = 1) {
+  gini_weighted(solution, predictions, weights) / gini_weighted(solution, solution, weights)
 }

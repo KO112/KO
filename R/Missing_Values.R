@@ -1,5 +1,6 @@
-# Include external operators
-#' @include utils-pipe.R
+# Include other functions in package
+#' @include Pipes.R
+#' @include Error_Handling.R
 NULL
 
 
@@ -53,6 +54,9 @@ percent_missing_vals <- function(vec) {
 #' replace_missing(c(1, NA, 1, 2), method = "mean", returnImputed = TRUE)
 #'
 replace_missing <- function(vec, method = "mode", returnImputed = FALSE) {
+
+  # Ensure the input is numeric
+  stop_if(!is.numeric(vec), "Non-numeric vector passed.")
 
   # Find the value to replace missing values with based on the desired method
   if (method == "median") {
