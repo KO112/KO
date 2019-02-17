@@ -23,5 +23,6 @@ Collate:
     'Evaluation_Functions.R'
     'Formatting.R'
     'Missing_Values.R'
+    'Trimming.R'
 Suggests: 
     testthat

@@ -18,7 +18,7 @@ Nothing
 If the condition is met, stop execution, and print an error message
 }
 \examples{
-# stop_if(TRUE, "I'm an error message")
-# stop_if(FALSE, "I'm an error message") # Will not throw error
+# stop_if(TRUE, "I'm an error message") # Will stop execution and print the message
+# stop_if(FALSE, "I'm an error message") # Will do nothing
 
 }
