@@ -16,6 +16,7 @@ globalVariables(c("Lorentz", "random", "cumPosFound"))
 #' @param weights Weights to assign to each prediction.
 #'
 #' @return Weighted Gini index.
+#' @export
 #'
 gini_weighted <- function(solution, predictions, weights = 1) {
 
@@ -50,6 +51,7 @@ gini_weighted <- function(solution, predictions, weights = 1) {
 #' @param weights Weights to assign to each prediction.
 #'
 #' @return Normalized weighted Gini index.
+#' @export
 #'
 gini_weighted_normalized <- function(solution, predictions, weights = 1) {
   gini_weighted(solution, predictions, weights) / gini_weighted(solution, solution, weights)
