@@ -1,32 +1,43 @@
+# Include external operators
+#' @include utils-pipe.R
+NULL
+
+# Avoid "undefined variable" notes in package checking
+globalVariables(c("Lorentz", "random", "cumPosFound"))
+
+
 #' Weighted Gini
 #'
 #' Calculate the weighted Gini index of predictions against the solutions.
 #'
 #' @param solution Numerical vector of actual response.
 #' @param weights Weights to assign to each prediction.
-#' @param submission Predictions to score against the solution.
+#' @param predictions Predictions to score against the solution.
 #'
 #' @return Weighted Gini index.
 #'
-gini_weighted <- function(solution, weights = 1, submission) {
-  df <- data.frame(
+gini_weighted <- function(solution, weights = 1, predictions) {
+
+  # Create a data frame of the solution, weights, predictions, arranging by the predictions
+  data.frame(
       solution = solution,
       weights = weights,
-      submission = submission
+      predictions = predictions
     ) %>%
-    dplyr::arrange(dplyr::desc(submission)) %>%
+    dplyr::arrange(dplyr::desc(predictions)) %>%
+
+    # Calculate the
     dplyr::mutate(
       random = cumsum(weights / sum(weights)),
       cumPosFound = cumsum(solution * weights),
-      Lorentz <- cumPosFound / sum(solution * weights)
-    )
-  # df <- df[order(df$submission, decreasing = TRUE), ]
-  # df$random = cumsum((df$weights / sum(df$weights)))
-  # totalPositive <- sum(df$solution * df$weights)
-  # df$cumPosFound <- cumsum(df$solution * df$weights)
-  # df$Lorentz <- df$cumPosFound / totalPositive
-  gini <- sum(df$Lorentz[-1] * df$random[-nrow(df)]) - sum(df$Lorentz[-nrow(df)] * df$random[-1])
-  return(gini)
+      Lorentz = cumPosFound / sum(solution * weights)
+    ) %$%
+
+    # Calculate the Gini index, and return the Gini
+    {sum(utils::tail(Lorentz, -1) * utils::head(random, -1)) -
+        sum(utils::head(Lorentz, -1) * utils::tail(random, -1))} %>%
+    return()
+
 }
 
 #' Normalized Weighted Gini
@@ -35,10 +46,10 @@ gini_weighted <- function(solution, weights = 1, submission) {
 #'
 #' @param solution Numerical vector of actual response.
 #' @param weights Weights to assign to each prediction.
-#' @param submission Predictions to score against the solution.
+#' @param predictions Predictions to score against the solution.
 #'
 #' @return Normalized weighted Gini index.
 #'
-gini_weighted_normalized <- function(solution, weights = 1, submission) {
-  gini_weighted(solution, weights, submission) / gini_weighted(solution, weights, solution)
+gini_weighted_normalized <- function(solution, weights = 1, predictions) {
+  gini_weighted(solution, weights, predictions) / gini_weighted(solution, weights, solution)
 }
