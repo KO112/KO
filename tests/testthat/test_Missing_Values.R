@@ -3,9 +3,12 @@ context("Missing Values")
 
 # Test percent_missing_vals output
 test_that("percent_missing_vals", {
-  expect_equal(percent_missing_vals(c(NA)), 1)
-  expect_equal(percent_missing_vals(c(1, 2, 3, 4, 5)), 0)
-  expect_equal(percent_missing_vals(c(1, 2, NA, 4, 5)), 0.2)
+  expect_equal(percent_missing_vals(c(NA)),
+               1)
+  expect_equal(percent_missing_vals(c(1, 2, 3, 4, 5)),
+               0)
+  expect_equal(percent_missing_vals(c(1, 2, NA, 4, 5)),
+               0.2)
 })
 
 
