@@ -8,16 +8,24 @@
 #'
 #' @return Weighted Gini index.
 #'
-gini_weighted <- function(solution, weights = NULL, submission){
-  if (is.null(weights)) weights = rep(1, length(solution))
-  df = data.frame(solution = solution, weights = weights, submission = submission)
-  df <- df[order(df$submission, decreasing = TRUE),]
-  df$random = cumsum((df$weights/sum(df$weights)))
-  totalPositive <- sum(df$solution * df$weights)
-  df$cumPosFound <- cumsum(df$solution * df$weights)
-  df$Lorentz <- df$cumPosFound / totalPositive
-  n <- nrow(df)
-  gini <- sum(df$Lorentz[-1]*df$random[-n]) - sum(df$Lorentz[-n]*df$random[-1])
+gini_weighted <- function(solution, weights = 1, submission) {
+  df <- data.frame(
+      solution = solution,
+      weights = weights,
+      submission = submission
+    ) %>%
+    dplyr::arrange(dplyr::desc(submission)) %>%
+    dplyr::mutate(
+      random = cumsum(weights / sum(weights)),
+      cumPosFound = cumsum(solution * weights),
+      Lorentz <- cumPosFound / sum(solution * weights)
+    )
+  # df <- df[order(df$submission, decreasing = TRUE), ]
+  # df$random = cumsum((df$weights / sum(df$weights)))
+  # totalPositive <- sum(df$solution * df$weights)
+  # df$cumPosFound <- cumsum(df$solution * df$weights)
+  # df$Lorentz <- df$cumPosFound / totalPositive
+  gini <- sum(df$Lorentz[-1] * df$random[-nrow(df)]) - sum(df$Lorentz[-nrow(df)] * df$random[-1])
   return(gini)
 }
 
@@ -31,6 +39,6 @@ gini_weighted <- function(solution, weights = NULL, submission){
 #'
 #' @return Normalized weighted Gini index.
 #'
-gini_weighted_normalized <- function(solution, weights = NULL, submission) {
+gini_weighted_normalized <- function(solution, weights = 1, submission) {
   gini_weighted(solution, weights, submission) / gini_weighted(solution, weights, solution)
 }
