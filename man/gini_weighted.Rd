@@ -4,10 +4,10 @@
 \alias{gini_weighted}
 \title{Weighted Gini}
 \usage{
-gini_weighted(solution, predictions, weights = 1)
+gini_weighted(solutions, predictions, weights = 1)
 }
 \arguments{
-\item{solution}{Numerical vector of actual response.}
+\item{solutions}{Numerical vector of actual response.}
 
 \item{predictions}{Predictions to score against the solution.}
 

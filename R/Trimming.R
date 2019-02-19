@@ -17,9 +17,23 @@ trim_glm <- function(model) {
   # Assert that the model object is a GLM
   stop_if(!inherits(model, "glm"), "Passed object is not a GLM.")
 
-  # Remove everything not in a certain set of parameters
+  # Set the vector of parts of the GLM to keep in the final output
+  keep <- c(
+    "coefficients",
+    "rank",
+    "qr",
+    "family",
+    "call",
+    "formula",
+    "terms",
+    "deviance",
+    "null.deviance",
+    "aic"
+  )
+
+  # Remove everything that we don't specifically want to keep
   sapply(names(model), function(part) {
-    if (!(part %in% c("coefficients", "rank", "qr", "family", "call", "formula", "terms")))
+    if (!(part %in% keep))
       model[[part]] <<- NULL
   })
 

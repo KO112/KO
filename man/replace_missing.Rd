@@ -7,11 +7,11 @@
 replace_missing(vec, method = "mode", returnImputed = FALSE)
 }
 \arguments{
-\item{vec}{Vector to replace missing values in}
+\item{vec}{Vector in which to replace missing values}
 
 \item{method}{The method to use to determine the imputed value}
 
-\item{returnImputed}{Whether or not to return the values missing elements were imputed with}
+\item{returnImputed}{Whether or not to return the value that missing elements were imputed with}
 }
 \value{
 A vector with missing values replaced as desired,

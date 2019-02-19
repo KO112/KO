@@ -16,11 +16,11 @@ NULL
 #' @export
 #'
 #' @examples
-#' percent_missing_vals(c(NA))
-#' percent_missing_vals(c(1, 2, 3, 4, 5))
-#' percent_missing_vals(c(1, 2, NA, 4, 5))
+#' percent_missing(c(NA))
+#' percent_missing(c(1, 2, 3, 4, 5))
+#' percent_missing(c(1, 2, NA, 4, 5))
 #'
-percent_missing_vals <- function(vec) {
+percent_missing <- function(vec) {
   if (is.numeric(vec) | is.logical(vec) | lubridate::is.Date(vec) | is.factor(vec)) {
     numMissing <- sum(is.na(vec))
   } else if (is.character(vec)) {
@@ -38,9 +38,9 @@ percent_missing_vals <- function(vec) {
 #' Replace missing values in a vector with either the mode, median,
 #'   or mean of the vector, removing NA values in the calculation.
 #'
-#' @param vec Vector to replace missing values in
+#' @param vec Vector in which to replace missing values
 #' @param method The method to use to determine the imputed value
-#' @param returnImputed Whether or not to return the values missing elements were imputed with
+#' @param returnImputed Whether or not to return the value that missing elements were imputed with
 #'
 #' @return A vector with missing values replaced as desired,
 #'   or a list of that and the replacement value.
@@ -55,13 +55,13 @@ percent_missing_vals <- function(vec) {
 #'
 replace_missing <- function(vec, method = "mode", returnImputed = FALSE) {
 
-  # Ensure the input is numeric
-  stop_if(!is.numeric(vec), "Non-numeric vector passed.")
-
-  # Find the value to replace missing values with based on the desired method
+  # Find the value to replace missing values with based on the desired method,
+  #   ensuring that we have a numeric vector for median and mean
   if (method == "median") {
+    stop_if(!is.numeric(vec), "Can only calculate median for numeric vector.")
     imputedVal <- stats::median(vec, na.rm = TRUE)
   } else if (method == "mean") {
+    stop_if(!is.numeric(vec), "Can only calculate mean for numeric vector.")
     imputedVal <- mean(vec, na.rm = TRUE)
   } else {
     if (method != "mode") message("Invalid method chosen to replace missing values. Mode will be used.")
@@ -71,12 +71,14 @@ replace_missing <- function(vec, method = "mode", returnImputed = FALSE) {
   # Convert the imputed value to the appropriate type
   if (lubridate::is.Date(vec)) {
     imputedVal <- lubridate::as_date(imputedVal)
+  } else if (is.factor(vec)) {
+    imputedVal <- as.character(imputedVal)
   } else {
     imputedVal <- as.vector(imputedVal, class(vec))
   }
 
   # Replace NA/missing values with the imputed value, and return the vector
-  if (is.numeric(vec) | is.logical(vec) | lubridate::is.Date(vec)) {
+  if (is.numeric(vec) | is.factor(vec) | is.logical(vec) | lubridate::is.Date(vec)) {
     vec[is.na(vec)] <- imputedVal
   } else if (is.character(vec)) {
     vec[(vec == "") | is.na(vec)] <- imputedVal

@@ -25,6 +25,13 @@ test_that("gini_weighted_normalized output", {
 })
 
 
+# Test quasi_poisson_aic_bic output
+test_that("quasi_poisson_aic_bic output", {
+  expect_equal(T, T)
+})
+
+
+
 # WeightedGini <- function(solution, weights = NULL, submission) {
 #   if (is.null(weights)) {
 #     weights = rep(1, length(solution))
