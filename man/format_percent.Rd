@@ -11,8 +11,8 @@ format_percent(vec, accuracy = 0.01, vecNames = names(vec),
 \item{vec}{Vector to format as a percent}
 
 \item{accuracy}{The number to round to the nearest multiple of
-(e.g 3.14159 will round to 314.16% by default).
-The absolutely value of the value passed will be used.
+(e.g 3.14159 will round to 314.16\% by default).
+The absolute value of the value passed will be used.
 The rounding will be done after conversion to a percent.}
 
 \item{vecNames}{Vector used to name the output}

@@ -14,8 +14,8 @@ globalVariables(c("."))
 #'
 #' @param vec Vector to format as a percent
 #' @param accuracy The number to round to the nearest multiple of
-#'   (e.g 3.14159 will round to 314.16% by default).
-#'   The absolutely value of the value passed will be used.
+#'   (e.g 3.14159 will round to 314.16\% by default).
+#'   The absolute value of this parameter will be used.
 #'   The rounding will be done after conversion to a percent.
 #' @param vecNames Vector used to name the output
 #' @param silent If TRUE, will not print out a message if NA values are found
