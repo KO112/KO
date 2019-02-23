@@ -72,5 +72,7 @@ trim_glm <- function(model) {
 trim_glm_summary <- function(modelSummary) {
   stop_if(!inherits(modelSummary, "summary.glm"), "Passed object is not a GLM model summary.")
   modelSummary$deviance.resid <- NULL
+  attr(modelSummary$terms,".Environment") <- NULL
+  attr(modelSummary$formula,".Environment") <- NULL
   return(modelSummary)
 }
