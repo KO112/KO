@@ -37,7 +37,7 @@ trim_glm <- function(model) {
       model[[part]] <<- NULL
   })
 
-  # Trim the family object
+  # Trim the family object (maybe leave in)
   model$family$variance <- NULL
   model$family$dev.resids <- NULL
   model$family$aic <- NULL
