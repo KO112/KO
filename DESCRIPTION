@@ -23,6 +23,7 @@ Collate:
     'Evaluation_Functions.R'
     'Formatting.R'
     'Missing_Values.R'
+    'Quasi_Poisson.R'
     'Trimming.R'
 Suggests: 
     testthat
