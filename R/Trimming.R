@@ -19,16 +19,17 @@ trim_glm <- function(model) {
 
   # Set the vector of parts of the GLM to keep in the final output
   keep <- c(
-    "coefficients",
-    "rank",
-    "qr",
-    "family",
-    "call",
-    "formula",
-    "terms",
-    "deviance",
-    "null.deviance",
-    "aic"
+    "coefficients"
+    , "rank"
+    , "qr"
+    , "family"
+    , "call"
+    , "formula"
+    , "terms"
+    , "deviance"
+    , "null.deviance"
+    , "aic"
+    , "xlevels"
   )
 
   # Remove everything that we don't specifically want to keep
@@ -46,8 +47,8 @@ trim_glm <- function(model) {
 
   # Trim the qr object and remove environment pointers
   model$qr$qr <- NULL
-  attr(model$terms,".Environment") <- NULL
-  attr(model$formula,".Environment") <- NULL
+  attr(model$terms, ".Environment") <- NULL
+  attr(model$formula, ".Environment") <- NULL
 
   # Return the tirmmed model
   return(model)
@@ -72,7 +73,7 @@ trim_glm <- function(model) {
 trim_glm_summary <- function(modelSummary) {
   stop_if(!inherits(modelSummary, "summary.glm"), "Passed object is not a GLM model summary.")
   modelSummary$deviance.resid <- NULL
-  attr(modelSummary$terms,".Environment") <- NULL
-  attr(modelSummary$formula,".Environment") <- NULL
+  attr(modelSummary$terms, ".Environment") <- NULL
+  attr(modelSummary$formula, ".Environment") <- NULL
   return(modelSummary)
 }
