@@ -2,20 +2,39 @@
 % Please edit documentation in R/Evaluation_Functions.R
 \name{gini_weighted}
 \alias{gini_weighted}
+\alias{gini_weighted_normalized}
 \title{Weighted Gini}
 \usage{
 gini_weighted(solutions, predictions, weights = 1)
+
+gini_weighted_normalized(solutions, predictions, weights = 1)
 }
 \arguments{
-\item{solutions}{Numerical vector of actual response.}
+\item{solutions}{Numerical vector of actual response values.}
 
 \item{predictions}{Predictions to score against the solution.}
 
 \item{weights}{Weights to assign to each prediction.}
 }
 \value{
-Weighted Gini index.
+(Normalized) weighted Gini index (numeric).
 }
 \description{
-Calculate the weighted Gini index of predictions against the solutions.
+Calculate the (normalized) weighted Gini index of predictions against the solutions.
+}
+\examples{
+
+# Create a GLM for testing
+\donttest{
+  data(dataCar, package = "insuranceData")
+  dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
+                    data = dataCar, family = poisson, offset = log(exposure), x = TRUE)
+
+  gini_weighted(dataCar$numclaims, predict(dataCarGLM, dataCar))
+}
+
+\donttest{
+  gini_weighted_normalized(dataCar$numclaims, predict(dataCarGLM, dataCar))
+}
+
 }

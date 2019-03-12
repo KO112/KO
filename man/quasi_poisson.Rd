@@ -10,12 +10,17 @@ quasi_poisson(...)
 \item{...}{Input values to families}
 }
 \value{
-Quasi Poisson family with AIC/BIC defined
+Quasi Poisson family with AIC/BIC defined.
 }
 \description{
 Create a function to define AIC within a quasi Poisson family
 }
 \examples{
-quasi_poisson()
+\donttest{
+  data(dataCar, package = "insuranceData")
+  dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
+                    data = dataCar, family = quasi_poisson, offset = log(exposure))
+  dataCarGLMSummary <- summary(dataCarGLM)
+}
 
 }

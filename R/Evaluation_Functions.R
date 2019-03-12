@@ -9,14 +9,26 @@ globalVariables(c("Lorentz", "random", "cumPosFound"))
 
 #' Weighted Gini
 #'
-#' Calculate the weighted Gini index of predictions against the solutions.
+#' Calculate the (normalized) weighted Gini index of predictions against the solutions.
 #'
-#' @param solutions Numerical vector of actual response.
+#' @param solutions Numerical vector of actual response values.
 #' @param predictions Predictions to score against the solution.
 #' @param weights Weights to assign to each prediction.
 #'
-#' @return Weighted Gini index.
+#' @return (Normalized) weighted Gini index (numeric).
+#' @name gini_weighted
 #' @export
+#'
+#' @examples
+#'
+#' # Create a GLM for testing
+#' \donttest{
+#'   data(dataCar, package = "insuranceData")
+#'   dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
+#'                     data = dataCar, family = poisson, offset = log(exposure), x = TRUE)
+#'
+#'   gini_weighted(dataCar$numclaims, predict(dataCarGLM, dataCar))
+#' }
 #'
 gini_weighted <- function(solutions, predictions, weights = 1) {
 
@@ -42,49 +54,14 @@ gini_weighted <- function(solutions, predictions, weights = 1) {
 
 }
 
-#' Normalized Weighted Gini
-#'
-#' Calculate the normalized weighted Gini index of predictions against the solutions.
-#'
-#' @param solutions Numerical vector of actual response.
-#' @param predictions Predictions to score against the solution.
-#' @param weights Weights to assign to each prediction.
-#'
-#' @return Normalized weighted Gini index.
-#' @export
-#'
-gini_weighted_normalized <- function(solutions, predictions, weights = 1) {
-  gini_weighted(solutions, predictions, weights) / gini_weighted(solutions, solutions, weights)
-}
-
-
-
-#' Calculate AIC & BIC
-#'
-#' Calculate the AIC and BIC for a quasi-Poisson GLM by calculating training a normal Poisson GLM.
-#'
-#' @param model Quasi-Poisson GLM to calculate the AIC/BIC for.
-#'
-#' @return A list of two elements, AIC and BIC.
+#' @rdname gini_weighted
 #' @export
 #'
 #' @examples
-#' # quasi_poisson_aic_bic(quasiPoissonGLM)
+#' \donttest{
+#'   gini_weighted_normalized(dataCar$numclaims, predict(dataCarGLM, dataCar))
+#' }
 #'
-quasi_poisson_aic_bic <- function(model) {
-
-  # Train a Poisson GLM based on the passed model
-  model_poi <- stats::glm(
-      model$y ~ model$x,
-      family = stats::poisson(link = "log"),
-      data = model$data,
-      offset = model$offset,
-      subset = model$subset,
-      na.action = "na.pass",
-      x = TRUE
-    )
-
-  # Return the AIC and BIC of the model in a list
-  return(list(AIC = stats::AIC(model_poi), BIC = stats::BIC(model_poi)))
-
+gini_weighted_normalized <- function(solutions, predictions, weights = 1) {
+  gini_weighted(solutions, predictions, weights) / gini_weighted(solutions, solutions, weights)
 }

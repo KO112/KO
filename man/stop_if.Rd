@@ -12,7 +12,7 @@ stop_if(condition, errorMessage)
 \item{errorMessage}{Message to be displayed if the stopping condition is met}
 }
 \value{
-Nothing
+Nothing.
 }
 \description{
 If the condition is met, stop execution, and print an error message

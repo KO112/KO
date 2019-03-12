@@ -5,7 +5,7 @@
 #' @param condition Condition that, if met, will stop and print an error message
 #' @param errorMessage Message to be displayed if the stopping condition is met
 #'
-#' @return Nothing
+#' @return Nothing.
 #' @export
 #'
 #' @examples
