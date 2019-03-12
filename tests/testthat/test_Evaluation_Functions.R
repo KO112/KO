@@ -14,8 +14,8 @@ testData <- data.frame(
 )
 
 # Create a quasipoisson GLM and make predictions from it
+# testGLM_P <- glm(resp ~ ., data = testData, family = stats::poisson(link = "log"), x = TRUE)
 testGLM_QP <- glm(resp ~ ., data = testData, family = stats::quasipoisson(link = "log"), x = TRUE)
-testGLM_P <- glm(resp ~ ., data = testData, family = stats::poisson(link = "log"), x = TRUE)
 testPreds <- predict(testGLM_QP, testData)
 
 
@@ -49,31 +49,3 @@ test_that("gini_weighted_normalized output", {
   expect_equal(gini_weighted_normalized(testData$resp, testPreds),
                1)
 })
-
-
-# Test quasi_poisson_aic_bic output
-test_that("quasi_poisson_aic_bic output", {
-  # expect_equal(quasi_poisson_aic_bic(mtcarsGLM)$AIC, mtcarsGLM$aic)
-  expect_equal(quasi_poisson_aic_bic(testGLM_QP)$AIC, testGLM_P$aic)
-})
-
-
-
-# WeightedGini <- function(solution, weights = NULL, submission) {
-#   if (is.null(weights)) {
-#     weights = rep(1, length(solution))
-#   }
-#   df = data.frame(solution = solution, weights = weights, submission = submission)
-#   df <- df[order(df$submission, decreasing = TRUE),]
-#   df$random = cumsum((df$weights/sum(df$weights)))
-#   totalPositive <- sum(df$solution * df$weights)
-#   df$cumPosFound <- cumsum(df$solution * df$weights)
-#   df$Lorentz <- df$cumPosFound / totalPositive
-#   n <- nrow(df)
-#   gini <- sum(df$Lorentz[-1]*df$random[-n]) - sum(df$Lorentz[-n]*df$random[-1])
-#   return(gini)
-# }
-#
-# NormalizedWeightedGini <- function(solution, weights = NULL, submission) {
-#   WeightedGini(solution, weights, submission) / WeightedGini(solution, weights, solution)
-# }
