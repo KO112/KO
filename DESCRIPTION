@@ -5,21 +5,23 @@ Version: 0.1.0
 Author: Kevin O'Brien
 Maintainer: Kevin O'Brien <kevinobrien112@outlook.com>
 Description: Contains code that is handy to reuse.
-    Use four spaces when indenting paragraphs within the Description.
+    Used in personal projects.
 License: CC0
 Encoding: UTF-8
 LazyData: true
 Imports:
-    stats (>= 3.5.2),
+    stats,
     dplyr (>= 0.7.8),
     magrittr,
     knitr (>= 1.21),
     scales (>= 1.0.0),
-    lubridate
+    lubridate,
+    insuranceData
 RoxygenNote: 6.1.1
 Collate: 
     'Error_Handling.R'
     'Pipes.R'
+    'Bounding_and_Rounding.R'
     'Evaluation_Functions.R'
     'Formatting.R'
     'Missing_Values.R'
