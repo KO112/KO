@@ -11,7 +11,7 @@ test_that("format_percent output", {
                "10.00%")
   expect_equal(format_percent(0.12345, accuracy = 0.1),
                "12.3%")
-  expect_equal(format_percent(c(0.12345, 0.54321), vecNames = c("a", "b")),
+  expect_equal(format_percent(c(0.12345, 0.54321), vec_names = c("a", "b")),
                setNames(c("12.34%", "54.32%"), c("a", "b")))
 })
 
@@ -45,7 +45,7 @@ test_that("pad_vector output", {
                c("  1", "  2", "300"))
   expect_equal(pad_vector(c(1, 2), header = "Header"),
                c("Header", "------", "     1", "     2"))
-  expect_equal(pad_vector(c(1, 2, 300), padWith = "_"),
+  expect_equal(pad_vector(c(1, 2, 300), padding = "_"),
                c("__1", "__2", "300"))
   expect_equal(pad_vector(c(1, 200, 3), alignment = "L"),
                c("1  ", "200", "3  "))
@@ -56,13 +56,13 @@ test_that("pad_vector output", {
 
 # Test plain_text_table output
 test_that("plain_text_table output", {
-  expect_equal(plain_text_table(head(mtcars), sep = "+", catOut = F),
+  expect_equal(plain_text_table(head(mtcars), sep = "+", cat_out = F),
                readChar("./plain_text_table_sep_test.txt",
                         file.size("./plain_text_table_sep_test.txt")) %>%
                  gsub("\r", "", .))
-  expect_equal(plain_text_table(data.frame(a = 1:2, b = 3:4), catOut = FALSE),
+  expect_equal(plain_text_table(data.frame(a = 1:2, b = 3:4), cat_out = FALSE),
                "a | b\n- | -\n1 | 3\n2 | 4")
-  expect_equal(plain_text_table(data.frame(a = 1:2, b = 3:4), sep = "+", catOut = FALSE),
+  expect_equal(plain_text_table(data.frame(a = 1:2, b = 3:4), sep = "+", cat_out = FALSE),
                "a+b\n-+-\n1+3\n2+4")
 })
 

@@ -32,6 +32,6 @@ test_that("replace_missing output", {
                c(1, 1, 1, 2))
   expect_equal(replace_missing(c(1, NA, 1, 2), method = "mean"),
                c(1, 4/3, 1, 2))
-  expect_equal(replace_missing(c(1, NA, 1, 2), method = "mean", returnImputed = TRUE),
+  expect_equal(replace_missing(c(1, NA, 1, 2), method = "mean", return_imputed = TRUE),
                list(Vec = c(1, 4/3, 1, 2), ImputedVal = 4/3))
 })
