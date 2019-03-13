@@ -4,17 +4,17 @@
 \alias{replace_missing}
 \title{Replace missing values in a vector}
 \usage{
-replace_missing(vec, method = "mode", returnImputed = FALSE)
+replace_missing(vec, method = "mode", return_imputed = FALSE)
 }
 \arguments{
 \item{vec}{Vector in which to replace missing values}
 
 \item{method}{The method to use to determine the imputed value}
 
-\item{returnImputed}{Whether or not to return the value that missing elements were imputed with}
+\item{return_imputed}{Whether or not to return the value that missing elements were imputed with}
 }
 \value{
-A vector with missing values replaced as desired,
+Vector with missing values replaced as desired,
   or a list of that and the replacement value.
 }
 \description{
@@ -26,6 +26,6 @@ replace_missing(c(1, 1, 1, 2, NA))
 replace_missing(c(1, 1, 1, 2, NA), method = "mode") # Same as above
 replace_missing(c(1, NA, 1, 2), method = "median")
 replace_missing(c(1, NA, 1, 2), method = "mean")
-replace_missing(c(1, NA, 1, 2), method = "mean", returnImputed = TRUE)
+replace_missing(c(1, NA, 1, 2), method = "mean", return_imputed = TRUE)
 
 }

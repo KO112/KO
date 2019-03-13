@@ -4,7 +4,7 @@
 \alias{format_percent}
 \title{Format a numerical vector as percents}
 \usage{
-format_percent(vec, accuracy = 0.01, vecNames = names(vec),
+format_percent(vec, accuracy = 0.01, vec_names = names(vec),
   silent = FALSE)
 }
 \arguments{
@@ -15,7 +15,7 @@ format_percent(vec, accuracy = 0.01, vecNames = names(vec),
 The absolute value of this parameter will be used.
 The rounding will be done after conversion to a percent.}
 
-\item{vecNames}{Vector used to name the output}
+\item{vec_names}{Vector used to name the output}
 
 \item{silent}{If TRUE, will not print out a message if NA values are found}
 }
@@ -31,6 +31,6 @@ format_percent(0.12345)
 format_percent(pi)
 format_percent(0.1)
 format_percent(0.12345, accuracy = 0.1)
-format_percent(c(0.12345, 0.54321), vecNames = c("a", "b"))
+format_percent(c(0.12345, 0.54321), vec_names = c("a", "b"))
 
 }

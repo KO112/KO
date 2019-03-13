@@ -4,10 +4,10 @@
 \alias{trim_glm_summary}
 \title{Remove excess parts of a GLM summary}
 \usage{
-trim_glm_summary(modelSummary)
+trim_glm_summary(model_smy)
 }
 \arguments{
-\item{modelSummary}{Summary of a}
+\item{model_smy}{Summary of a}
 }
 \value{
 A trimmed-down GLM summary.

@@ -17,15 +17,14 @@ gini_weighted_normalized(solutions, predictions, weights = 1)
 \item{weights}{Weights to assign to each prediction.}
 }
 \value{
-(Normalized) weighted Gini index (numeric).
+(Normalized) weighted Gini index (numeric scalar).
 }
 \description{
 Calculate the (normalized) weighted Gini index of predictions against the solutions.
 }
 \examples{
-
 # Create a GLM for testing
-\donttest{
+\dontrun{
   data(dataCar, package = "insuranceData")
   dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
                     data = dataCar, family = poisson, offset = log(exposure), x = TRUE)
@@ -33,7 +32,7 @@ Calculate the (normalized) weighted Gini index of predictions against the soluti
   gini_weighted(dataCar$numclaims, predict(dataCarGLM, dataCar))
 }
 
-\donttest{
+\dontrun{
   gini_weighted_normalized(dataCar$numclaims, predict(dataCarGLM, dataCar))
 }
 

@@ -10,7 +10,7 @@ percent_missing(vec)
 \item{vec}{Vector to count missing values in}
 }
 \value{
-A number containing the percent of missing values.
+Numeric vector containing the percent of missing values.
 }
 \description{
 Count the percent of missing values in a vector.

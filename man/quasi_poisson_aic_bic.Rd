@@ -16,7 +16,7 @@ A list of two elements, AIC and BIC.
 Calculate the AIC and BIC for a quasi-Poisson GLM by training a normal Poisson GLM.
 }
 \examples{
-\donttest{
+\dontrun{
   data(dataCar, package = "insuranceData")
   dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
                     data = dataCar, family = quasi_poisson, offset = log(exposure))

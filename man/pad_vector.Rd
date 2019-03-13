@@ -4,14 +4,14 @@
 \alias{pad_vector}
 \title{Convert a vector to a padded character column}
 \usage{
-pad_vector(vec, header = NA, padWith = " ", alignment = "R")
+pad_vector(vec, header = NA, padding = " ", alignment = "R")
 }
 \arguments{
 \item{vec}{Vector to pad values of}
 
 \item{header}{Optional name of vector to add to top of return value}
 
-\item{padWith}{Character to pad output vector with}
+\item{padding}{Character to pad output vector with}
 
 \item{alignment}{Alignment of text in output (one of 'R', 'L', 'C')}
 }
@@ -24,7 +24,7 @@ Convert a vector to a padded character column
 \examples{
 pad_vector(c(1, 2, 300))
 pad_vector(c(1, 2), header = "Header")
-pad_vector(c(1, 2, 300), padWith = "_")
+pad_vector(c(1, 2, 300), padding = "_")
 pad_vector(c(1, 200, 3), alignment = "L")
 pad_vector(c(100, 2, 30), alignment = "C")
 

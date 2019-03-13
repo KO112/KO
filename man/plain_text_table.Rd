@@ -4,17 +4,17 @@
 \alias{plain_text_table}
 \title{Returns a data frame in plain text with padded (equal width) columns}
 \usage{
-plain_text_table(data, sep = " | ", catOut = TRUE)
+plain_text_table(data, sep = " | ", cat_out = TRUE)
 }
 \arguments{
 \item{data}{A data frame to convert to plain text}
 
 \item{sep}{Characters to bs used as column seperators}
 
-\item{catOut}{Whether or not to print the value to standard output}
+\item{cat_out}{Whether or not to print the value to standard output}
 }
 \value{
-If catOut, nothing, else a string containing the table in plain text form.
+If cat_out, nothing, else a string containing the table in plain text form.
 }
 \description{
 Returns a data frame in plain text with padded (equal width) columns
@@ -24,6 +24,6 @@ plain_text_table(head(mtcars))
 plain_text_table(head(cars))
 plain_text_table(data.frame(a = 1:2, b = 3:4))
 plain_text_table(head(mtcars), sep = "+")
-plain_text_table(head(mtcars), catOut = FALSE)
+plain_text_table(head(mtcars), cat_out = FALSE)
 
 }

@@ -19,13 +19,14 @@ Imports:
     insuranceData
 RoxygenNote: 6.1.1
 Collate: 
-    'Error_Handling.R'
     'Pipes.R'
     'Bounding_and_Rounding.R'
+    'Error_Handling.R'
     'Evaluation_Functions.R'
     'Formatting.R'
     'Missing_Values.R'
     'Quasi_Poisson.R'
+    'Summarize.R'
     'Trimming.R'
 Suggests: 
     testthat

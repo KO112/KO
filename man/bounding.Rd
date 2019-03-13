@@ -12,20 +12,20 @@ divide_round_bound(num, div = 1, lower = -Inf, upper = Inf,
   type = "round")
 }
 \arguments{
-\item{num}{Number to bound}
+\item{num}{Numeric vector to bound}
 
 \item{lower}{Lower bound to floor the result at}
 
 \item{upper}{Upper bound to cap the result at}
 
-\item{div}{Number to divide `num` by}
+\item{div}{Numeric vector to divide \code{num} by}
 
 \item{type}{Type of rounding to be performed (one of "floor", "ceiling", or "round")}
 }
 \value{
-Bounded number (numeric).
+Bounded numeric vector.
 
-Divided, rounded, and bounded number (integer).
+Divided, rounded, and bounded integer vector.
 }
 \description{
 Bound a number by two other numbers, or divide, round, and bound
