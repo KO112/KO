@@ -60,7 +60,7 @@ trim_glm <- function(model) {
 #'
 #' Remove parts of a GLM summary to shrink the size.
 #'
-#' @param modelSummary Summary of a
+#' @param model_smy Summary of a
 #'
 #' @return A trimmed-down GLM summary.
 #' @export
@@ -70,10 +70,10 @@ trim_glm <- function(model) {
 #' object.size(mtcarsGLMSummary)
 #' object.size(trim_glm_summary(mtcarsGLMSummary))
 #'
-trim_glm_summary <- function(modelSummary) {
-  stop_if(!inherits(modelSummary, "summary.glm"), "Passed object is not a GLM model summary.")
-  modelSummary$deviance.resid <- NULL
-  attr(modelSummary$terms, ".Environment") <- NULL
-  attr(modelSummary$formula, ".Environment") <- NULL
-  return(modelSummary)
+trim_glm_summary <- function(model_smy) {
+  stop_if(!inherits(model_smy, "summary.glm"), "Passed object is not a GLM model summary.")
+  model_smy$deviance.resid <- NULL
+  attr(model_smy$terms, ".Environment") <- NULL
+  attr(model_smy$formula, ".Environment") <- NULL
+  return(model_smy)
 }

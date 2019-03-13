@@ -1,6 +1,5 @@
 # Include other functions in package
 #' @include Pipes.R
-#' @include Error_Handling.R
 NULL
 
 
@@ -8,11 +7,11 @@ NULL
 #'
 #' Bound a number by two other numbers, or divide, round, and bound
 #'
-#' @param num Number to bound
+#' @param num Numeric vector to bound
 #' @param lower Lower bound to floor the result at
 #' @param upper Upper bound to cap the result at
 #'
-#' @return Bounded number (numeric).
+#' @return Bounded numeric vector.
 #' @name bounding
 #' @export
 #'
@@ -29,10 +28,10 @@ bound <- function(num, lower = -Inf, upper = Inf) {
 
 #' Divide, round and bound a number
 #'
-#' @param div Number to divide `num` by
+#' @param div Numeric vector to divide \code{num} by
 #' @param type Type of rounding to be performed (one of "floor", "ceiling", or "round")
 #'
-#' @return Divided, rounded, and bounded number (integer).
+#' @return Divided, rounded, and bounded integer vector.
 #' @rdname bounding
 #' @export
 #'

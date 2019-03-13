@@ -2,11 +2,11 @@
 #'
 #' @param ... Input values to families
 #'
-#' @return Quasi Poisson family with AIC/BIC defined.
+#' @return Quasi-Poisson family with AIC/BIC defined.
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   data(dataCar, package = "insuranceData")
 #'   dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
 #'                     data = dataCar, family = quasi_poisson, offset = log(exposure))
@@ -30,7 +30,7 @@ quasi_poisson <- function(...) {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   data(dataCar, package = "insuranceData")
 #'   dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
 #'                     data = dataCar, family = quasi_poisson, offset = log(exposure))

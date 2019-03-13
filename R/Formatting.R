@@ -17,7 +17,7 @@ globalVariables(c("."))
 #'   (e.g 3.14159 will round to 314.16\% by default).
 #'   The absolute value of this parameter will be used.
 #'   The rounding will be done after conversion to a percent.
-#' @param vecNames Vector used to name the output
+#' @param vec_names Vector used to name the output
 #' @param silent If TRUE, will not print out a message if NA values are found
 #'
 #' @return Character vector of items formatted as percent.
@@ -28,13 +28,13 @@ globalVariables(c("."))
 #' format_percent(pi)
 #' format_percent(0.1)
 #' format_percent(0.12345, accuracy = 0.1)
-#' format_percent(c(0.12345, 0.54321), vecNames = c("a", "b"))
+#' format_percent(c(0.12345, 0.54321), vec_names = c("a", "b"))
 #'
-format_percent <- function(vec, accuracy = 0.01, vecNames = names(vec), silent = FALSE) {
+format_percent <- function(vec, accuracy = 0.01, vec_names = names(vec), silent = FALSE) {
   stop_if(!is.numeric(vec), "Non-numeric vector passed.")
   if (any(is.na(vec)) & !silent) message("NA values were found, and will be printed as \"NA%\"")
   scales::percent(x = vec, accuracy = abs(accuracy)) %>%
-    stats::setNames(vecNames) %>%
+    stats::setNames(vec_names) %>%
     return()
 }
 
@@ -59,13 +59,11 @@ latex_table <- function(data) {
 }
 
 
-
-
 #' Convert a vector to a padded character column
 #'
 #' @param vec Vector to pad values of
 #' @param header Optional name of vector to add to top of return value
-#' @param padWith Character to pad output vector with
+#' @param padding Character to pad output vector with
 #' @param alignment Alignment of text in output (one of 'R', 'L', 'C')
 #'
 #' @return A character vector padded with spaces to give uniform width.
@@ -74,29 +72,30 @@ latex_table <- function(data) {
 #' @examples
 #' pad_vector(c(1, 2, 300))
 #' pad_vector(c(1, 2), header = "Header")
-#' pad_vector(c(1, 2, 300), padWith = "_")
+#' pad_vector(c(1, 2, 300), padding = "_")
 #' pad_vector(c(1, 200, 3), alignment = "L")
 #' pad_vector(c(100, 2, 30), alignment = "C")
 #'
-pad_vector <- function(vec, header = NA, padWith = " ", alignment = "R") {
+pad_vector <- function(vec, header = NA, padding = " ", alignment = "R") {
 
-  # If a header was passed, add it as fhe first element
+  # If a header was passed, add it as the first element, and convert alignment to upper case
   if (!is.na(header)) vec <- c(header, vec)
+  alignment <- toupper(alignment)
 
   # Convert the vector to character, count the number of characters in each element,
   #   find the maximum width, and create a vector holding the padding
   width <- as.character(vec) %>% nchar()
   maxWidth <- max(width)
-  paddedVec <- strrep(padWith, maxWidth - width)
+  paddedVec <- strrep(padding, maxWidth - width)
 
   # Pad the vector, aligning the values to either the left, center, or right
   if (alignment == "L") {
     paddedVec %<>% paste0(vec, .)
   } else if (alignment == "C") {
-    paddedVec <- strrep(padWith, maxWidth - width) %>% paste0(vec)
-    paddedVec <- paste0(strrep(padWith, floor((maxWidth - width) / 2)),
+    paddedVec <- strrep(padding, maxWidth - width) %>% paste0(vec)
+    paddedVec <- paste0(strrep(padding, floor((maxWidth - width) / 2)),
                         vec,
-                        strrep(padWith, ceiling((maxWidth - width) / 2)))
+                        strrep(padding, ceiling((maxWidth - width) / 2)))
   } else {
     if (alignment != "R") message("Invalid alignment option chosen. Defaulting to \"R\".")
     paddedVec %<>% paste0(., vec)
@@ -113,9 +112,9 @@ pad_vector <- function(vec, header = NA, padWith = " ", alignment = "R") {
 #'
 #' @param data A data frame to convert to plain text
 #' @param sep Characters to bs used as column seperators
-#' @param catOut Whether or not to print the value to standard output
+#' @param cat_out Whether or not to print the value to standard output
 #'
-#' @return If catOut, nothing, else a string containing the table in plain text form.
+#' @return If cat_out, nothing, else a string containing the table in plain text form.
 #' @export
 #'
 #' @examples
@@ -123,12 +122,12 @@ pad_vector <- function(vec, header = NA, padWith = " ", alignment = "R") {
 #' plain_text_table(head(cars))
 #' plain_text_table(data.frame(a = 1:2, b = 3:4))
 #' plain_text_table(head(mtcars), sep = "+")
-#' plain_text_table(head(mtcars), catOut = FALSE)
+#' plain_text_table(head(mtcars), cat_out = FALSE)
 #'
-plain_text_table <- function(data, sep = " | ", catOut = TRUE) {
-  plainTextTbl <- mapply(pad_vector, vec = data, header = names(data)) %>%
+plain_text_table <- function(data, sep = " | ", cat_out = TRUE) {
+  plainTextTbl <- mapply(pad_vector, vec = data, header = colnames(data)) %>%
     apply(1, paste0, collapse = sep) %>%
     paste0(collapse = "\n")
-  if (catOut) cat(plainTextTbl)
+  if (cat_out) cat(plainTextTbl)
   else return(plainTextTbl)
 }

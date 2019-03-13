@@ -15,14 +15,13 @@ globalVariables(c("Lorentz", "random", "cumPosFound"))
 #' @param predictions Predictions to score against the solution.
 #' @param weights Weights to assign to each prediction.
 #'
-#' @return (Normalized) weighted Gini index (numeric).
+#' @return (Normalized) weighted Gini index (numeric scalar).
 #' @name gini_weighted
 #' @export
 #'
 #' @examples
-#'
 #' # Create a GLM for testing
-#' \donttest{
+#' \dontrun{
 #'   data(dataCar, package = "insuranceData")
 #'   dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
 #'                     data = dataCar, family = poisson, offset = log(exposure), x = TRUE)
@@ -58,7 +57,7 @@ gini_weighted <- function(solutions, predictions, weights = 1) {
 #' @export
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   gini_weighted_normalized(dataCar$numclaims, predict(dataCarGLM, dataCar))
 #' }
 #'

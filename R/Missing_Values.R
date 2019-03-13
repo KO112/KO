@@ -12,7 +12,7 @@ NULL
 #'
 #' @param vec Vector to count missing values in
 #'
-#' @return A number containing the percent of missing values.
+#' @return Numeric vector containing the percent of missing values.
 #' @export
 #'
 #' @examples
@@ -40,9 +40,9 @@ percent_missing <- function(vec) {
 #'
 #' @param vec Vector in which to replace missing values
 #' @param method The method to use to determine the imputed value
-#' @param returnImputed Whether or not to return the value that missing elements were imputed with
+#' @param return_imputed Whether or not to return the value that missing elements were imputed with
 #'
-#' @return A vector with missing values replaced as desired,
+#' @return Vector with missing values replaced as desired,
 #'   or a list of that and the replacement value.
 #' @export
 #'
@@ -51,9 +51,9 @@ percent_missing <- function(vec) {
 #' replace_missing(c(1, 1, 1, 2, NA), method = "mode") # Same as above
 #' replace_missing(c(1, NA, 1, 2), method = "median")
 #' replace_missing(c(1, NA, 1, 2), method = "mean")
-#' replace_missing(c(1, NA, 1, 2), method = "mean", returnImputed = TRUE)
+#' replace_missing(c(1, NA, 1, 2), method = "mean", return_imputed = TRUE)
 #'
-replace_missing <- function(vec, method = "mode", returnImputed = FALSE) {
+replace_missing <- function(vec, method = "mode", return_imputed = FALSE) {
 
   # Find the value to replace missing values with based on the desired method,
   #   ensuring that we have a numeric vector for median and mean
@@ -65,7 +65,7 @@ replace_missing <- function(vec, method = "mode", returnImputed = FALSE) {
     imputedVal <- mean(vec, na.rm = TRUE)
   } else {
     if (method != "mode") message("Invalid method chosen to replace missing values. Mode will be used.")
-    imputedVal <- vec %>% table(useNA = "no") %>% sort() %>% utils::tail(1) %>% names()
+    imputedVal <- table(vec, useNA = "no") %>% sort() %>% utils::tail(1) %>% names()
   }
 
   # Convert the imputed value to the appropriate type
@@ -88,7 +88,7 @@ replace_missing <- function(vec, method = "mode", returnImputed = FALSE) {
   }
 
   # Return the vector, and the imputed value as well if desired
-  if (returnImputed) return(list(Vec = vec, ImputedVal = imputedVal))
+  if (return_imputed) return(list(Vec = vec, ImputedVal = imputedVal))
   return(vec)
 
 }
