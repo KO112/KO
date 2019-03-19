@@ -24,6 +24,7 @@ Collate:
     'Error_Handling.R'
     'Evaluation_Functions.R'
     'Formatting.R'
+    'Inline_If.R'
     'Missing_Values.R'
     'Quasi_Poisson.R'
     'Summarize.R'

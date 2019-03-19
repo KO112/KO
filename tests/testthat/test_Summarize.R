@@ -29,21 +29,21 @@ test_that("table_df", {
 
 
 # Test mode_stat
-test_that("mode_stat", {
-  expect_equal(mode_stat(),
-               )
-})
+# test_that("mode_stat", {
+#   expect_equal(mode_stat(),
+#                )
+# })
 
 
 # Test summarize_vec
-test_that("summarize_vec", {
-  expect_equal(summarize_vec(),
-               )
-})
+# test_that("summarize_vec", {
+#   expect_equal(summarize_vec(),
+#                )
+# })
 
 
 # Test summarize_df
-test_that("summarize_df", {
-  expect_equal(summarize_df(),
-               )
-})
+# test_that("summarize_df", {
+#   expect_equal(summarize_df(),
+#                )
+# })
