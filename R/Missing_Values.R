@@ -43,7 +43,7 @@ percent_missing <- function(vec) {
 #' @param return_imputed Whether or not to return the value that missing elements were imputed with
 #'
 #' @return Vector with missing values replaced as desired,
-#'   or a list of that and the replacement value.
+#'   or a list of that and the replacement (imputed) value.
 #' @export
 #'
 #' @examples
