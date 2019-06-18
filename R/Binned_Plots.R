@@ -62,7 +62,6 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
     ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$index) + 0.5), breaks = binnedData$index, labels = binnedData$binnedCol__) +
     ggplot2::theme(
       text = ggplot2::element_text(size = fontSize)
-      # , plot.title = ggplot2::element_text(hjust = 0.5)
       , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
     )
 
@@ -78,7 +77,6 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
       legend.position = "top"
       , text = ggplot2::element_text(size = fontSize)
       , plot.title = ggplot2::element_text(hjust = 0.5)
-      # , axis.line.x = ggplot2::element_blank()
       , axis.text.x = ggplot2::element_blank()
       , axis.ticks.x = ggplot2::element_blank()
     )
@@ -87,10 +85,7 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
   dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
   weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
   combinedPlot <- rbind(dataPlot, weightPlot, size = "first")
-  combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths) # use the largest widths
-  # maxWidth <- grid::unit.pmax(dataPlot$widths[2:3], weightPlot$widths[2:3])
-  # dataPlot$widths[2:3] <- maxWidth
-  # weightPlot$widths[2:3] <- maxWidth
+  combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths)
 
   # Return the plots (merging into one if desired)
   if (showWeights) return(gridExtra::arrangeGrob(dataPlot, weightPlot))
