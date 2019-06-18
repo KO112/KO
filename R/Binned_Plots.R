@@ -38,9 +38,9 @@ binned_one_way_data <- function(x, yData, weight = rep(1, nrow(yData)), type = "
   yData <- dplyr::select_if(yData, is.numeric)
 
   # Summarize the data, & return the binned data
-  binnedData <- data.table::data.table(x = dataBins, weight = weight) %>% cbind(yData)
-  sdCols <- setdiff(names(binnedData), c("x", "weight"))
-  binnedData <- binnedData[, c(lapply(.SD, weighted.mean, w = weight), weight = sum(weight)), keyby = "x", .SDcols = sdCols]
+  binnedData <- data.table::data.table(binnedCol__ = dataBins, weight = weight) %>% cbind(yData)
+  sdCols <- setdiff(names(binnedData), c("binnedCol__", "weight"))
+  binnedData <- binnedData[, c(lapply(.SD, weighted.mean, w = weight), weight = sum(weight)), keyby = "binnedCol__", .SDcols = sdCols]
   return(binnedData)
 
 }
@@ -59,7 +59,7 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
     ggplot2::aes(x = index, y = weight) +
     ggplot2::geom_bar(color = "black", stat = "identity", width = 1) +
     ggplot2::labs(x = xlab, y = wlab) +
-    ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$index) + 0.5), breaks = binnedData$index, labels = binnedData$x) +
+    ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$index) + 0.5), breaks = binnedData$index, labels = binnedData$binnedCol__) +
     ggplot2::theme(
       text = ggplot2::element_text(size = fontSize)
       # , plot.title = ggplot2::element_text(hjust = 0.5)
@@ -67,7 +67,7 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
     )
 
   # Plot the y data
-  binnedData <- binnedData[, data.table::melt.data.table(binnedData, id.vars = c("x", "weight", "index"))]
+  binnedData <- binnedData[, data.table::melt.data.table(binnedData, id.vars = c("binnedCol__", "weight", "index"))]
   dataPlot <- ggplot2::ggplot(binnedData) +
     ggplot2::aes(x = index, y = value, color = variable) +
     ggplot2::geom_line(size = 1) +
@@ -83,16 +83,18 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
       , axis.ticks.x = ggplot2::element_blank()
     )
 
-  # Alight the plots better (see http://www.exegetic.biz/blog/2015/05/r-recipe-aligning-axes-in-ggplot2)
-  # dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
-  # weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
+  # Align the plots better (see https://github.com/tidyverse/ggplot2/wiki/align-two-plots-on-a-page)
+  dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
+  weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
+  combinedPlot <- rbind(dataPlot, weightPlot, size = "first")
+  combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths) # use the largest widths
   # maxWidth <- grid::unit.pmax(dataPlot$widths[2:3], weightPlot$widths[2:3])
   # dataPlot$widths[2:3] <- maxWidth
   # weightPlot$widths[2:3] <- maxWidth
 
   # Return the plots (merging into one if desired)
   if (showWeights) return(gridExtra::arrangeGrob(dataPlot, weightPlot))
+  if (showWeights) return(combinedPlot)
   return(dataPlot)
-
 
 }
