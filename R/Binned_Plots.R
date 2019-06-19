@@ -1,18 +1,4 @@
-#' Title
-#'
-#'
-#'
-#' @param x
-#' @param yData
-#' @param weight
-#' @param type
-#' @param bins
-#'
-#' @return
-#' @export
-#'
-#' @examples
-binned_one_way_data <- function(x, yData, weight = rep(1, nrow(yData)), type = "quantile", bins = 10) {
+binned_one_way_data <- function(x, yData, weight = rep(1, nrow(yData)), scaleWeight = TRUE, type = "quantile", bins = 10) {
 
   # If x isn't numeric, or if there are as many distinct x values as bins requested, just use x
   if (!is.numeric(x) || (dplyr::n_distinct(x) <= bins)) {
@@ -37,21 +23,24 @@ binned_one_way_data <- function(x, yData, weight = rep(1, nrow(yData)), type = "
   # Remove non-numeric data from yData
   yData <- dplyr::select_if(yData, is.numeric)
 
-  # Summarize the data, & return the binned data
-  binnedData <- data.table::data.table(binnedCol__ = dataBins, weight = weight) %>% cbind(yData)
-  sdCols <- setdiff(names(binnedData), c("binnedCol__", "weight"))
-  binnedData <- binnedData[, c(lapply(.SD, weighted.mean, w = weight), weight = sum(weight)), keyby = "binnedCol__", .SDcols = sdCols]
-  return(binnedData)
+  # Summarize the data by bins
+  binnedData <- data.table::data.table(bins__ = dataBins, weight = weight) %>% cbind(yData)
+  sdCols <- setdiff(names(binnedData), c("bins__", "weight"))
+  binnedData <- binnedData[, c(lapply(.SD, weighted.mean, w = weight), weight = sum(weight)), keyby = "bins__", .SDcols = sdCols]
+
+  # Scale the weight if desired, and return the binned data (the extra brackets mean it will print implicitly)
+  if (scaleWeight) binnedData[, weight := weight / sum(weight)]
+  return(binnedData[])
 
 }
 
 
 binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "quantile", bins = 10, fontSize = 10,
-                                showWeights = TRUE, overlap = TRUE, # plotly = FALSE,
+                                showWeights = TRUE, scaleWeight = TRUE, overlap = TRUE, # plotly = FALSE,
                                 xlab = "Bins", ylab = "Response", wlab = "Weight", title = "One-Way Plot") {
 
   # Calculate the binned one way data, & create an index
-  binnedData <- binned_one_way_data(x = x, yData = yData, weight = weight, type = type, bins = bins)
+  binnedData <- binned_one_way_data(x = x, yData = yData, weight = weight, scaleWeight = scaleWeight, type = type, bins = bins)
   binnedData[, index := .I]
 
   # Plot the weights (done first since the data is melted/gathered below)
@@ -59,21 +48,21 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
     ggplot2::aes(x = index, y = weight) +
     ggplot2::geom_bar(color = "black", stat = "identity", width = 1) +
     ggplot2::labs(x = xlab, y = wlab) +
-    ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$index) + 0.5), breaks = binnedData$index, labels = binnedData$binnedCol__) +
-    ggplot2::scale_y_continuous(labels = scales::comma) +
+    ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$index) + 0.5), breaks = binnedData$index, labels = binnedData$bins__) +
+    ggplot2::scale_y_continuous(labels = if (scaleWeight) scales::percent else scales::comma) +
     ggplot2::theme(
       text = ggplot2::element_text(size = fontSize)
       , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
     )
 
   # Plot the y data
-  binnedData <- binnedData[, data.table::melt.data.table(binnedData, id.vars = c("binnedCol__", "weight", "index"))]
+  binnedData <- binnedData[, data.table::melt.data.table(binnedData, id.vars = c("bins__", "weight", "index"))]
   dataPlot <- ggplot2::ggplot(binnedData) +
     ggplot2::aes(x = index, y = value, color = variable) +
     ggplot2::geom_line(size = 1) +
     ggplot2::geom_point(size = 2) +
     ggplot2::labs(x = xlab, y = ylab, title = title) +
-    ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$index) + 0.5), breaks = binnedData$index, labels = binnedData$binnedCol__) +
+    ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$index) + 0.5), breaks = binnedData$index, labels = binnedData$bins__) +
     ggplot2::scale_y_continuous(labels = scales::comma) +
     ggplot2::theme(
       legend.position = "top"
@@ -81,7 +70,7 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
       , plot.title = ggplot2::element_text(hjust = 0.5)
       , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
     )
-  browser()
+  # browser()
   # If the weights should be shown, merge and align them, else return just the plotted data
   if (showWeights) {
 
@@ -105,3 +94,15 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, nrow(yData)), type = "
   }
 
 }
+
+# https://rpubs.com/MarkusLoew/226759
+# d <- data.table::data.table(ggplot2::diamonds)
+# a <- binned_one_way_data(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])[, index := .I]
+# b <- a[, data.table::melt.data.table(a, id.vars = c("bins__", "weight", "index"))]
+#
+# ggplot() +
+#   geom_bar(color = "black", stat = "identity", width = 1, data = a, mapping = aes(x = index, y = weight * 75)) +
+#   geom_line(size = 1, data = b, mapping = aes(x = index, y = value, color = variable)) +
+#   geom_point(size = 2, data = b, mapping = aes(x = index, y = value, color = variable)) +
+#   scale_x_continuous(limits = c(0.5, max(b$index) + 0.5), breaks = a$index, labels = a$bins__) +
+#   scale_y_continuous(limits = range(a$x), labels = scales::comma)
