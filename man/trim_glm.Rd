@@ -7,7 +7,7 @@
 trim_glm(model)
 }
 \arguments{
-\item{model}{A GLM object}
+\item{model}{A GLM object.}
 }
 \value{
 A trimmed-down GLM, with only the parts needed for predicton.

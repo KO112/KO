@@ -7,7 +7,7 @@
 percent_missing(vec)
 }
 \arguments{
-\item{vec}{Vector to count missing values in}
+\item{vec}{Vector to count missing values in.}
 }
 \value{
 Numeric vector containing the percent of missing values.

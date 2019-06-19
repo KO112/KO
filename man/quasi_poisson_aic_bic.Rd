@@ -7,7 +7,7 @@
 quasi_poisson_aic_bic(model)
 }
 \arguments{
-\item{model}{Quasi-Poisson GLM to calculate the AIC/BIC for}
+\item{model}{Quasi-Poisson GLM to calculate the AIC/BIC for.}
 }
 \value{
 A list of two elements, AIC and BIC.

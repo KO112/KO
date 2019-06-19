@@ -7,14 +7,14 @@
 table_df(data, max_distinct = 250, group = TRUE, useNA = "ifany")
 }
 \arguments{
-\item{data}{A data frame/matrix}
+\item{data}{A data frame/matrix.}
 
-\item{max_distinct}{Maximum number of unique elements to return ungrouped (integer)}
+\item{max_distinct}{Maximum number of unique elements to return ungrouped (integer).}
 
-\item{group}{Whether or not to group columns with more than \code{max_distinct} (logical)}
+\item{group}{Whether or not to group columns with more than \code{max_distinct} (logical).}
 
 \item{useNA}{Value to pass to table to determine whether or not to use NA values
-(one of "no", "ifany", and "always")}
+(one of "no", "ifany", and "always").}
 }
 \value{
 List of tables.

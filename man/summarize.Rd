@@ -13,16 +13,16 @@ summarize_df(data, as_vec = FALSE, get_table = FALSE,
   useNA = "ifany")
 }
 \arguments{
-\item{vec}{Atomic vector}
+\item{vec}{Atomic vector.}
 
-\item{as_vec}{Whether to return the values as a named vector instead of a list (logical)}
+\item{as_vec}{Whether to return the values as a named vector instead of a list (logical).}
 
-\item{get_table}{Whether to tabulate the vector as well}
+\item{get_table}{Whether to tabulate the vector as well.}
 
 \item{useNA}{Value to pass to table to determine whether or not to use NA values
-(one of "no", "ifany", and "always")}
+(one of "no", "ifany", and "always").}
 
-\item{data}{A data frame/matrix/vector}
+\item{data}{A data frame/matrix/vector.}
 }
 \value{
 List of summary statistics.
@@ -31,7 +31,7 @@ List of lists of summary statistics.
 }
 \description{
 Takes in a data frame/matrix/vector and calculates summary statistics based on the type.
-If \code{get_table} is true, returns a table of counts as well.
+If \code{get_table} is \code{TRUE}, returns a table of counts as well.
 }
 \examples{
 summarize_vec(mtcars$mpg)

@@ -7,11 +7,11 @@
 iif(condition, true, false)
 }
 \arguments{
-\item{condition}{Condition to check (logical)}
+\item{condition}{Condition to check (logical).}
 
-\item{true}{Value to return when the condition is true}
+\item{true}{Value to return when the condition is \code{TRUE}.}
 
-\item{false}{Value to return when the condition is false}
+\item{false}{Value to return when the condition is \code{FALSE}.}
 }
 \value{
 Either the \code{true} or \code{false} parameter.

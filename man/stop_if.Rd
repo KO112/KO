@@ -7,9 +7,9 @@
 stop_if(condition, error_msg)
 }
 \arguments{
-\item{condition}{Condition that, if met, will stop and print an error message}
+\item{condition}{Condition that, if met, will stop and print an error message.}
 
-\item{error_msg}{Message to be displayed if the stopping condition is met}
+\item{error_msg}{Message to be displayed if the stopping condition is met.}
 }
 \value{
 Nothing.

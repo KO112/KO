@@ -3,9 +3,9 @@
 NULL
 
 
-#' Binned One-Way Data
+#' Binned One-Way Data/Plot
 #'
-#' Calculate the average value of
+#' Calculate the (weighted) average value of a binned set of data, and plot it.
 #'
 #' @param x The vector to perform binning by.
 #'   If numeric, it will be binned according to \code{type}.
@@ -20,7 +20,7 @@ NULL
 #' @param type The type of binning desired.
 #'   Valid options are:
 #'     \code{r == raw}, which will create a bin for each distinct value in \code{x}.
-#'     \code{e == equal}, which will do the same as \code{p == pretty}
+#'     \code{e == equal}, which will do the same as \code{p == pretty}.
 #'     \code{p == pretty}, which will cut the range of \code{x} into equally sized bins,
 #'       with the endpoints of each bin being chosen to be nice round numbers.
 #'     \code{q == quantile}, which will cut \code{x} into bins according to weighted quantiles.
@@ -29,7 +29,8 @@ NULL
 #' @param bins The number of bins to create (or, if \code{type} is in \code{m == min == minimum},
 #'   the desired minimum number of observations per bin).
 #'
-#' @return
+#' @return A \code{data.table} holding the binned data.
+#' @name binned
 #' @export
 #'
 #' @examples
@@ -75,7 +76,7 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 }
 
 
-#' Title
+#' Binned One-Way Plot
 #'
 #' @param x The vector to perform binning by.
 #'   If numeric, it will be binned according to \code{type}.
@@ -90,7 +91,7 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #' @param type The type of binning desired.
 #'   Valid options are:
 #'     \code{r == raw}, which will create a bin for each distinct value in \code{x}.
-#'     \code{e == equal}, which will do the same as \code{p == pretty}
+#'     \code{e == equal}, which will do the same as \code{p == pretty}.
 #'     \code{p == pretty}, which will cut the range of \code{x} into equally sized bins,
 #'       with the endpoints of each bin being chosen to be nice round numbers.
 #'     \code{q == quantile}, which will cut \code{x} into bins according to weighted quantiles.
@@ -98,21 +99,22 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #'       \code{bins} observations in each bin.
 #' @param bins The number of bins to create (or, if \code{type} is in \code{m == min == minimum},
 #'   the desired minimum number of observations per bin).
-#' @param fontSize 
-#' @param showWeights 
-#' @param overlap If \code{TRUE}, the data and weights plots will be overlapped
+#' @param fontSize Size of the font to use in the plot.
+#' @param showWeights If \code{TRUE}, the weights plot will be shown as well.
+#' @param overlap (NOT YET IMPLEMENTED) If \code{TRUE}, the data and weights plots will be overlapped
 #'   (not used if \code{showWeights} is \code{FALSE}).
+#' @param plotly (NOT YET IMPLEMENTED) Will return a \code{plotly} object instead of a \code{ggplot} one.
 #' @param xlab The x-axis label of the plot.
 #' @param ylab The y-axis label of the data section of the plot.
 #' @param wlab The y-axis label of the weight section of the plot.
 #' @param title The title of the plot.
 #'
-#' @return
+#' @return A \code{ggplot} object, or a \code{plotly} object if \code{plotly} is \code{TRUE}.
 #' @export
 #'
 #' @examples
 binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10,
-                                fontSize = 10, showWeights = TRUE, overlap = TRUE, # plotly = FALSE,
+                                fontSize = 10, showWeights = TRUE, overlap = TRUE, plotly = FALSE,
                                 xlab = "Bins", ylab = "Response", wlab = "Weight", title = "One-Way Plot") {
   
   # Calculate the binned one way data, create an index, & melt the table

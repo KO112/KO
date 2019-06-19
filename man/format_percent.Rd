@@ -8,16 +8,16 @@ format_percent(vec, accuracy = 0.01, vec_names = names(vec),
   silent = FALSE)
 }
 \arguments{
-\item{vec}{Vector to format as a percent}
+\item{vec}{Vector to format as a percent.}
 
 \item{accuracy}{The number to round to the nearest multiple of
 (e.g 3.14159 will round to 314.16\% by default).
 The absolute value of this parameter will be used.
 The rounding will be done after conversion to a percent.}
 
-\item{vec_names}{Vector used to name the output}
+\item{vec_names}{Vector used to name the output.}
 
-\item{silent}{If TRUE, will not print out a message if NA values are found}
+\item{silent}{If \code{TRUE}, will not print out a message if NA values are found.}
 }
 \value{
 Character vector of items formatted as percent.

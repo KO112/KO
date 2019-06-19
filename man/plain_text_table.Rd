@@ -7,11 +7,11 @@
 plain_text_table(data, sep = " | ", cat_out = TRUE)
 }
 \arguments{
-\item{data}{A data frame to convert to plain text}
+\item{data}{A data frame to convert to plain text.}
 
-\item{sep}{Characters to bs used as column seperators}
+\item{sep}{Characters to bs used as column seperators.}
 
-\item{cat_out}{Whether or not to print the value to standard output}
+\item{cat_out}{Whether or not to print the value to standard output.}
 }
 \value{
 If cat_out, nothing, else a string containing the table in plain text form.

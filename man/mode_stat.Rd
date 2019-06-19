@@ -7,14 +7,14 @@
 mode_stat(vec, return_all_modes = FALSE)
 }
 \arguments{
-\item{vec}{Atomic vector}
+\item{vec}{Atomic vector.}
 
-\item{return_all_modes}{Whether or not to return a vector of all modes (for ties) (logical scalar)}
+\item{return_all_modes}{Whether or not to return a vector of all modes (for ties) (logical scalar).}
 }
 \value{
 Scalar of same type as \code{vec},
   or a vector of the same type if there are multiple modes,
-  and \code{return_all_modes} is true.
+  and \code{return_all_modes} is \code{TRUE}.
 }
 \description{
 Ignoring NAs, find the most common element in a vector (statistical mode).

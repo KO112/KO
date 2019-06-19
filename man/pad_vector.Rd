@@ -7,13 +7,13 @@
 pad_vector(vec, header = NA, padding = " ", alignment = "R")
 }
 \arguments{
-\item{vec}{Vector to pad values of}
+\item{vec}{Vector to pad values of.}
 
-\item{header}{Optional name of vector to add to top of return value}
+\item{header}{Optional name of vector to add to top of return value.}
 
-\item{padding}{Character to pad output vector with}
+\item{padding}{Character to pad output vector with.}
 
-\item{alignment}{Alignment of text in output (one of 'R', 'L', 'C')}
+\item{alignment}{Alignment of text in output (one of 'R', 'L', 'C').}
 }
 \value{
 A character vector padded with spaces to give uniform width.

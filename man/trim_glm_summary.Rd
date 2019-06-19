@@ -7,7 +7,7 @@
 trim_glm_summary(model_smy)
 }
 \arguments{
-\item{model_smy}{Summary of a}
+\item{model_smy}{Summary of a GLM object.}
 }
 \value{
 A trimmed-down GLM summary.

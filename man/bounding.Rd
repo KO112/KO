@@ -12,11 +12,11 @@ divide_round_bound(num, div = 1, lower = -Inf, upper = Inf,
   type = "round")
 }
 \arguments{
-\item{num}{Numeric vector to bound}
+\item{num}{Numeric vector to bound.}
 
-\item{lower}{Lower bound to floor the result at}
+\item{lower}{Lower bound to floor the result at.}
 
-\item{upper}{Upper bound to cap the result at}
+\item{upper}{Upper bound to cap the result at.}
 
 \item{div}{Numeric vector to divide \code{num} by}
 

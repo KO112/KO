@@ -7,15 +7,15 @@
 replace_missing(vec, method = "mode", return_imputed = FALSE)
 }
 \arguments{
-\item{vec}{Vector in which to replace missing values}
+\item{vec}{Vector in which to replace missing values.}
 
-\item{method}{The method to use to determine the imputed value}
+\item{method}{The method to use to determine the imputed value.}
 
-\item{return_imputed}{Whether or not to return the value that missing elements were imputed with}
+\item{return_imputed}{Whether or not to return the value that missing elements were imputed with.}
 }
 \value{
 Vector with missing values replaced as desired,
-  or a list of that and the replacement value.
+  or a list of that and the replacement (imputed) value.
 }
 \description{
 Replace missing values in a vector with either the mode, median,
