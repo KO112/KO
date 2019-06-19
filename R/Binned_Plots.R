@@ -34,6 +34,7 @@ NULL
 #' @export
 #'
 #' @examples
+#' # 
 binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10) {
   
   # Convert yData to a data.table (if necessary), and check that the lengths are all the same
@@ -76,29 +77,6 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 }
 
 
-#' Binned One-Way Plot
-#'
-#' @param x The vector to perform binning by.
-#'   If numeric, it will be binned according to \code{type}.
-#'   If non-numeric, it will be binned according to all the unique values.
-#' @param yData A data.frame-like object (or numeric vector) whose numerical columns will be used
-#'   to calculate average values by bin.
-#'   Must have the same number of rows (or length) as the length of x.
-#' @param weight An (optional) vector of weights for weighted binning,
-#'   and for taking weighted averages.
-#'   Must be the same length as x.
-#' @param scaleWeight If \code{TRUE}, the weights will be scaled from 0 to 1 (i.e. as a percent).
-#' @param type The type of binning desired.
-#'   Valid options are:
-#'     \code{r == raw}, which will create a bin for each distinct value in \code{x}.
-#'     \code{e == equal}, which will do the same as \code{p == pretty}.
-#'     \code{p == pretty}, which will cut the range of \code{x} into equally sized bins,
-#'       with the endpoints of each bin being chosen to be nice round numbers.
-#'     \code{q == quantile}, which will cut \code{x} into bins according to weighted quantiles.
-#'     \code{m == min == minimum}, which will try to ensure there are a minimum of
-#'       \code{bins} observations in each bin.
-#' @param bins The number of bins to create (or, if \code{type} is in \code{m == min == minimum},
-#'   the desired minimum number of observations per bin).
 #' @param fontSize Size of the font to use in the plot.
 #' @param showWeights If \code{TRUE}, the weights plot will be shown as well.
 #' @param overlap (NOT YET IMPLEMENTED) If \code{TRUE}, the data and weights plots will be overlapped
@@ -110,9 +88,11 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #' @param title The title of the plot.
 #'
 #' @return A \code{ggplot} object, or a \code{plotly} object if \code{plotly} is \code{TRUE}.
+#' @rdname binned
 #' @export
 #'
 #' @examples
+#' # 
 binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10,
                                 fontSize = 10, showWeights = TRUE, overlap = TRUE, plotly = FALSE,
                                 xlab = "Bins", ylab = "Response", wlab = "Weight", title = "One-Way Plot") {

@@ -11,7 +11,7 @@ NULL
 #' @param lower Lower bound to floor the result at.
 #' @param upper Upper bound to cap the result at.
 #'
-#' @return Bounded numeric vector.
+#' @return \code{bound}: bounded numeric vector.
 #' @name bounding
 #' @export
 #'
@@ -26,12 +26,10 @@ bound <- function(num, lower = -Inf, upper = Inf) {
 }
 
 
-#' Divide, round and bound a number
+#' @param div Numeric vector to divide \code{num} by.
+#' @param type Type of rounding to be performed (one of "floor", "ceiling", or "round").
 #'
-#' @param div Numeric vector to divide \code{num} by
-#' @param type Type of rounding to be performed (one of "floor", "ceiling", or "round")
-#'
-#' @return Divided, rounded, and bounded integer vector.
+#' @return \code{divide_round_bound}: divided, rounded, and bounded integer vector.
 #' @rdname bounding
 #' @export
 #'

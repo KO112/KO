@@ -18,14 +18,14 @@ divide_round_bound(num, div = 1, lower = -Inf, upper = Inf,
 
 \item{upper}{Upper bound to cap the result at.}
 
-\item{div}{Numeric vector to divide \code{num} by}
+\item{div}{Numeric vector to divide \code{num} by.}
 
-\item{type}{Type of rounding to be performed (one of "floor", "ceiling", or "round")}
+\item{type}{Type of rounding to be performed (one of "floor", "ceiling", or "round").}
 }
 \value{
-Bounded numeric vector.
+\code{bound}: bounded numeric vector.
 
-Divided, rounded, and bounded integer vector.
+\code{divide_round_bound}: divided, rounded, and bounded integer vector.
 }
 \description{
 Bound a number by two other numbers, or divide, round, and bound
