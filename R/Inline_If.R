@@ -4,9 +4,9 @@
 #'   and returns either the \code{true} or \code{false} paramater.
 #' Similar to \code{ifelse}, but returns the entire value of the parameters.
 #'
-#' @param condition Condition to check (logical)
-#' @param true Value to return when the condition is true
-#' @param false Value to return when the condition is false
+#' @param condition Condition to check (logical).
+#' @param true Value to return when the condition is \code{TRUE}.
+#' @param false Value to return when the condition is \code{FALSE}.
 #'
 #' @return Either the \code{true} or \code{false} parameter.
 #' @export

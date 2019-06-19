@@ -7,9 +7,9 @@ NULL
 #'
 #' Bound a number by two other numbers, or divide, round, and bound
 #'
-#' @param num Numeric vector to bound
-#' @param lower Lower bound to floor the result at
-#' @param upper Upper bound to cap the result at
+#' @param num Numeric vector to bound.
+#' @param lower Lower bound to floor the result at.
+#' @param upper Upper bound to cap the result at.
 #'
 #' @return Bounded numeric vector.
 #' @name bounding

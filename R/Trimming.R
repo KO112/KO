@@ -2,7 +2,7 @@
 #'
 #' Remove parts of a GLM not needed for prediction to trim down size.
 #'
-#' @param model A GLM object
+#' @param model A GLM object.
 #'
 #' @return A trimmed-down GLM, with only the parts needed for predicton.
 #' @export
@@ -60,7 +60,7 @@ trim_glm <- function(model) {
 #'
 #' Remove parts of a GLM summary to shrink the size.
 #'
-#' @param model_smy Summary of a
+#' @param model_smy Summary of a GLM object.
 #'
 #' @return A trimmed-down GLM summary.
 #' @export

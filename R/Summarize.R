@@ -45,11 +45,11 @@ count_distinct <- function(data) {
 #' Calls the table function on each column in a data frame/matrix,
 #'   but only for columns with up to a certain number of unique values.
 #'
-#' @param data A data frame/matrix
-#' @param max_distinct Maximum number of unique elements to return ungrouped (integer)
-#' @param group Whether or not to group columns with more than \code{max_distinct} (logical)
+#' @param data A data frame/matrix.
+#' @param max_distinct Maximum number of unique elements to return ungrouped (integer).
+#' @param group Whether or not to group columns with more than \code{max_distinct} (logical).
 #' @param useNA Value to pass to table to determine whether or not to use NA values
-#'   (one of "no", "ifany", and "always")
+#'   (one of "no", "ifany", and "always").
 #'
 #' @return List of tables.
 #' @export
@@ -99,12 +99,12 @@ table_df <- function(data, max_distinct = 250, group = TRUE, useNA = "ifany") {
 #'   unless all elements are specifically requested,
 #'   in which case a vector of all modes will be returned.
 #'
-#' @param vec Atomic vector
-#' @param return_all_modes Whether or not to return a vector of all modes (for ties) (logical scalar)
+#' @param vec Atomic vector.
+#' @param return_all_modes Whether or not to return a vector of all modes (for ties) (logical scalar).
 #'
 #' @return Scalar of same type as \code{vec},
 #'   or a vector of the same type if there are multiple modes,
-#'   and \code{return_all_modes} is true.
+#'   and \code{return_all_modes} is \code{TRUE}.
 #' @export
 #'
 #' @examples
@@ -123,13 +123,13 @@ mode_stat <- function(vec, return_all_modes = FALSE) {
 #' Summarize a Data Frame/Matrix/Vector
 #'
 #' Takes in a data frame/matrix/vector and calculates summary statistics based on the type.
-#' If \code{get_table} is true, returns a table of counts as well.
+#' If \code{get_table} is \code{TRUE}, returns a table of counts as well.
 #'
-#' @param vec Atomic vector
-#' @param get_table Whether to tabulate the vector as well
+#' @param vec Atomic vector.
+#' @param get_table Whether to tabulate the vector as well.
 #' @param useNA Value to pass to table to determine whether or not to use NA values
-#'   (one of "no", "ifany", and "always")
-#' @param as_vec Whether to return the values as a named vector instead of a list (logical)
+#'   (one of "no", "ifany", and "always").
+#' @param as_vec Whether to return the values as a named vector instead of a list (logical).
 #'
 #' @return List of summary statistics.
 #' @name summarize
@@ -206,7 +206,7 @@ summarize_vec <- function(vec, as_vec = FALSE, get_table = FALSE, useNA = "ifany
 }
 
 
-#' @param data A data frame/matrix/vector
+#' @param data A data frame/matrix/vector.
 #'
 #' @return List of lists of summary statistics.
 #' @rdname summarize

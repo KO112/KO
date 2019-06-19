@@ -24,7 +24,7 @@ quasi_poisson <- function(...) {
 #'
 #' Calculate the AIC and BIC for a quasi-Poisson GLM by training a normal Poisson GLM.
 #'
-#' @param model Quasi-Poisson GLM to calculate the AIC/BIC for
+#' @param model Quasi-Poisson GLM to calculate the AIC/BIC for.
 #'
 #' @return A list of two elements, AIC and BIC.
 #' @export

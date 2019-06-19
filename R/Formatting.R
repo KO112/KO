@@ -12,13 +12,13 @@ globalVariables(c("."))
 #' Format a numerical vector as a character vector holding the values formatted as percents.
 #' Will throw an error for non-numeric vetcors, and  print a message if NA values are found.
 #'
-#' @param vec Vector to format as a percent
+#' @param vec Vector to format as a percent.
 #' @param accuracy The number to round to the nearest multiple of
 #'   (e.g 3.14159 will round to 314.16\% by default).
 #'   The absolute value of this parameter will be used.
 #'   The rounding will be done after conversion to a percent.
-#' @param vec_names Vector used to name the output
-#' @param silent If TRUE, will not print out a message if NA values are found
+#' @param vec_names Vector used to name the output.
+#' @param silent If \code{TRUE}, will not print out a message if NA values are found.
 #'
 #' @return Character vector of items formatted as percent.
 #' @export
@@ -61,10 +61,10 @@ latex_table <- function(data) {
 
 #' Convert a vector to a padded character column
 #'
-#' @param vec Vector to pad values of
-#' @param header Optional name of vector to add to top of return value
-#' @param padding Character to pad output vector with
-#' @param alignment Alignment of text in output (one of 'R', 'L', 'C')
+#' @param vec Vector to pad values of.
+#' @param header Optional name of vector to add to top of return value.
+#' @param padding Character to pad output vector with.
+#' @param alignment Alignment of text in output (one of 'R', 'L', 'C').
 #'
 #' @return A character vector padded with spaces to give uniform width.
 #' @export
@@ -110,9 +110,9 @@ pad_vector <- function(vec, header = NA, padding = " ", alignment = "R") {
 
 #' Returns a data frame in plain text with padded (equal width) columns
 #'
-#' @param data A data frame to convert to plain text
-#' @param sep Characters to bs used as column seperators
-#' @param cat_out Whether or not to print the value to standard output
+#' @param data A data frame to convert to plain text.
+#' @param sep Characters to bs used as column seperators.
+#' @param cat_out Whether or not to print the value to standard output.
 #'
 #' @return If cat_out, nothing, else a string containing the table in plain text form.
 #' @export
