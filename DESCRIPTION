@@ -10,12 +10,18 @@ License: CC0
 Encoding: UTF-8
 LazyData: true
 Imports:
-    stats,
-    dplyr (>= 0.7.8),
-    magrittr,
-    knitr (>= 1.21),
-    scales (>= 1.0.0),
+    data.table,
+    dplyr,
+    ggplot2,
+    grid,
+    Hmisc,
+    knitr,
     lubridate,
+    magrittr,
+    scales,
+    stats
+Suggests: 
+    testthat,
     insuranceData
 RoxygenNote: 6.1.1
 Collate: 
@@ -29,5 +35,3 @@ Collate:
     'Quasi_Poisson.R'
     'Summarize.R'
     'Trimming.R'
-Suggests: 
-    testthat
