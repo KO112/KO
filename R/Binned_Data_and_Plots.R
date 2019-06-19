@@ -42,7 +42,7 @@ globalVariables(c(".SD", ".I", "Weight__", "Index__", "Value__", "Variable__"))
 #' # 
 binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10) {
   
-  # Convert yData to a data.table (if necessary), and check that the lengths are all the same
+  # Convert yData to a data.table (if necessary), & check that the lengths are all the same
   if (is.vector(yData)) yData <- data.table::data.table(y = yData)
   stop_if(!is.atomic(x), paste0("The vector to bin by (x) must be atomic. It is instead of class: ", class(x)))
   stop_if(length(x) != length(weight), "The weights are not the same length as the vector to bin by (x).")
@@ -75,7 +75,7 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
   sdCols <- setdiff(names(binnedData), c("Bins__", "Weight__"))
   binnedData <- binnedData[, c(lapply(.SD, stats::weighted.mean, w = Weight__), Weight__ = sum(Weight__)), keyby = "Bins__", .SDcols = sdCols]
   
-  # Scale the weight if desired, and return the binned data (the extra brackets mean it will print implicitly)
+  # Scale the weight if desired, & return the binned data (the extra brackets mean it will print implicitly)
   if (scaleWeight) binnedData[, Weight__ := Weight__ / sum(Weight__)]
   return(binnedData[])
   
@@ -86,7 +86,7 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #' @param showWeights If \code{TRUE}, the weights plot will be shown as well.
 #' @param overlap (NOT YET IMPLEMENTED) If \code{TRUE}, the data and weights plots will be overlapped
 #'   (not used if \code{showWeights} is \code{FALSE}).
-#' @param plotly (NOT YET IMPLEMENTED) Will return a \code{plotly} object instead of a \code{ggplot} one.
+#' @param plotly Will return a \code{plotly} object instead of a \code{ggplot} one.
 #' @param xlab The x-axis label of the plot.
 #' @param ylab The y-axis label of the data section of the plot.
 #' @param wlab The y-axis label of the weight section of the plot.
@@ -106,63 +106,107 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
   binnedData <- binned_one_way_data(x = x, yData = yData, weight = weight,
                                     scaleWeight = scaleWeight, type = type, bins = bins)
   binnedData[, Index__ := .I]
-  meltedBinnedData <- binnedData[, data.table::melt.data.table(binnedData, id.vars = c("Bins__", "Weight__", "Index__"),
-                                                               variable.name = "Variable__", value.name = "Value__")]
+  meltedBinnedData <- data.table::melt.data.table(binnedData, id.vars = c("Bins__", "Weight__", "Index__"),
+                                                  variable.name = "Variable__", value.name = "Value__")
   
-  # Create the y data plot
-  dataPlot <- ggplot2::ggplot(meltedBinnedData, mapping = ggplot2::aes(x = Index__, y = Value__, color = Variable__)) +
-    ggplot2::geom_line(size = 1) + ggplot2::geom_point(size = 2) +
-    ggplot2::scale_x_continuous(limits = c(0.5, max(meltedBinnedData$Index__) + 0.5),
-                                breaks = meltedBinnedData$Index__, labels = meltedBinnedData$Bins__) +
-    ggplot2::scale_y_continuous(labels = scales::comma) +
-    ggplot2::labs(x = xlab, y = ylab, title = title) +
-    ggplot2::theme(
-      legend.position = "top"
-      , text = ggplot2::element_text(size = fontSize)
-      , plot.title = ggplot2::element_text(hjust = 0.5)
-      , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
-    )
-  
-  # If the weights should be shown, merge and align them, else return just the plotted data
-  if (showWeights) {
+  # Return a plotly object if desired, else a ggplot one
+  if (plotly) {
     
-    # Remove x-axis label, text and ticks
-    dataPlot <- dataPlot +
-      ggplot2::labs(x = NULL) +
-      ggplot2::theme(axis.text.x = ggplot2::element_blank(), axis.ticks.x = ggplot2::element_blank())
+    # Create the plot object, using the bins along the x-axis
+    dataPlot <- plot_ly(x = ~ as.factor(Bins__)) %>%
+      
+      # Add lines with points for each data column
+      add_trace(
+        data = meltedBinnedData, y = ~ Value__, color = ~ Variable__,
+        text = ~ paste0(Bins__, "\n", round(Value__, 3)), hoverinfo = "text",
+        colors = c("#FF3333", "#33FF33", "#4488FF"), mode = "lines+markers", type = "scatter"
+      )
+        
+    # If the weights should be shown, merge & align them, else return just the plotted data
+    if (showWeights) {
+      
+        # Add the weights in the background
+        add_bars(
+          p = dataPlot, name = "Weight", data = binnedData, y = ~ Weight__, color = I("#666666"),
+          text = ~ paste0(Bins__, "\n", round(Weight__, 3)), hoverinfo = "text", yaxis = "y2"
+          
+        # Center the legend above the plot, name axes
+        ) %>% layout(
+          legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10),
+          xaxis = list(title = "Bins"),
+          yaxis = list(side = "left", title = "Value", overlaying = "y2", showgrid = FALSE),
+          yaxis2 = list(side = "right", title = "Weight")
+        ) %>% 
+        
+        # Return the object (will work with print, but not plot)
+        return()
+      
+    }
+      
+  } else {
     
-    # Create the weights plot
-    weightPlot <- ggplot2::ggplot(binnedData, mapping = ggplot2::aes(x = Index__, y = Weight__)) +
-      ggplot2::geom_bar(color = "black", stat = "identity", width = 1) +
-      ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$Index__) + 0.5),
-                                  breaks = binnedData$Index__, labels = binnedData$Bins__) +
-      ggplot2::scale_y_continuous(labels = if (scaleWeight) scales::percent else scales::comma) +
-      ggplot2::labs(x = xlab, y = wlab) +
+    # Create the y data ggplot, with lines & points for each data column
+    dataPlot <- ggplot2::ggplot(meltedBinnedData, mapping = ggplot2::aes(x = Index__, y = Value__, color = Variable__)) +
+      ggplot2::geom_line(size = 1) + ggplot2::geom_point(size = 2) +
+      
+      # Set the x-axis limits, use bin names as labels, & format the y-axis labels to use commas
+      ggplot2::scale_x_continuous(limits = c(0.5, max(meltedBinnedData$Index__) + 0.5),
+                                  breaks = meltedBinnedData$Index__, labels = meltedBinnedData$Bins__) +
+      ggplot2::scale_y_continuous(labels = scales::comma) +
+      
+      # Set the title & axis labels, put the legend on top, size the text, center the title, & tilt the x-axis labels
+      ggplot2::labs(x = xlab, y = ylab, title = title) +
       ggplot2::theme(
-        text = ggplot2::element_text(size = fontSize)
+        legend.position = "top"
+        , text = ggplot2::element_text(size = fontSize)
+        , plot.title = ggplot2::element_text(hjust = 0.5)
         , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
       )
     
-    # Align the plots nicely (see https://github.com/tidyverse/ggplot2/wiki/align-two-plots-on-a-page)
-    dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
-    weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
-    combinedPlot <- rbind(dataPlot, weightPlot, size = "first")
-    combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths)
-    return(combinedPlot)
-    
-  } else {
-    
-    return(dataPlot)
-    # return(plotly::ggplotly(dataPlot))
+    # If the weights should be shown, merge & align them, else return just the plotted data
+    if (showWeights) {
+      
+      # Remove x-axis label, text, & ticks
+      dataPlot <- dataPlot +
+        ggplot2::labs(x = NULL) +
+        ggplot2::theme(axis.text.x = ggplot2::element_blank(), axis.ticks.x = ggplot2::element_blank())
+      
+      # Create the weights ggplot, using bars
+      weightPlot <- ggplot2::ggplot(binnedData, mapping = ggplot2::aes(x = Index__, y = Weight__)) +
+        ggplot2::geom_bar(color = "black", stat = "identity", width = 1) +
+        
+        # Set the x-axis limits, use bin names as labels, & format the y-axis labels to use commas or percents
+        ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$Index__) + 0.5),
+                                    breaks = binnedData$Index__, labels = binnedData$Bins__) +
+        ggplot2::scale_y_continuous(labels = if (scaleWeight) scales::percent else scales::comma) +
+        
+        # Set the x-axis & y-axis labels, set the font size, and angle the text
+        ggplot2::labs(x = xlab, y = wlab) +
+        ggplot2::theme(
+          text = ggplot2::element_text(size = fontSize)
+          , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
+        )
+      
+      # Align the plots nicely (see https://github.com/tidyverse/ggplot2/wiki/align-two-plots-on-a-page)
+      dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
+      weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
+      combinedPlot <- rbind(dataPlot, weightPlot, size = "first")
+      combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths)
+      return(combinedPlot)
+      
+    }
     
   }
+  
+  # Return the data plot
+  return(dataPlot)
   
 }
 
 # https://rpubs.com/MarkusLoew/226759
 # d <- data.table::data.table(ggplot2::diamonds)
-# a <- binned_one_way_data(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])[, Index__ := .I]
-# b <- a[, data.table::melt.data.table(a, id.vars = c("Bins__", "Weight__", "Index__"))]
+# a <- binned_one_way_data(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])[, Index__ := .I][]
+# b <- data.table::melt.data.table(a, id.vars = c("Bins__", "Weight__", "Index__"), variable.name = "Variable__", value.name = "Value__")
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price]) %>% plot()
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], type = "equal", bins = 20) %>% plot()
 #
@@ -172,3 +216,27 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #   geom_point(size = 2, data = b, mapping = aes(x = Index__, y = Value__, color = Variable__)) +
 #   scale_x_continuous(limits = c(0.5, max(b$Index__) + 0.5), breaks = a$Index__, labels = a$Bins__) +
 #   scale_y_continuous(limits = range(a$x), labels = scales::comma)
+
+# plotly::plot_ly(
+#   data = binnedData, x = ~ as.factor(Bins__), y = ~ Weight__, type = "bar", name = "Weight",
+#   marker = list(color = "#DDDDDD"), hoverinfo = "text", text = ~ paste(Weight__)
+# ) %>% plotly::add_trace(
+#   data = meltedBinnedData, x = ~ as.factor(Bins__), y = ~ Value__, type = "scatter", name = "Num of Obs",
+#   mode = "markers+lines", marker = list(color = "#FF4400"), line = list(color = "#FF4400"),
+#   yaxis = "y2", hoverinfo = "text", text = ~ paste(round(Value__, 2))
+# ) %>% plotly::layout(
+#   yaxis  = list(side = "right", title = "Num of Obs", showgrid = FALSE, zeroline = FALSE),
+#   yaxis2 = list(side = "left", overlaying = "y", title = "Average Response", showgrid = FALSE, zeroline = FALSE),
+#   legend = list(x = 0.3, y = 1.1, orientation = "h"), xaxis  = list(title = "")
+# )
+
+# plot_ly(x = ~ as.factor(Bins__)) %>%
+#   add_trace(data = b, y = ~ Value__, color = ~ Variable__, colors = c("#FF3333", "#33FF33", "#4488FF"),
+#             text = ~ round(Value__, 3), mode = "lines+markers", type = "scatter") %>%
+#   add_bars(name = "Weight", data = a, y = ~ Weight__, color = I("#444444"),
+#            text = ~ round(Weight__, 3), yaxis = "y2") %>%
+#   layout(
+#     legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10),
+#     yaxis = list(side = "left", title = "Value", overlaying = "y2"),
+#     yaxis2 = list(side = "right", title = "Weight")
+#   )
