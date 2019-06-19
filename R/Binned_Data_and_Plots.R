@@ -1,6 +1,11 @@
 # Include other functions in package
 #' @include Pipes.R
+#' @include Error_Handling.R
+#' @importFrom data.table :=
 NULL
+
+# Avoid "undefined variable" notes in package checking
+globalVariables(c(".SD", ".I", "index", "value", "variable"))
 
 
 #' Binned One-Way Data/Plot
@@ -29,7 +34,7 @@ NULL
 #' @param bins The number of bins to create (or, if \code{type} is in \code{m == min == minimum},
 #'   the desired minimum number of observations per bin).
 #'
-#' @return A \code{data.table} holding the binned data.
+#' @return \code{binned_one_way_data}: a \code{data.table} holding the binned data.
 #' @name binned
 #' @export
 #'
@@ -68,7 +73,7 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
   # Summarize the data by bins
   binnedData <- data.table::data.table(bins__ = dataBins, weight = weight) %>% cbind(yData)
   sdCols <- setdiff(names(binnedData), c("bins__", "weight"))
-  binnedData <- binnedData[, c(lapply(.SD, weighted.mean, w = weight), weight = sum(weight)), keyby = "bins__", .SDcols = sdCols]
+  binnedData <- binnedData[, c(lapply(.SD, stats::weighted.mean, w = weight), weight = sum(weight)), keyby = "bins__", .SDcols = sdCols]
   
   # Scale the weight if desired, and return the binned data (the extra brackets mean it will print implicitly)
   if (scaleWeight) binnedData[, weight := weight / sum(weight)]
@@ -87,7 +92,7 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #' @param wlab The y-axis label of the weight section of the plot.
 #' @param title The title of the plot.
 #'
-#' @return A \code{ggplot} object, or a \code{plotly} object if \code{plotly} is \code{TRUE}.
+#' @return \code{binned_one_way_plot}: a \code{ggplot} object, or a \code{plotly} object if \code{plotly} is \code{TRUE}.
 #' @rdname binned
 #' @export
 #'
@@ -157,6 +162,8 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 # d <- data.table::data.table(ggplot2::diamonds)
 # a <- binned_one_way_data(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])[, index := .I]
 # b <- a[, data.table::melt.data.table(a, id.vars = c("bins__", "weight", "index"))]
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price]) %>% plot()
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], type = "equal", bins = 20) %>% plot()
 #
 # ggplot() +
 #   geom_bar(color = "black", stat = "identity", width = 1, data = a, mapping = aes(x = index, y = weight * 75)) +

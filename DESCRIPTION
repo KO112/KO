@@ -26,9 +26,9 @@ Suggests:
 RoxygenNote: 6.1.1
 Collate: 
     'Pipes.R'
-    'Binned_Plots.R'
-    'Bounding_and_Rounding.R'
     'Error_Handling.R'
+    'Binned_Data_and_Plots.R'
+    'Bounding_and_Rounding.R'
     'Evaluation_Functions.R'
     'Formatting.R'
     'Inline_If.R'
