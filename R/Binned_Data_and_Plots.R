@@ -115,16 +115,20 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
       
       # Add lines with points for each data column
       plotly::add_trace(
-        data = meltedBinnedData, y = ~ Value__, color = ~ Variable__,
-        text = ~ paste0(Bins__, "\n", round(Value__, 3)), hoverinfo = "text",
-        colors = c("#FF3333", "#33FF33", "#4488FF"), mode = "lines+markers", type = "scatter"
+        data = meltedBinnedData, y = ~ Value__, color = ~ Variable__
+        , text = ~ paste0(Bins__, "\n", round(Value__, 3)), hoverinfo = "text"
+        , colors = c("#FF3333", "#33FF33", "#4488FF"), mode = "lines+markers", type = "scatter"
       ) %>%
       
-      # Center the legend above the plot, name the axes, and
+      # Center the legend above the plot, & name the axes
       plotly::layout(
-        legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10),
-        xaxis = list(title = "Bins"),
-        yaxis = list(side = "left", title = "Value", showgrid = FALSE)
+        legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10)
+        , title = list(text = title, yanchor = "top", y = 1)
+        # , annotations = list(xanchor = "center", x = 0.5, y = 10)
+        # , annotations = list(text = "One-Way Plot", showarrow = FALSE, xref = "paper",
+                             # yref = "paper", yanchor = "top", y = 1)
+        , xaxis = list(title = xlab)
+        , yaxis = list(title = ylab)
       )
         
     # If the weights should be shown, merge & align them, else return just the plotted data
@@ -132,15 +136,15 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
       
       # Add the weights in the background
       dataPlot <- plotly::add_bars(
-          p = dataPlot, name = "Weight", data = binnedData, y = ~ Weight__, color = I("#666666"),
-          text = ~ paste0(Bins__, "\n", round(Weight__, 3)), hoverinfo = "text", yaxis = "y2",
-          marker = list(line = list(color = "#FF0000", width = 1))
+          p = dataPlot, name = "Weight", data = binnedData, y = ~ Weight__, color = I("#666666")
+          , text = ~ paste0(Bins__, "\n", round(Weight__, 3)), hoverinfo = "text", yaxis = "y2"
+          , marker = list(line = list(color = "#FF0000", width = 1))
         ) %>%
         
-        # Ensure the lines are on top of the bars, and move the weight axis to the right side
+        # Ensure the lines are on top of the bars, & move the weight axis to the right side
         plotly::layout(
-          yaxis = list(overlaying = "y2"),
-          yaxis2 = list(side = "right", title = "Weight")
+          yaxis = list(overlaying = "y2")
+          , yaxis2 = list(side = "right", title = wlab, showgrid = FALSE)
         )
       
     }
@@ -157,7 +161,7 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
       ggplot2::scale_y_continuous(labels = scales::comma) +
       
       # Set the title & axis labels, put the legend on top, size the text, center the title, & tilt the x-axis labels
-      ggplot2::labs(x = xlab, y = ylab, title = title) +
+      ggplot2::labs(title = title, x = xlab, y = ylab, color = "Variable") +
       ggplot2::theme(
         legend.position = "top"
         , text = ggplot2::element_text(size = fontSize)
@@ -175,29 +179,22 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
       
       # Create the weights ggplot, using bars
       weightPlot <- ggplot2::ggplot(binnedData, mapping = ggplot2::aes(x = Index__, y = Weight__)) +
-        ggplot2::geom_bar(color = "black", stat = "identity", width = 1) +
+        ggplot2::geom_bar(stat = "identity", color = "#FF0000", size = 1) +
         
         # Set the x-axis limits, use bin names as labels, & format the y-axis labels to use commas or percents
         ggplot2::scale_x_continuous(limits = c(0.5, max(binnedData$Index__) + 0.5),
                                     breaks = binnedData$Index__, labels = binnedData$Bins__) +
         ggplot2::scale_y_continuous(labels = if (scaleWeight) scales::percent else scales::comma) +
         
-        # Set the x-axis & y-axis labels, set the font size, and angle the text
+        # Set the x-axis & y-axis labels, set the font size, & angle the text
         ggplot2::labs(x = xlab, y = wlab) +
         ggplot2::theme(
           text = ggplot2::element_text(size = fontSize)
           , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
         )
       
-      # Align the plots nicely (see https://github.com/tidyverse/ggplot2/wiki/align-two-plots-on-a-page)
-      # dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
-      # weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
-      # dataPlot <- ggplot2::ggplotGrob(dataPlot)
-      # weightPlot <- ggplot2::ggplotGrob(weightPlot)
-      # combinedPlot <- rbind(dataPlot, weightPlot, size = "first")
-      # combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths)
-      combinedPlot <- cowplot::plot_grid(dataPlot, weightPlot, rel_heights = c(1.5, 1), nrow = 2, align = "v")
-      return(combinedPlot)
+      # Stack the data & weight plots vertically, align their axes, & set the heights
+      dataPlot <- cowplot::plot_grid(dataPlot, weightPlot, nrow = 2, align = "v", rel_heights = c(1.5, 1))
       
     }
     
@@ -212,8 +209,12 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 # d <- data.table::data.table(ggplot2::diamonds)
 # a <- binned_one_way_data(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])[, Index__ := .I][]
 # b <- data.table::melt.data.table(a, id.vars = c("Bins__", "Weight__", "Index__"), variable.name = "Variable__", value.name = "Value__")
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price]) %>% plot()
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], type = "equal", bins = 20) %>% plot()
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], type = "equal", bins = 20)
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = T)
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = F)
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = T)
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = F)
 #
 # ggplot() +
 #   geom_bar(color = "black", stat = "identity", width = 1, data = a, mapping = aes(x = Index__, y = Weight__ * 75)) +
