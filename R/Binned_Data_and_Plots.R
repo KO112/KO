@@ -73,10 +73,11 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
   # Summarize the data by bins
   binnedData <- data.table::data.table(Bins__ = dataBins, Weight__ = weight) %>% cbind(yData)
   sdCols <- setdiff(names(binnedData), c("Bins__", "Weight__"))
-  binnedData <- binnedData[, c(lapply(.SD, stats::weighted.mean, w = Weight__), Weight__ = sum(Weight__)), keyby = "Bins__", .SDcols = sdCols]
+  binnedData <- binnedData[, c(lapply(.SD, stats::weighted.mean, w = Weight__, na.rm = TRUE),
+                               Weight__ = sum(Weight__, na.rm = TRUE)), keyby = "Bins__", .SDcols = sdCols]
   
   # Scale the weight if desired, & return the binned data (the extra brackets mean it will print implicitly)
-  if (scaleWeight) binnedData[, Weight__ := Weight__ / sum(Weight__)]
+  if (scaleWeight) binnedData[, Weight__ := Weight__ / sum(Weight__, na.rm = TRUE)]
   return(binnedData[])
   
 }
