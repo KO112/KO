@@ -4,7 +4,7 @@
 NULL
 
 
-#' Find percent of missing values
+#' Find the percent of missing values
 #'
 #' Count the percent of missing values in a vector.
 #' Counts the percent of NA values for non-character vectors,
@@ -12,7 +12,7 @@ NULL
 #'
 #' @param vec Vector to count missing values in.
 #'
-#' @return Numeric vector containing the percent of missing values.
+#' @return Numeric scalar containing the percent of missing values.
 #' @export
 #'
 #' @examples
@@ -21,6 +21,35 @@ NULL
 #' percent_missing(c(1, 2, NA, 4, 5))
 #'
 percent_missing <- function(vec) {
+  # if (is.numeric(vec) | is.logical(vec) | lubridate::is.Date(vec) | is.factor(vec)) {
+  #   numMissing <- sum(is.na(vec))
+  # } else if (is.character(vec)) {
+  #   numMissing <- sum(vec == "", na.rm = TRUE) + sum(is.na(vec))
+  # } else {
+  #   message("Unknown vector data type: ", class(vec))
+  #   numMissing <- sum(is.na(vec))
+  # }
+  return(num_missing(vec) / length(vec))
+}
+
+
+#' Find the number of missing values
+#'
+#' Count the number of missing values in a vector.
+#' Counts the number of NA values for non-character vectors,
+#'   and the number of NA or "" values for characters.
+#'
+#' @param vec Vector to count missing values in.
+#'
+#' @return Numeric scalar containing the number of missing values.
+#' @export
+#'
+#' @examples
+#' num_missing(c(NA))
+#' num_missing(c(1, 2, 3, 4, 5))
+#' num_missing(c(1, 2, NA, 4, 5))
+#'
+num_missing <- function(vec) {
   if (is.numeric(vec) | is.logical(vec) | lubridate::is.Date(vec) | is.factor(vec)) {
     numMissing <- sum(is.na(vec))
   } else if (is.character(vec)) {
@@ -29,7 +58,7 @@ percent_missing <- function(vec) {
     message("Unknown vector data type: ", class(vec))
     numMissing <- sum(is.na(vec))
   }
-  return(numMissing / length(vec))
+  return(numMissing)
 }
 
 

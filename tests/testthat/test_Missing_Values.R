@@ -16,6 +16,21 @@ test_that("percent_missing output", {
 })
 
 
+# Test num_missing output
+test_that("num_missing output", {
+  expect_equal(num_missing(c(NA)),
+               1)
+  expect_equal(num_missing(c(1, 2, 3, 4, 5)),
+               0)
+  expect_equal(num_missing(c(1, 2, NA, 4, 5)),
+               1)
+  expect_equal(num_missing(c("a", "b", NA, NA)),
+               2)
+  expect_equal(num_missing(factor(c(NA, NA, NA))),
+               3)
+})
+
+
 # Test replace_missing output
 test_that("replace_missing output", {
   expect_equal(replace_missing(c(1, 1, 1, 2, NA)),
