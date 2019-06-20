@@ -2,7 +2,7 @@
 % Please edit documentation in R/Missing_Values.R
 \name{percent_missing}
 \alias{percent_missing}
-\title{Find percent of missing values}
+\title{Find the percent of missing values}
 \usage{
 percent_missing(vec)
 }
@@ -10,7 +10,7 @@ percent_missing(vec)
 \item{vec}{Vector to count missing values in.}
 }
 \value{
-Numeric vector containing the percent of missing values.
+Numeric scalar containing the percent of missing values.
 }
 \description{
 Count the percent of missing values in a vector.
