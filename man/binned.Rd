@@ -11,9 +11,8 @@ binned_one_way_data(x, yData, weight = rep(1, length(x)),
 
 binned_one_way_plot(x, yData, weight = rep(1, length(x)),
   scaleWeight = TRUE, type = "quantile", bins = 10, fontSize = 10,
-  showWeights = TRUE, overlap = TRUE, plotly = FALSE,
-  xlab = "Bins", ylab = "Response", wlab = "Weight",
-  title = "One-Way Plot")
+  showWeights = TRUE, plotly = FALSE, xlab = "Bins",
+  ylab = "Response", wlab = "Weight", title = "One-Way Plot")
 }
 \arguments{
 \item{x}{The vector to perform binning by.
@@ -47,10 +46,7 @@ the desired minimum number of observations per bin).}
 
 \item{showWeights}{If \code{TRUE}, the weights plot will be shown as well.}
 
-\item{overlap}{(NOT YET IMPLEMENTED) If \code{TRUE}, the data and weights plots will be overlapped
-(not used if \code{showWeights} is \code{FALSE}).}
-
-\item{plotly}{(NOT YET IMPLEMENTED) Will return a \code{plotly} object instead of a \code{ggplot} one.}
+\item{plotly}{Will return a \code{plotly} object instead of a \code{ggplot} one.}
 
 \item{xlab}{The x-axis label of the plot.}
 

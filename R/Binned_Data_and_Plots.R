@@ -84,8 +84,6 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 
 #' @param fontSize Size of the font to use in the plot.
 #' @param showWeights If \code{TRUE}, the weights plot will be shown as well.
-#' @param overlap (NOT YET IMPLEMENTED) If \code{TRUE}, the data and weights plots will be overlapped
-#'   (not used if \code{showWeights} is \code{FALSE}).
 #' @param plotly Will return a \code{plotly} object instead of a \code{ggplot} one.
 #' @param xlab The x-axis label of the plot.
 #' @param ylab The y-axis label of the data section of the plot.
@@ -99,7 +97,7 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #' @examples
 #' # 
 binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10,
-                                fontSize = 10, showWeights = TRUE, overlap = TRUE, plotly = FALSE,
+                                fontSize = 10, showWeights = TRUE, plotly = FALSE,
                                 xlab = "Bins", ylab = "Response", wlab = "Weight", title = "One-Way Plot") {
   
   # Calculate the binned one way data, create an index, & melt the table
