@@ -163,7 +163,7 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
         , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
       )
     
-    # If the weights should be shown, merge & align them, else return just the plotted data
+    # If the weights should be shown, merge & align the plots, else return just the plotted data
     if (showWeights) {
       
       # Remove x-axis label, text, & ticks
@@ -198,7 +198,7 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
     
   }
   
-  # Return the data plot
+  # Return the plotted data
   return(dataPlot)
   
 }
