@@ -118,26 +118,30 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
         data = meltedBinnedData, y = ~ Value__, color = ~ Variable__,
         text = ~ paste0(Bins__, "\n", round(Value__, 3)), hoverinfo = "text",
         colors = c("#FF3333", "#33FF33", "#4488FF"), mode = "lines+markers", type = "scatter"
+      ) %>%
+      
+      # Center the legend above the plot, name the axes, and
+      plotly::layout(
+        legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10),
+        xaxis = list(title = "Bins"),
+        yaxis = list(side = "left", title = "Value", showgrid = FALSE)
       )
         
     # If the weights should be shown, merge & align them, else return just the plotted data
     if (showWeights) {
       
-        # Add the weights in the background
-        plotly::add_bars(
+      # Add the weights in the background
+      dataPlot <- plotly::add_bars(
           p = dataPlot, name = "Weight", data = binnedData, y = ~ Weight__, color = I("#666666"),
-          text = ~ paste0(Bins__, "\n", round(Weight__, 3)), hoverinfo = "text", yaxis = "y2"
-          
-        # Center the legend above the plot, name axes
-        ) %>% plotly::layout(
-          legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10),
-          xaxis = list(title = "Bins"),
-          yaxis = list(side = "left", title = "Value", overlaying = "y2", showgrid = FALSE),
-          yaxis2 = list(side = "right", title = "Weight")
-        ) %>% 
+          text = ~ paste0(Bins__, "\n", round(Weight__, 3)), hoverinfo = "text", yaxis = "y2",
+          marker = list(line = list(color = "#FF0000", width = 1))
+        ) %>%
         
-        # Return the object (will work with print, but not plot)
-        return()
+        # Ensure the lines are on top of the bars, and move the weight axis to the right side
+        plotly::layout(
+          yaxis = list(overlaying = "y2"),
+          yaxis2 = list(side = "right", title = "Weight")
+        )
       
     }
       
@@ -186,10 +190,13 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
         )
       
       # Align the plots nicely (see https://github.com/tidyverse/ggplot2/wiki/align-two-plots-on-a-page)
-      dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
-      weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
-      combinedPlot <- rbind(dataPlot, weightPlot, size = "first")
-      combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths)
+      # dataPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(dataPlot))
+      # weightPlot <- ggplot2::ggplot_gtable(ggplot2::ggplot_build(weightPlot))
+      # dataPlot <- ggplot2::ggplotGrob(dataPlot)
+      # weightPlot <- ggplot2::ggplotGrob(weightPlot)
+      # combinedPlot <- rbind(dataPlot, weightPlot, size = "first")
+      # combinedPlot$widths <- grid::unit.pmax(dataPlot$widths, weightPlot$widths)
+      combinedPlot <- cowplot::plot_grid(dataPlot, weightPlot, rel_heights = c(1.5, 1), nrow = 2, align = "v")
       return(combinedPlot)
       
     }
