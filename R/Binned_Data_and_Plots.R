@@ -124,9 +124,6 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
       plotly::layout(
         legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10)
         , title = list(text = title, yanchor = "top", y = 1)
-        # , annotations = list(xanchor = "center", x = 0.5, y = 10)
-        # , annotations = list(text = "One-Way Plot", showarrow = FALSE, xref = "paper",
-                             # yref = "paper", yanchor = "top", y = 1)
         , xaxis = list(title = xlab)
         , yaxis = list(title = ylab)
       )
@@ -209,40 +206,8 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 # d <- data.table::data.table(ggplot2::diamonds)
 # a <- binned_one_way_data(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])[, Index__ := .I][]
 # b <- data.table::melt.data.table(a, id.vars = c("Bins__", "Weight__", "Index__"), variable.name = "Variable__", value.name = "Value__")
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], type = "equal", bins = 20)
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = T)
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = F)
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = T)
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = F)
-#
-# ggplot() +
-#   geom_bar(color = "black", stat = "identity", width = 1, data = a, mapping = aes(x = Index__, y = Weight__ * 75)) +
-#   geom_line(size = 1, data = b, mapping = aes(x = Index__, y = Value__, color = Variable__)) +
-#   geom_point(size = 2, data = b, mapping = aes(x = Index__, y = Value__, color = Variable__)) +
-#   scale_x_continuous(limits = c(0.5, max(b$Index__) + 0.5), breaks = a$Index__, labels = a$Bins__) +
-#   scale_y_continuous(limits = range(a$x), labels = scales::comma)
-
-# plotly::plot_ly(
-#   data = binnedData, x = ~ as.factor(Bins__), y = ~ Weight__, type = "bar", name = "Weight",
-#   marker = list(color = "#DDDDDD"), hoverinfo = "text", text = ~ paste(Weight__)
-# ) %>% plotly::add_trace(
-#   data = meltedBinnedData, x = ~ as.factor(Bins__), y = ~ Value__, type = "scatter", name = "Num of Obs",
-#   mode = "markers+lines", marker = list(color = "#FF4400"), line = list(color = "#FF4400"),
-#   yaxis = "y2", hoverinfo = "text", text = ~ paste(round(Value__, 2))
-# ) %>% plotly::layout(
-#   yaxis  = list(side = "right", title = "Num of Obs", showgrid = FALSE, zeroline = FALSE),
-#   yaxis2 = list(side = "left", overlaying = "y", title = "Average Response", showgrid = FALSE, zeroline = FALSE),
-#   legend = list(x = 0.3, y = 1.1, orientation = "h"), xaxis  = list(title = "")
-# )
-
-# plot_ly(x = ~ as.factor(Bins__)) %>%
-#   add_trace(data = b, y = ~ Value__, color = ~ Variable__, colors = c("#FF3333", "#33FF33", "#4488FF"),
-#             text = ~ round(Value__, 3), mode = "lines+markers", type = "scatter") %>%
-#   add_bars(name = "Weight", data = a, y = ~ Weight__, color = I("#444444"),
-#            text = ~ round(Weight__, 3), yaxis = "y2") %>%
-#   layout(
-#     legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10),
-#     yaxis = list(side = "left", title = "Value", overlaying = "y2"),
-#     yaxis2 = list(side = "right", title = "Weight")
-#   )
