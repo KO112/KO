@@ -12,7 +12,9 @@ binned_one_way_data(x, yData, weight = rep(1, length(x)),
 binned_one_way_plot(x, yData, weight = rep(1, length(x)),
   scaleWeight = TRUE, type = "quantile", bins = 10, fontSize = 10,
   showWeights = TRUE, plotly = FALSE, xlab = "Bins",
-  ylab = "Response", wlab = "Weight", title = "One-Way Plot")
+  ylab = "Response", wlab = "Weight", title = paste("One-Way Plot",
+  if (!missing(xlab)) paste0("of ", xlab), if (!missing(ylab))
+  paste0("by ", ylab)))
 }
 \arguments{
 \item{x}{The vector to perform binning by.
