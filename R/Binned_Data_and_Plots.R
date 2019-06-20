@@ -111,10 +111,10 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
   if (plotly) {
     
     # Create the plot object, using the bins along the x-axis
-    dataPlot <- plot_ly(x = ~ as.factor(Bins__)) %>%
+    dataPlot <- plotly::plot_ly(x = ~ as.factor(Bins__)) %>%
       
       # Add lines with points for each data column
-      add_trace(
+      plotly::add_trace(
         data = meltedBinnedData, y = ~ Value__, color = ~ Variable__,
         text = ~ paste0(Bins__, "\n", round(Value__, 3)), hoverinfo = "text",
         colors = c("#FF3333", "#33FF33", "#4488FF"), mode = "lines+markers", type = "scatter"
@@ -124,12 +124,12 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
     if (showWeights) {
       
         # Add the weights in the background
-        add_bars(
+        plotly::add_bars(
           p = dataPlot, name = "Weight", data = binnedData, y = ~ Weight__, color = I("#666666"),
           text = ~ paste0(Bins__, "\n", round(Weight__, 3)), hoverinfo = "text", yaxis = "y2"
           
         # Center the legend above the plot, name axes
-        ) %>% layout(
+        ) %>% plotly::layout(
           legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10),
           xaxis = list(title = "Bins"),
           yaxis = list(side = "left", title = "Value", overlaying = "y2", showgrid = FALSE),

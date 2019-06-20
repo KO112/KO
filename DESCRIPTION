@@ -18,6 +18,7 @@ Imports:
     knitr,
     lubridate,
     magrittr,
+    plotly,
     scales,
     stats
 Suggests: 
