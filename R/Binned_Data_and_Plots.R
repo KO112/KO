@@ -204,13 +204,3 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
   return(dataPlot)
   
 }
-
-# https://rpubs.com/MarkusLoew/226759
-# d <- data.table::data.table(ggplot2::diamonds)
-# a <- binned_one_way_data(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price])[, Index__ := .I][]
-# b <- data.table::melt.data.table(a, id.vars = c("Bins__", "Weight__", "Index__"), variable.name = "Variable__", value.name = "Value__")
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], type = "equal", bins = 20)
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = T)
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = F)
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = T)
-# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = F)

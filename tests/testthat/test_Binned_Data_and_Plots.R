@@ -1,6 +1,13 @@
 context("Binned Data and Plots")
 
 
+# https://rpubs.com/MarkusLoew/226759
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = T)
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = F)
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = T)
+# binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = T, showWeights = F)
+
+
 # Create datasets to test
 diamonds <- data.table::data.table(ggplot2::diamonds)
 binnedData1 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price])
@@ -32,7 +39,30 @@ expectedPlot4 <- readRDS("./Test Data/binnedPlot4.RDS")
 expectedPlot5 <- readRDS("./Test Data/binnedPlot5.RDS")
 
 
-# 
+# Function to compare two ggplot objects
+compare_ggplot <- function(plot1, plot2, noFiles = FALSE) {
+  # browser()
+  if (noFiles) {
+    
+    # Render each image as an object, and check that they are identical
+    fig1 <- magick::image_graph(width = 200, height = 200); print(plot1); dev.off()
+    fig2 <- magick::image_graph(width = 200, height = 200); print(plot2); dev.off()
+    return(identical(fig1[[1]], fig2[[1]]))
+    
+  } else {
+    
+    # Create temp file names, save the plots, compare those files, and remove the temp files
+    file1 <- tempfile(pattern = "ggplot_", fileext = ".png")
+    file2 <- tempfile(pattern = "ggplot_", fileext = ".png")
+    suppressMessages(ggplot2::ggsave(filename = file1, plot = plot1))
+    suppressMessages(ggplot2::ggsave(filename = file2, plot = plot2))
+    are_equal <- identical(digest::digest(file = file1), digest::digest(file = file2))
+    file.remove(c(file1, file2))
+    return(are_equal)
+    
+  }
+  
+}
 
 
 
