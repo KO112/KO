@@ -53,42 +53,52 @@ expectedPlot5 <- readRDS("./Test Data/binnedPlot5.RDS")
 # Test binned_one_way_data
 test_that("binned_one_way_data", {
   
-  expect_identical()
+  expect_identical(binnedData1, expectedData1)
+  expect_identical(binnedData2, expectedData2)
+  expect_identical(binnedData3, expectedData3)
+  expect_identical(binnedData4, expectedData4)
+  expect_identical(binnedData5, expectedData5)
   
-  # Test the binnedData1
-  expect_equal(binnedData1[, Bins__], expectedData1[, Bins__])
-  expect_equal(binnedData1[, x], expectedData1[, x])
-  expect_equal(binnedData1[, y], expectedData1[, y])
-  expect_equal(binnedData1[, z], expectedData1[, z])
-  expect_equal(binnedData1[, Weight__], expectedData1[, Weight__])
+  expect_identical(binnedPlot1, expectedPlot1)
+  expect_identical(binnedPlot2, expectedPlot2)
+  expect_identical(binnedPlot3, expectedPlot3)
+  expect_identical(binnedPlot4, expectedPlot4)
+  expect_identical(binnedPlot5, expectedPlot5)
   
-  # Test the binnedData2
-  expect_equal(binnedData2[, Bins__], expectedData2[, Bins__])
-  expect_equal(binnedData2[, x], expectedData2[, x])
-  expect_equal(binnedData2[, y], expectedData2[, y])
-  expect_equal(binnedData2[, z], expectedData2[, z])
-  expect_equal(binnedData2[, Weight__], expectedData2[, Weight__])
-  
-  # Test the binnedData3
-  expect_equal(binnedData3[, Bins__], expectedData3[, Bins__])
-  expect_equal(binnedData3[, x], expectedData3[, x])
-  expect_equal(binnedData3[, y], expectedData3[, y])
-  expect_equal(binnedData3[, z], expectedData3[, z])
-  expect_equal(binnedData3[, Weight__], expectedData3[, Weight__])
-  
-  # Test the binnedData4
-  expect_equal(binnedData4[, Bins__], expectedData4[, Bins__])
-  expect_equal(binnedData4[, x], expectedData4[, x])
-  expect_equal(binnedData4[, y], expectedData4[, y])
-  expect_equal(binnedData4[, z], expectedData4[, z])
-  expect_equal(binnedData4[, Weight__], expectedData4[, Weight__])
-  
-  # Test the binnedData5
-  expect_equal(binnedData5[, Bins__], expectedData5[, Bins__])
-  expect_equal(binnedData5[, x], expectedData5[, x])
-  expect_equal(binnedData5[, y], expectedData5[, y])
-  expect_equal(binnedData5[, z], expectedData5[, z])
-  expect_equal(binnedData5[, Weight__], expectedData5[, Weight__])
+  # # Test the binnedData1
+  # expect_equal(binnedData1[, Bins__], expectedData1[, Bins__])
+  # expect_equal(binnedData1[, x], expectedData1[, x])
+  # expect_equal(binnedData1[, y], expectedData1[, y])
+  # expect_equal(binnedData1[, z], expectedData1[, z])
+  # expect_equal(binnedData1[, Weight__], expectedData1[, Weight__])
+  # 
+  # # Test the binnedData2
+  # expect_equal(binnedData2[, Bins__], expectedData2[, Bins__])
+  # expect_equal(binnedData2[, x], expectedData2[, x])
+  # expect_equal(binnedData2[, y], expectedData2[, y])
+  # expect_equal(binnedData2[, z], expectedData2[, z])
+  # expect_equal(binnedData2[, Weight__], expectedData2[, Weight__])
+  # 
+  # # Test the binnedData3
+  # expect_equal(binnedData3[, Bins__], expectedData3[, Bins__])
+  # expect_equal(binnedData3[, x], expectedData3[, x])
+  # expect_equal(binnedData3[, y], expectedData3[, y])
+  # expect_equal(binnedData3[, z], expectedData3[, z])
+  # expect_equal(binnedData3[, Weight__], expectedData3[, Weight__])
+  # 
+  # # Test the binnedData4
+  # expect_equal(binnedData4[, Bins__], expectedData4[, Bins__])
+  # expect_equal(binnedData4[, x], expectedData4[, x])
+  # expect_equal(binnedData4[, y], expectedData4[, y])
+  # expect_equal(binnedData4[, z], expectedData4[, z])
+  # expect_equal(binnedData4[, Weight__], expectedData4[, Weight__])
+  # 
+  # # Test the binnedData5
+  # expect_equal(binnedData5[, Bins__], expectedData5[, Bins__])
+  # expect_equal(binnedData5[, x], expectedData5[, x])
+  # expect_equal(binnedData5[, y], expectedData5[, y])
+  # expect_equal(binnedData5[, z], expectedData5[, z])
+  # expect_equal(binnedData5[, Weight__], expectedData5[, Weight__])
   
 })
 
