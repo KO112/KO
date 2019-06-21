@@ -5,3 +5,4 @@ To-Do List:
 - Filter/select model matrix (e.g. partial column matching, etc.
 - Make mode_stat ignore blanks
 - Check if client can run on own computer, check address of client on server, check if running server from own computer works.
+- plotly tests for BDP
