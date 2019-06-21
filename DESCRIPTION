@@ -9,9 +9,12 @@ Description: Contains code that is handy to reuse.
 License: CC0
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1
+Depends: R (>= 3.5.0)
 Imports:
     cowplot,
     data.table,
+    digest,
     dplyr,
     ggplot2,
     grid,
@@ -23,14 +26,15 @@ Imports:
     scales,
     stats
 Suggests: 
-    testthat,
-    insuranceData
-RoxygenNote: 6.1.1
+    insuranceData,
+    magick,
+    testthat
 Collate: 
     'Error_Handling.R'
     'Pipes.R'
     'Binned_Data_and_Plots.R'
     'Bounding_and_Rounding.R'
+    'Compare_ggplots.R'
     'Evaluation_Functions.R'
     'Formatting.R'
     'Inline_If.R'
