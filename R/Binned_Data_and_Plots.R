@@ -39,7 +39,15 @@ globalVariables(c(".SD", ".I", "Weight__", "Index__", "Value__", "Variable__"))
 #' @export
 #'
 #' @examples
-#' # 
+#' diamonds <- data.table::data.table(ggplot2::diamonds)
+#' binnedData1 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+#'                                    diamonds[, price])
+#' binnedData2 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+#'                                    diamonds[, price], scaleWeight = FALSE)
+#' binnedData3 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+#'                                    diamonds[, price], type = "equal")
+#' binnedData4 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], 
+#'                                    diamonds[, price], bins = 5)
 binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10) {
   
   # Convert yData to a data.table (if necessary), & check that the lengths are all the same
@@ -84,8 +92,10 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 
 
 #' @param fontSize Size of the font to use in the plot.
+#'
 #' @param showWeights If \code{TRUE}, the weights plot will be shown as well.
 #' @param plotly Will return a \code{plotly} object instead of a \code{ggplot} one.
+#' @param bgColor Color to use for the background of the plot.
 #' @param xlab The x-axis label of the plot.
 #' @param ylab The y-axis label of the data section of the plot.
 #' @param wlab The y-axis label of the weight section of the plot.
@@ -96,9 +106,16 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #' @export
 #'
 #' @examples
-#' # 
+#' binnedPlot1 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+#'                                    diamonds[, price])
+#' binnedPlot2 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+#'                                    diamonds[, price], scaleWeight = FALSE)
+#' binnedPlot3 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+#'                                    diamonds[, price], type = "equal")
+#' binnedPlot4 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+#'                                    diamonds[, price], bins = 5)
 binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10,
-                                fontSize = 10, showWeights = TRUE, plotly = FALSE,
+                                fontSize = 10, showWeights = TRUE, plotly = FALSE, bgColor = "#CCDDFF",
                                 xlab = "Bins", ylab = "Response", wlab = "Weight",
                                 title = paste("One-Way Plot", if (!missing(xlab)) paste0("of ", xlab),
                                               if (!missing(ylab)) paste0("by ", ylab))) {
@@ -126,9 +143,12 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
       # Center the legend above the plot, & name the axes
       plotly::layout(
         legend = list(orientation = "h", xanchor = "center", x = 0.5, y = 10)
-        , title = list(text = title, yanchor = "top", y = 1)
-        , xaxis = list(title = xlab)
+        , title = list(text = title, yanchor = "top", y = 0.99)
+        , margin = list(l = 50, r = 50)
+        , xaxis = list(title = xlab, tickangle = -22.5)
         , yaxis = list(title = ylab)
+        , paper_bgcolor = bgColor
+        , plot_bgcolor = "#EBEBEB"
       )
         
     # If the weights should be shown, merge & align them, else return just the plotted data
@@ -167,6 +187,10 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
         , text = ggplot2::element_text(size = fontSize)
         , plot.title = ggplot2::element_text(hjust = 0.5)
         , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
+        # , panel.background = ggplot2::element_rect(fill = bgColor)
+        , plot.background = ggplot2::element_rect(fill = bgColor)
+        , legend.background = ggplot2::element_rect(fill = bgColor)
+        , legend.key = ggplot2::element_blank()
       )
     
     # If the weights should be shown, merge & align the plots, else return just the plotted data
@@ -191,6 +215,8 @@ binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
         ggplot2::theme(
           text = ggplot2::element_text(size = fontSize)
           , axis.text.x = ggplot2::element_text(angle = 22.5, hjust = 1)
+          , plot.background = ggplot2::element_rect(fill = bgColor)
+          , legend.background = ggplot2::element_rect(fill = bgColor)
         )
       
       # Stack the data & weight plots vertically, align their axes, & set the heights

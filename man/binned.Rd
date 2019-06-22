@@ -11,10 +11,10 @@ binned_one_way_data(x, yData, weight = rep(1, length(x)),
 
 binned_one_way_plot(x, yData, weight = rep(1, length(x)),
   scaleWeight = TRUE, type = "quantile", bins = 10, fontSize = 10,
-  showWeights = TRUE, plotly = FALSE, xlab = "Bins",
-  ylab = "Response", wlab = "Weight", title = paste("One-Way Plot",
-  if (!missing(xlab)) paste0("of ", xlab), if (!missing(ylab))
-  paste0("by ", ylab)))
+  showWeights = TRUE, plotly = FALSE, bgColor = "#CCDDFF",
+  xlab = "Bins", ylab = "Response", wlab = "Weight",
+  title = paste("One-Way Plot", if (!missing(xlab)) paste0("of ", xlab),
+  if (!missing(ylab)) paste0("by ", ylab)))
 }
 \arguments{
 \item{x}{The vector to perform binning by.
@@ -50,6 +50,8 @@ the desired minimum number of observations per bin).}
 
 \item{plotly}{Will return a \code{plotly} object instead of a \code{ggplot} one.}
 
+\item{bgColor}{Color to use for the background of the plot.}
+
 \item{xlab}{The x-axis label of the plot.}
 
 \item{ylab}{The y-axis label of the data section of the plot.}
@@ -67,6 +69,21 @@ the desired minimum number of observations per bin).}
 Calculate the (weighted) average value of a binned set of data, and plot it.
 }
 \examples{
-# 
-# 
+diamonds <- data.table::data.table(ggplot2::diamonds)
+binnedData1 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+                                   diamonds[, price])
+binnedData2 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+                                   diamonds[, price], scaleWeight = FALSE)
+binnedData3 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+                                   diamonds[, price], type = "equal")
+binnedData4 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], 
+                                   diamonds[, price], bins = 5)
+binnedPlot1 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+                                   diamonds[, price])
+binnedPlot2 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+                                   diamonds[, price], scaleWeight = FALSE)
+binnedPlot3 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+                                   diamonds[, price], type = "equal")
+binnedPlot4 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
+                                   diamonds[, price], bins = 5)
 }
