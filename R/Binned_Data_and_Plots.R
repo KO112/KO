@@ -75,8 +75,11 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
     
   }
   
-  # Remove non-numeric data from yData
+  # Remove non-numeric data from yData, and replace NA's in dataBins
   yData <- dplyr::select_if(yData, is.numeric)
+  if (sum(is.na(dataBins)) > 0) {
+    dataBins <- as.character(dataBins) %>% replace(is.na(.), "NA") %>% as.factor() %>% stats::relevel("NA")
+  }
   
   # Summarize the data by bins
   binnedData <- data.table::data.table(Bins__ = dataBins, Weight__ = weight) %>% cbind(yData)
