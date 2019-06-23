@@ -51,7 +51,7 @@ globalVariables(c(".SD", ".I", "Weight__", "Index__", "Value__", "Variable__"))
 binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10) {
   
   # Convert yData to a data.table (if necessary), & check that the lengths are all the same
-  if (is.vector(yData)) yData <- data.table::data.table(y = yData)
+  if (is.vector(yData)) yData <- data.table::data.table(Response = yData)
   stop_if(!is.atomic(x), paste0("The vector to bin by (x) must be atomic. It is instead of class: ", class(x)))
   stop_if(length(x) != length(weight), "The weights are not the same length as the vector to bin by (x).")
   stop_if(length(x) != nrow(yData), "The data does not have the same number of rows as the length of the vector to bin by (x).")
@@ -92,7 +92,6 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 
 
 #' @param fontSize Size of the font to use in the plot.
-#'
 #' @param showWeights If \code{TRUE}, the weights plot will be shown as well.
 #' @param plotly Will return a \code{plotly} object instead of a \code{ggplot} one.
 #' @param bgColor Color to use for the background of the plot.
