@@ -15,14 +15,14 @@ binnedData2 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, 
 binnedData3 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price], type = "equal")
 binnedData4 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price], bins = 5)
 binnedData5 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price],
-                                  scaleWeight = FALSE, type = "equal", bins = 7)
+                                   scaleWeight = FALSE, type = "equal", bins = 7)
 
 binnedPlot1 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price])
 binnedPlot2 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price], scaleWeight = FALSE)
 binnedPlot3 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price], type = "equal")
 binnedPlot4 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price], bins = 5)
 binnedPlot5 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)], diamonds[, price],
-                                  scaleWeight = FALSE, type = "equal", bins = 7)
+                                   scaleWeight = FALSE, type = "equal", bins = 7)
 
 
 # Read in the expected data and plots
