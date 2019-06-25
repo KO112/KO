@@ -6,6 +6,7 @@ To-Do List:
 - Make mode_stat ignore blanks
 - Check if client can run on own computer, check address of client on server, check if running server from own computer works.
 - plotly tests for BDP
+- Add value option to replace_missing, fix for factors (relevel?)
 
 
 # Calculate the stars for p-values
