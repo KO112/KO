@@ -77,8 +77,8 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
     }
     
     # Return a tibble holding the desired values
-    tibble(nmInds, df1_values, df2_values) %>%
-      setNames(c("Index", paste0(x, "_df1"), paste0(x, "_df2"))) %>%
+    tibble::tibble(nmInds, df1_values, df2_values) %>%
+      stats::setNames(c("Index", paste0(x, "_df1"), paste0(x, "_df2"))) %>%
       return()
     
   }, simplify = FALSE)

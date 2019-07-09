@@ -24,7 +24,8 @@ Imports:
     magrittr,
     plotly,
     scales,
-    stats
+    stats,
+    tibble
 Suggests: 
     insuranceData,
     magick,
@@ -34,6 +35,7 @@ Collate:
     'Pipes.R'
     'Binned_Data_and_Plots.R'
     'Bounding_and_Rounding.R'
+    'Compare_DF.R'
     'Compare_ggplots.R'
     'Evaluation_Functions.R'
     'Formatting.R'
