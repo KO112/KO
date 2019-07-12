@@ -32,6 +32,7 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
     
     # Get the columns, and some information about them
     df1_col <- df1[[x]]; df2_col <- df2[[x]]
+    df1_class <- class(df1_col); df2_class <- class(df2_col)
     df1_na <- is.na(df1_col); df2_na <- is.na(df2_col)
     df1_na_count <- sum(df1_na); df2_na_count <- sum(df2_na)
     colComp <- df1_col == df2_col
@@ -45,9 +46,13 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
     # df1_table <- table(df1_values, useNA = "ifany")
     # df2_table <- table(df2_values, useNA = "ifany")
     
-    # Print information on the number of NA's.
+    # If desired, print column differences
     if (printColDiffs) {
       
+      # Compare classes
+      if (df1_class != df2_class) message("Column '", x, "' has different classes: (df1: ", df1_class, ", df2: ", df2_class, ")")
+      
+      # Print information on the number of NA's
       if ((df1_na_count == 0) && (df2_na_count == 0)) {
         message("Column '", x, "' has 0 NA's.")
       } else {
@@ -56,6 +61,7 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
       }
       
       # Print the comparisons table
+      names(dimnames(compTable)) <- NULL
       print(compTable)
       # print(df1_table)
       # print(df2_table)
@@ -63,13 +69,12 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
     }
     
     # Compare numeric columns (for rounding errors)
-    if (is.double(df1_col) && is.double(df2_col)) { # && (df1_na_count == 0) && (df2_na_count == 0)) {
+    if (is.double(df1_col) && is.double(df2_col)) {
       nmIndsExclNA <- which(df1_col != df2_col)
       diffs <- abs(df1_col[nmIndsExclNA] - df2_col[nmIndsExclNA])
-      if (max(diffs) <= tol) {
+      if (suppressWarnings(max(diffs, na.rm = TRUE)) <= tol) {
         if (printColDiffs) message("All differences for column '", x, "' are <= ", tol, ".")
         return(NULL)
-        # return(paste0("All less than ",  tol, "."))
       } else if (printColDiffs) {
         message("The maximum difference for column '", x, "' was ", max(diffs),
                 ", and ", sum(diffs > tol), " exceed the desired tolerance (", tol, ").")
