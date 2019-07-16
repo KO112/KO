@@ -24,7 +24,7 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
     message("Column names in 'df2' but not in 'df1': ", paste0(df2_not_df1_colnames, collapse = ", "))
   
   # Compare columns with common names
-  compareCols <- mapply(identical, df1[, sameNames], df2[, sameNames])
+  compareCols <- mapply(identical, as_tibble(df1)[, sameNames], as_tibble(df2)[, sameNames])
   diffCols <- names(compareCols[!compareCols])
   
   # Print information on non-identical columns
