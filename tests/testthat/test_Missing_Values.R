@@ -49,4 +49,8 @@ test_that("replace_missing output", {
                c(1, 4/3, 1, 2))
   expect_equal(replace_missing(c(1, NA, 1, 2), method = "mean", return_imputed = TRUE),
                list(Vec = c(1, 4/3, 1, 2), ImputedVal = 4/3))
+  expect_equal(replace_missing(c(1, NA, 1, 2), with = 5),
+               c(1, 5, 1, 2))
+  expect_warning(replace_missing(c(1, NA, 1, 2), method = "mode", with = 5),
+                 "Both the 'method' and 'with' fields were specified inside the 'replace_missing' function. The 'method' field will be ignored.")
 })

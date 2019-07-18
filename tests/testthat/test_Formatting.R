@@ -73,3 +73,12 @@ test_that("plain_text_table has output", {
   expect_output(plain_text_table(data.frame(a = 1:2, b = 3:4)))
   expect_output(plain_text_table(head(mtcars), sep = "+"))
 })
+
+
+# Test pvalue_stars formatting
+test_that("pvalue_stars", {
+  expect_equal(pvalue_stars(c(-Inf, 0, 0.0005, 0.0001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.15, 1, Inf, NA)),
+               c("***", "***", "***", "***", " **", " **", "  *", "  *", "  .", "---", "---", "---", "---"))
+  expect_equal(pvalue_stars(c(-Inf, 0, 0.0005, 0.0001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.15, 1, Inf, NA), alignment = "L"),
+               c("***", "***", "***", "***", "** ", "** ", "*  ", "*  ", ".  ", "---", "---", "---", "---"))
+})
