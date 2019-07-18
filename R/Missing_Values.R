@@ -69,6 +69,7 @@ num_missing <- function(vec) {
 #'
 #' @param vec Vector in which to replace missing values.
 #' @param method The method to use to determine the imputed value.
+#' @param with The value to impute missing values with (if specified, method will be ignored).
 #' @param return_imputed Whether or not to return the value that missing elements were imputed with.
 #'
 #' @return Vector with missing values replaced as desired,
@@ -81,12 +82,19 @@ num_missing <- function(vec) {
 #' replace_missing(c(1, NA, 1, 2), method = "median")
 #' replace_missing(c(1, NA, 1, 2), method = "mean")
 #' replace_missing(c(1, NA, 1, 2), method = "mean", return_imputed = TRUE)
+#' replace_missing(c(1, NA, 1, 2), with = 5)
+#' replace_missing(c(1, NA, 1, 2), method = "mean", with = 5)
 #'
-replace_missing <- function(vec, method = "mode", return_imputed = FALSE) {
+replace_missing <- function(vec, method = "mode", with, return_imputed = FALSE) {
 
   # Find the value to replace missing values with based on the desired method,
   #   ensuring that we have a numeric vector for median and mean
-  if (method == "median") {
+  if (!missing(with)) {
+    if (!missing(method)) warning(paste0("Both the 'method' and 'with' fields were specified ",
+                                         "inside the 'replace_missing' function. ",
+                                         "The 'method' field will be ignored."))
+    imputedVal <- with
+  } else if (method == "median") {
     stop_if(!is.numeric(vec), "Can only calculate median for numeric vector.")
     imputedVal <- stats::median(vec, na.rm = TRUE)
   } else if (method == "mean") {
@@ -103,7 +111,7 @@ replace_missing <- function(vec, method = "mode", return_imputed = FALSE) {
   } else if (is.factor(vec)) {
     imputedVal <- as.character(imputedVal)
   } else {
-    imputedVal <- as.vector(imputedVal, class(vec))
+    imputedVal <- as.vector(imputedVal, mode = class(vec))
   }
 
   # Replace NA/missing values with the imputed value, and return the vector
