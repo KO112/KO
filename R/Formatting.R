@@ -128,3 +128,32 @@ plain_text_table <- function(data, sep = " | ", cat_out = TRUE) {
   if (cat_out) cat(plainTextTbl)
   else return(plainTextTbl)
 }
+
+
+#' P-Value Stars
+#' 
+#' Calculate the significance stars for p-values.
+#'
+#' @param p_values A numeric vector of p-values.
+#' @param alignment Which side to align the significance stars to
+#'   (padding spaces will be added to the other side).
+#'
+#' @return A character vector of the p-value significance stars.
+#' @export
+#'
+#' @examples
+#' pvalue_stars(c(-Inf, 0, 0.0005, 0.001, 0.005, 0.01, 0.025, 0.05, 0.1, 0.15, 1, Inf, NA))
+#' pvalue_stars(c(-Inf, 0, 0.001, 0.01, 0.025, 0.05, 0.1, 0.15, 1, Inf, NA), alignment = "L")
+#' 
+pvalue_stars <- function(p_values, alignment = "R") {
+  return(
+    dplyr::case_when(
+      p_values <= 0.001 ~ "***",
+      p_values <= 0.01 ~ "**",
+      p_values <= 0.05 ~ "*",
+      p_values <= 0.1 ~ ".",
+      TRUE ~ "---"
+    ) %>%
+      pad_vector(vec = ., alignment = alignment)
+  )
+}

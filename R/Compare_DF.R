@@ -1,4 +1,31 @@
-# Compare two data-frame (like) objects
+#' Compare Data-Frames
+#' 
+#' Compare two data-frame (like) objects.
+#' The function will compare the objects by column names, and print information about differences.
+#'
+#' @param df1 The first object inheriting from a data.frame.
+#' @param df2 The second object inheriting from a data.frame.
+#' @param printColDiffs Whether or not to print messages showing
+#'   the differences between columns (logical scalar).
+#' @param tol The acceptable tolerance for equality between numeric columns (numeric scalar).
+#'
+#' @return A list of column comparison data for each non-identical column.
+#' @export
+#'
+#' @examples
+#' 
+#' # Returns an empty list, since the objects are identical
+#' compare_dfs(mtcars, mtcars)
+#' 
+#' # Prints a message about the difference in column names
+#' compare_dfs(mtcars, mtcars[, -1])
+#' 
+#' # Prints a message about the difference in values, & returns a tibble showing the differences
+#' compare_dfs(mtcars, dplyr::mutate(mtcars, mpg = mpg * 2))
+#' 
+#' # Same as the above, but doesn't print the message about the differences
+#' compare_dfs(mtcars, dplyr::mutate(mtcars, mpg = mpg * 2), printColDiffs = FALSE)
+#' 
 compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
   
   # Ensure we have two data-frame (like) objects
@@ -24,7 +51,7 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
     message("Column names in 'df2' but not in 'df1': ", paste0(df2_not_df1_colnames, collapse = ", "))
   
   # Compare columns with common names
-  compareCols <- mapply(identical, as_tibble(df1)[, sameNames], as_tibble(df2)[, sameNames])
+  compareCols <- mapply(identical, `[.data.frame`(df1, sameNames), `[.data.frame`(df2, sameNames))
   diffCols <- names(compareCols[!compareCols])
   
   # Print information on non-identical columns
@@ -82,9 +109,8 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10) {
     }
     
     # Return a tibble holding the desired values
-    tibble::tibble(nmInds, df1_values, df2_values) %>%
-      stats::setNames(c("Index", paste0(x, "_df1"), paste0(x, "_df2"))) %>%
-      return()
+    return(tibble::tibble(nmInds, df1_values, df2_values) %>%
+             stats::setNames(., c("Index", paste0(x, "_df1"), paste0(x, "_df2"))))
     
   }, simplify = FALSE)
   
