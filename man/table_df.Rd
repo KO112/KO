@@ -11,7 +11,7 @@ table_df(data, max_distinct = 250, group = TRUE, useNA = "ifany")
 
 \item{max_distinct}{Maximum number of unique elements to return ungrouped (integer).}
 
-\item{group}{Whether or not to group columns with more than \code{max_distinct} (logical).}
+\item{group}{Whether or not to group columns with more than \code{max_distinct} (logical) (unimplemented).}
 
 \item{useNA}{Value to pass to table to determine whether or not to use NA values
 (one of "no", "ifany", and "always").}

@@ -4,12 +4,14 @@
 \alias{replace_missing}
 \title{Replace missing values in a vector}
 \usage{
-replace_missing(vec, method = "mode", return_imputed = FALSE)
+replace_missing(vec, method = "mode", with, return_imputed = FALSE)
 }
 \arguments{
 \item{vec}{Vector in which to replace missing values.}
 
 \item{method}{The method to use to determine the imputed value.}
+
+\item{with}{The value to impute missing values with (if specified, method will be ignored).}
 
 \item{return_imputed}{Whether or not to return the value that missing elements were imputed with.}
 }

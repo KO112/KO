@@ -4,10 +4,13 @@
 \alias{count_distinct}
 \title{Count Distinct Values}
 \usage{
-count_distinct(data)
+count_distinct(data, use_base = TRUE)
 }
 \arguments{
-\item{data}{A data frame/matrix/vector}
+\item{data}{A data frame/matrix/vector.}
+
+\item{use_base}{Whether to use base \code{R} functions (i.e. \code{length/distinct})
+or \code{dplyr::n_distinct}, which seems to have some performance bugs.}
 }
 \value{
 Integer vector, named for data frames or matrixes with column names.

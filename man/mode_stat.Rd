@@ -4,12 +4,14 @@
 \alias{mode_stat}
 \title{Statistical Mode}
 \usage{
-mode_stat(vec, return_all_modes = FALSE)
+mode_stat(vec, return_all_modes = FALSE, ignoreBlanks = FALSE)
 }
 \arguments{
 \item{vec}{Atomic vector.}
 
 \item{return_all_modes}{Whether or not to return a vector of all modes (for ties) (logical scalar).}
+
+\item{ignoreBlanks}{Whether or not to ignore blanks (i.e. NA's and empty strings ("")) (logical scalar).}
 }
 \value{
 Scalar of same type as \code{vec},
