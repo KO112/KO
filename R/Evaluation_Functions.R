@@ -47,9 +47,8 @@ gini_weighted <- function(solutions, predictions, weights = 1) {
     ) %$%
 
     # Calculate the Gini index, and return the Gini
-    {sum(utils::tail(Lorentz, -1) * utils::head(random, -1)) -
-        sum(utils::head(Lorentz, -1) * utils::tail(random, -1))} %>%
-    return()
+    return(sum(utils::tail(Lorentz, -1) * utils::head(random, -1)) -
+             sum(utils::head(Lorentz, -1) * utils::tail(random, -1)))
 
 }
 

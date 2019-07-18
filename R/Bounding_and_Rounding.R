@@ -22,7 +22,7 @@ NULL
 #' bound(1:5, lower = 3)
 #'
 bound <- function(num, lower = -Inf, upper = Inf) {
-  num %>% pmax(lower) %>% pmin(upper) %>% return()
+  return(num %>% pmax(lower) %>% pmin(upper))
 }
 
 
@@ -42,8 +42,9 @@ bound <- function(num, lower = -Inf, upper = Inf) {
 #' divide_round_bound(1:100, 10)
 #'
 divide_round_bound <- function(num, div = 1, lower = -Inf, upper = Inf, type = "round") {
-  switch(tolower(type), floor = floor(num / div), ceiling = ceiling(num / div), round = , round(num / div)) %>%
-    bound(lower, upper) %>%
-    as.integer() %>%
-    return()
+  return(
+    switch(tolower(type), floor = floor(num / div), ceiling = ceiling(num / div), round = , round(num / div)) %>%
+      bound(lower, upper) %>%
+      as.integer()
+  )
 }

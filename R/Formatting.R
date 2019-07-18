@@ -33,9 +33,7 @@ globalVariables(c("."))
 format_percent <- function(vec, accuracy = 0.01, vec_names = names(vec), silent = FALSE) {
   stop_if(!is.numeric(vec), "Non-numeric vector passed.")
   if (any(is.na(vec)) & !silent) message("NA values were found, and will be printed as \"NA%\"")
-  scales::percent(x = vec, accuracy = abs(accuracy)) %>%
-    stats::setNames(vec_names) %>%
-    return()
+  return(scales::percent(x = vec, accuracy = abs(accuracy)) %>% stats::setNames(., vec_names))
 }
 
 
@@ -52,10 +50,9 @@ format_percent <- function(vec, accuracy = 0.01, vec_names = names(vec), silent 
 #' latex_table(mtcars)
 #'
 latex_table <- function(data) {
-  knitr::kable(x = data, format = "latex") %>%
-    gsub("\\{([rcl\\|]+)\\}", "\\{|\\1|\\}", .) %>%
-    as.character() %>%
-    return()
+  return(knitr::kable(x = data, format = "latex") %>%
+           gsub("\\{([rcl\\|]+)\\}", "\\{|\\1|\\}", .) %>%
+           as.character())
 }
 
 
@@ -80,7 +77,7 @@ pad_vector <- function(vec, header = NA, padding = " ", alignment = "R") {
 
   # If a header was passed, add it as the first element, and convert alignment to upper case
   if (!is.na(header)) vec <- c(header, vec)
-  alignment <- toupper(alignment)
+  alignment <- toupper(alignment) %>% substr(1, 1)
 
   # Convert the vector to character, count the number of characters in each element,
   #   find the maximum width, and create a vector holding the padding
