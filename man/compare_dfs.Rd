@@ -4,7 +4,7 @@
 \alias{compare_dfs}
 \title{Compare Data-Frames}
 \usage{
-compare_dfs(df1, df2, printColDiffs = TRUE, tol = 1e-10)
+compare_dfs(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE)
 }
 \arguments{
 \item{df1}{The first object inheriting from a data.frame.}
@@ -15,6 +15,8 @@ compare_dfs(df1, df2, printColDiffs = TRUE, tol = 1e-10)
 the differences between columns (logical scalar).}
 
 \item{tol}{The acceptable tolerance for equality between numeric columns (numeric scalar).}
+
+\item{trim}{Whether or not to trim whitespace from character columns (logical scalar).}
 }
 \value{
 A list of column comparison data for each non-identical column.

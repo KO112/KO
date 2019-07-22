@@ -29,5 +29,7 @@ replace_missing(c(1, 1, 1, 2, NA), method = "mode") # Same as above
 replace_missing(c(1, NA, 1, 2), method = "median")
 replace_missing(c(1, NA, 1, 2), method = "mean")
 replace_missing(c(1, NA, 1, 2), method = "mean", return_imputed = TRUE)
+replace_missing(c(1, NA, 1, 2), with = 5)
+replace_missing(c(1, NA, 1, 2), method = "mean", with = 5)
 
 }
