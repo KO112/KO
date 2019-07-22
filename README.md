@@ -7,4 +7,4 @@ To-Do List:
 - Check if client can run on own computer, check address of client on server, check if running server from own computer works.
 - plotly tests for BDP
 - replace_missing: fix for factors (relevel?)
-- Finish compare_df testing (test with dates, one col date one character, etc.)
+- Finish compare_df testing (test with dates, one col date one character, messages, etc.)

@@ -4,19 +4,22 @@
 \alias{compare_dfs}
 \title{Compare Data-Frames}
 \usage{
-compare_dfs(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE)
+compare_dfs(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE,
+  blankEqualsNA = FALSE)
 }
 \arguments{
 \item{df1}{The first object inheriting from a data.frame.}
 
 \item{df2}{The second object inheriting from a data.frame.}
 
-\item{printColDiffs}{Whether or not to print messages showing
-the differences between columns (logical scalar).}
+\item{printColDiffs}{What level of messages to print regarding
+the differences between columns (integer scalar).}
 
 \item{tol}{The acceptable tolerance for equality between numeric columns (numeric scalar).}
 
 \item{trim}{Whether or not to trim whitespace from character columns (logical scalar).}
+
+\item{blankEqualsNA}{Whether or not blanks and considered equal to NA in character vectors (logical scalar).}
 }
 \value{
 A list of column comparison data for each non-identical column.

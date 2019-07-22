@@ -5,10 +5,11 @@
 #'
 #' @param df1 The first object inheriting from a data.frame.
 #' @param df2 The second object inheriting from a data.frame.
-#' @param printColDiffs Whether or not to print messages showing
-#'   the differences between columns (logical scalar).
+#' @param printColDiffs What level of messages to print regarding
+#'   the differences between columns (integer scalar).
 #' @param tol The acceptable tolerance for equality between numeric columns (numeric scalar).
 #' @param trim Whether or not to trim whitespace from character columns (logical scalar).
+#' @param blankEqualsNA Whether or not blanks and considered equal to NA in character vectors (logical scalar).
 #'
 #' @return A list of column comparison data for each non-identical column.
 #' @export
@@ -27,7 +28,7 @@
 #' # Same as the above, but doesn't print the message about the differences
 #' compare_dfs(mtcars, dplyr::mutate(mtcars, mpg = mpg * 2), printColDiffs = FALSE)
 #' 
-compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE) {
+compare_dfs <- function(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE, blankEqualsNA = FALSE) {
   
   # Ensure we have two data-frame (like) objects
   KO::stop_if(!inherits(df1, "data.frame"), "'df1' must inherit from a 'data.frame'.")
@@ -63,6 +64,12 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE
     if (is.character(df1_col)) df1_col <- trimws(df1_col)
     if (is.character(df2_col)) df2_col <- trimws(df2_col)
     
+    # Replace NA's with blanks, if desired & appropriate
+    if (blankEqualsNA && is.character(df1_col) && is.character(df2_col)) {
+      df1_col <- replace_missing(df1_col, with = "");
+      df2_col <- replace_missing(df2_col, with = "")
+    }
+    
     # Get some information about the columns
     df1_class <- class(df1_col); df2_class <- class(df2_col)
     df1_na <- is.na(df1_col); df2_na <- is.na(df2_col)
@@ -71,12 +78,13 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE
     
     # If one of the columns is a date, convert them both to characters
     if (xor(lubridate::is.Date(df1_col), lubridate::is.Date(df2_col))) {
-      df1_col <- trimws(as.character(df1_col)); df2_col <- trimws(as.character(df2_col))
+      df1_col <- trimws(as.character(df1_col));
+      df2_col <- trimws(as.character(df2_col))
     }
     
     # Check if the columns are equal
     if (isTRUE(all.equal(df1_col, df2_col, check.attributes = FALSE))) {
-      message("The columns of ", colName, " are not equal, but they are identical.")
+      if (printColDiffs > 1) message("The columns of ", colName, " are not identical, but they are equal.")
       return(NULL)
     }
     
@@ -90,24 +98,26 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE
     # df2_table <- table(df2_values, useNA = "ifany")
     
     # If desired, print column differences
-    if (printColDiffs) {
+    if (printColDiffs > 0) {
       
       # Compare classes
-      if (df1_class != df2_class) message("Column '", colName, "' has different classes: (df1: ", df1_class, ", df2: ", df2_class, ")")
+      if (df1_class != df2_class) message("Column '", colName, "' has different classes: (df1: ", df1_class, ", df2: ", df2_class, ").")
       
       # Print information on the number of NA's
       if ((df1_na_count == 0) && (df2_na_count == 0)) {
-        message("Column '", colName, "' has 0 NA's.")
+        if (printColDiffs > 1) message("Column '", colName, "' has 0 NA's.")
       } else {
         message("Column '", colName, "' has ", df1_na_count, " NA's in 'df1', and ", df2_na_count, " in 'df2', ",
                 ifelse(all(df1_na == df2_na), "all", sum(df1_na & df2_na)), " of which are in the same position.")
       }
       
-      # Print the comparisons table
-      names(dimnames(compTable)) <- NULL
-      print(compTable)
-      # print(df1_table)
-      # print(df2_table)
+      # Print the comparisons table if desired
+      if (printColDiffs > 0) {
+        names(dimnames(compTable)) <- paste0("Column ", colName, " Differences:")
+        print(compTable)
+        # print(df1_table)
+        # print(df2_table)
+      }
       
     }
     
@@ -116,11 +126,11 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE
       nmIndsExclNA <- which(df1_col != df2_col)
       diffs <- abs(df1_col[nmIndsExclNA] - df2_col[nmIndsExclNA])
       if (suppressWarnings(max(diffs, na.rm = TRUE)) <= tol) {
-        if (printColDiffs) message("All differences for column '", colName, "' are <= ", tol, ".")
+        if (printColDiffs > 1) message("All differences for column '", colName, "' are <= ", tol, ".")
         return(NULL)
-      } else if (printColDiffs) {
-        message("The maximum difference for column '", colName, "' was ", max(diffs),
-                ", and ", sum(diffs > tol), " exceed the desired tolerance (", tol, ").")
+      } else if (printColDiffs > 0) {
+        if (printColDiffs > 1) message("The maximum difference for column '", colName, "' was ", max(diffs),
+                                       ", and ", sum(diffs > tol), " exceed the desired tolerance (", tol, ").")
       }
     }
     
@@ -128,7 +138,7 @@ compare_dfs <- function(df1, df2, printColDiffs = TRUE, tol = 1e-10, trim = TRUE
     diffTbl <- tibble::tibble(nmInds, df1_values, df2_values) %>%
       stats::setNames(., c("Index", paste0(colName, "_df1"), paste0(colName, "_df2")))
     if (nrow(diffTbl) == 0) {
-      message("Column ", colName, " returns 0 rows.")
+      if (printColDiffs > 1) message("Column ", colName, " returns 0 rows.")
       return(NULL)
     } else {
       return(diffTbl)
