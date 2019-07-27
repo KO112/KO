@@ -150,15 +150,3 @@ compare_dfs <- function(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE, b
   return(colComps[!sapply(colComps, is.null)])
   
 }
-
-
-# d1 <- ggplot2::diamonds
-# d2 <- ggplot2::diamonds %>% mutate(x = ifelse(color == "E", x * 2, x), y = ifelse(color == "F", NA, y))
-# # microbenchmark::microbenchmark(times = 10000, unit = "ms", compare_dfs(d1, d2))
-# a <- compare_dfs(d1, d2) # %>% print()
-
-# old_KO <- readRDS("~/Projects/20181213_Monitoring/retention/data/ji_ho_retention_predict_pif_data_old_KO.RDS")
-# new <- readRDS("~/Projects/20181213_Monitoring/retention/data/ji_ho_retention_predict_pif_data_new.RDS")
-# new_KO <- readRDS("~/Projects/20181213_Monitoring/retention/data/ji_ho_retention_predict_pif_data_new_KO.RDS")
-
-# comp <- compare_dfs(old, new) %>% print()
