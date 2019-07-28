@@ -37,6 +37,7 @@ Collate:
     'Bounding_and_Rounding.R'
     'Compare_DF.R'
     'Compare_ggplots.R'
+    'Data_Dictionary.R'
     'Evaluation_Functions.R'
     'Formatting.R'
     'Inline_If.R'
