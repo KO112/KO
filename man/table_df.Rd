@@ -4,7 +4,8 @@
 \alias{table_df}
 \title{Tabulate a Data Frame/Matrix}
 \usage{
-table_df(data, max_distinct = 250, group = TRUE, useNA = "ifany")
+table_df(data, max_distinct = 250, group = TRUE, useNA = "ifany",
+  dnn = NULL)
 }
 \arguments{
 \item{data}{A data frame/matrix.}
@@ -15,6 +16,8 @@ table_df(data, max_distinct = 250, group = TRUE, useNA = "ifany")
 
 \item{useNA}{Value to pass to table to determine whether or not to use NA values
 (one of "no", "ifany", and "always").}
+
+\item{dnn}{Value to be passed to the \code{table} function (dimension names of the resulting table).}
 }
 \value{
 List of tables.

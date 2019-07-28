@@ -29,9 +29,9 @@ test_that("count_distinct", {
 # Test table_df
 test_that("table_df", {
   expect_identical(table_df(mtcars),
-                   sapply(mtcars, table, useNA = "ifany"))
+                   sapply(mtcars, table, useNA = "ifany", dnn = NULL))
   expect_identical(table_df(mtcars$am),
-                   table(mtcars$am))
+                   table(mtcars$am, dnn = NULL))
 
 })
 

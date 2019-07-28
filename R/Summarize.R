@@ -53,6 +53,7 @@ count_distinct <- function(data, use_base = TRUE) {
 #' @param group Whether or not to group columns with more than \code{max_distinct} (logical) (unimplemented).
 #' @param useNA Value to pass to table to determine whether or not to use NA values
 #'   (one of "no", "ifany", and "always").
+#' @param dnn Value to be passed to the \code{table} function (dimension names of the resulting table).
 #' 
 #' @return List of tables.
 #' @export
@@ -65,21 +66,18 @@ count_distinct <- function(data, use_base = TRUE) {
 #' table_df(c(1, 2, 3, NA, NA), useNA = "no")
 #' table_df(c(1, 2, 3, NA, NA), useNA = "always")
 #' 
-table_df <- function(data, max_distinct = 250, group = TRUE, useNA = "ifany") {
+table_df <- function(data, max_distinct = 250, group = TRUE, useNA = "ifany", dnn = NULL) {
   
   # Count the number of distinct values in the column
   num_distinct <- count_distinct(data)
   
   # Take action depending on the object passed
   if (inherits(data, "data.frame")) {
-    retVal <- sapply(data, table, useNA = useNA) # %>%
-      # sapply(function(x) x %>% `attr<-`("dimnames", attr(., "dimnames") %>% `attr<-`("names", "")))
+    retVal <- sapply(data, table, useNA = useNA, dnn = dnn)
   } else if (inherits(data, "matrix")) {
-    retVal <- apply(data, 2, table, useNA = useNA) # %>%
-      # sapply(function(x) x %>% `attr<-`("dimnames", attr(., "dimnames") %>% `attr<-`("names", "")))
+    retVal <- apply(data, 2, table, useNA = useNA, dnn = dnn)
   } else if (is.atomic(data)) {
-    # browser()
-    retVal <- table(data, useNA = useNA) %>% `dimnames<-`(`names<-`(dimnames(.), ""))
+    retVal <- table(data, useNA = useNA, dnn = dnn)
   } else {
     stop("Unknown data type passed. Unable to calculate counts.")
   }
