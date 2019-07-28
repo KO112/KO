@@ -31,8 +31,8 @@
 compare_dfs <- function(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE, blankEqualsNA = FALSE) {
   
   # Ensure we have two data-frame (like) objects
-  KO::stop_if(!inherits(df1, "data.frame"), "'df1' must inherit from a 'data.frame'.")
-  KO::stop_if(!inherits(df2, "data.frame"), "'df2' must inherit from a 'data.frame'.")
+  stop_if(!inherits(df1, "data.frame"), "'df1' must inherit from a 'data.frame'.")
+  stop_if(!inherits(df2, "data.frame"), "'df2' must inherit from a 'data.frame'.")
   
   # Create diagnostic variables
   df1_nrow <- nrow(df1); df2_nrow <- nrow(df2)
@@ -43,10 +43,10 @@ compare_dfs <- function(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE, b
   df2_not_df1_colnames <- setdiff(df2_colnames, df1_colnames) %>% sort()
   
   # Ensure we have the same number of rows in each object
-  KO::stop_if(df1_nrow != df2_nrow, sprintf("The number of rows in 'df1' (%s) does not match the number of rows in 'df2' (%s).", df1_nrow, df2_nrow))
+  stop_if(df1_nrow != df2_nrow, sprintf("The number of rows in 'df1' (%s) does not match the number of rows in 'df2' (%s).", df1_nrow, df2_nrow))
   
   # Check column names, & print differences
-  KO::stop_if(length(sameNames) == 0, "There are no columns with common names.")
+  stop_if(length(sameNames) == 0, "There are no columns with common names.")
   if (length(df1_not_df2_colnames) > 0)
     message("Column names in 'df1' but not in 'df2': ", paste0(df1_not_df2_colnames, collapse = ", "))
   if (length(df2_not_df1_colnames) > 0)
