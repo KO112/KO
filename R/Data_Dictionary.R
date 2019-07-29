@@ -231,20 +231,6 @@ dim.dataDict <- function(dict) {
 }
 
 
-#' @return \code{ncol}: The number of columns.
-#' @rdname dimensions
-ncol.dataDict <- function(dict) {
-  dict$ncol
-}
-
-
-#' @return \code{nrow}: The number of rows.
-#' @rdname dimensions
-nrow.dataDict <- function(dict) {
-  dict$nrow
-}
-
-
 # Set `[[` to do the same as `[`(?)
 # `[[.dataDict` <- `[.dataDict`
 
