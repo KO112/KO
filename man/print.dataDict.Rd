@@ -15,5 +15,7 @@ Print a \code{dataDict} Object
 \examples{
 dataDict(mtcars)
 print(dataDict(mtcars))
+dd <- dataDict(mtcars)
+print(dd)
 
 }

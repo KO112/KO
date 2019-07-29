@@ -7,7 +7,7 @@
 dataDict(df, table = FALSE, lazyTable = TRUE, verbose = Inf)
 }
 \arguments{
-\item{df}{The data.frame-like object to calculate information for.}
+\item{df}{The data.frame-like object to calculate information for (should be a name, not an expression).}
 
 \item{table}{Whether or not to tabulate each column (logical scalar).}
 
@@ -22,9 +22,17 @@ A \code{dataDict} object.
 Create a data dictionary object which holds information on the columns of a data.frame-like object.
 }
 \details{
+The \code{df} parameter should be the name of a data.frame-like object, as opposed to an expression.
+E.g. call the function as \code{dataDict(mtcars)}, instead of \code{dataDict(as_tibble(mtcars))}.
+This will allow for more functionality, and will help avoid errors, especially when lazy table mode is active.
+If you want to pass an expression, simple ones should work, but do so at your own risk.
+
 Lazy table mode means that columns are not tabulated until requested.
 When they are tabulated, they can be done one at a time, or all together.
 This setting is useful since this can take a long time for large datasets.
+
+If \code{verbode > 0} (or not \code{FALSE}), a message will be printed out when lazy table mode is active,
+  as well as when \code{df} is passed as an expression .
 }
 \examples{
 dd <- dataDict(mtcars)

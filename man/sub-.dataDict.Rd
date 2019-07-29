@@ -4,14 +4,14 @@
 \alias{[.dataDict}
 \title{Extract Elements from a \code{dataDict} Object}
 \usage{
-\method{[}{dataDict}(dict, elem, col = NULL)
+\method{[}{dataDict}(dict, elem, cols = NULL)
 }
 \arguments{
 \item{dict}{A \code{dataDict} object.}
 
 \item{elem}{The element to extract (character scalar).}
 
-\item{col}{If \code{elem == "colTables"}, the column(s) to extract.}
+\item{cols}{If \code{elem == "colTables"}, the column(s) to extract.}
 }
 \value{
 The desired element extracted from the \code{dataDict} object.
@@ -24,13 +24,13 @@ dd <- dataDict(mtcars)
 dd["ncol"]
 dd["numUnique"]
 dd["colTables"]
-dd["colTables", NA]
 dd["colTables", "mpg"]
 dd["colTables", c("mpg", "cyl")]
+dd["colTables", NA]
 
 dd2 <- dataDict(mtcars, table = TRUE, lazyTable = FALSE)
-dd2["colTables", NA]
 dd2["colTables", "mpg"]
 dd2["colTables", c("mpg", "cyl")]
+dd2["colTables", NA]
 
 }

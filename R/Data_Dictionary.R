@@ -64,9 +64,9 @@ dataDict <- function(df, table = FALSE, lazyTable = TRUE, verbose = Inf) {
     
     
     # Set the dimensions of the original df object
-    dims <- dim(df)
-    nrow <- nrow(df)
+    dim <- dim(df)
     ncol <- ncol(df)
+    nrow <- nrow(df)
     
     # Set the column names & class of the original df object, & the classes of each column
     colNames <- colnames(df)
@@ -76,18 +76,8 @@ dataDict <- function(df, table = FALSE, lazyTable = TRUE, verbose = Inf) {
     # Get the number of unique elements
     numUnique <- sapply(df, function(x) length(unique(x)))
     
-    # Tabulate the results, if desired, setting the 'table' attribute
-    if (lazyTable) {
-      if (verbose > 0) message("dataDict: Lazy table mode active.")
-      attr(dict, "table") <- "lazy"
-      colTables <- list()
-    } else if (table) {
-      attr(dict, "table") <- TRUE
-      colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE)
-    } else {
-      attr(dict, "table") <- FALSE
-      colTables <- list()
-    }
+    # Set the column tables element
+    colTables <- columnTables(dict, df, table, lazyTable, verbose)
     
   })
   
@@ -196,11 +186,12 @@ print.dataDict <- function(dict) {
     
   } else if (elem == "colTables") {
     
-    getTables(dict, cols)
+    # Get the desired tables
+    return(getTables(dict, cols))
     
   } else if (elem %in% ls(dict)) (
     
-    # Simply return the element
+    # Return the desired element
     return(get(x = elem, envir = dict))
     
   ) else if (elem %in% dict$colNames) {
@@ -214,6 +205,92 @@ print.dataDict <- function(dict) {
     stop("The requested element (", elem, ") does not exist in this 'dataDict' object (",
          deparse(substitute(dict)), ".")
     
+  }
+  
+}
+
+
+#' Dimensions of a \code{dataDict}
+#' 
+#' Generic functions to retrieve the dimensions of the data.frame-like object
+#'   that the \code{dataDict} is based on.
+#'
+#' @param dict A \code{dataDict} object.
+#'
+#' @return \code{dim}: The dimensions.
+#' @name dimensions
+#'
+#' @examples
+#' dd <- dataDict(mtcars)
+#' dim(dd)
+#' ncol(dd)
+#' nrow(dd)
+#' 
+dim.dataDict <- function(dict) {
+  dict$dim
+}
+
+
+#' @return \code{ncol}: The number of columns.
+#' @rdname dimensions
+ncol.dataDict <- function(dict) {
+  dict$ncol
+}
+
+
+#' @return \code{nrow}: The number of rows.
+#' @rdname dimensions
+nrow.dataDict <- function(dict) {
+  dict$nrow
+}
+
+
+# Set `[[` to do the same as `[`(?)
+# `[[.dataDict` <- `[.dataDict`
+
+
+#' Update a \code{dataDict} Object
+#'
+#' @param dict A \code{dataDict} object.
+#' @param df The data.frame-like object to calculate information for.
+#'
+#' @export
+#'
+#' @examples
+#' 
+updateDD <- function(dict, df) {
+  
+}
+
+
+
+#' Create a \code{columnTables} Object
+#' 
+#' Create an object that is used to store the results of tabulating columns in a data.frame-like object.
+#' This is currently only called from with a \code{dataDict} object.
+#'
+#' @param dict A \code{dataDict} object.
+#' @param df The data.frame-like object to calculate information for (should be a name, not an expression).
+#' @param table Whether or not to tabulate each column (logical scalar).
+#' @param lazyTable Whether or not to enable lazy table mode (see below for more) (logical scalar).
+#'
+#' @return
+#'
+#' @examples
+#' 
+columnTables <- function(dict, df, table, lazyTable, verbose) {
+  
+  # Tabulate the results, if desired, setting the 'table' attribute
+  if (lazyTable) {
+    if (verbose > 0) message("dataDict: Lazy table mode active.")
+    attr(dict, "table") <- "lazy"
+    colTables <- list()
+  } else if (table) {
+    attr(dict, "table") <- TRUE
+    colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE)
+  } else {
+    attr(dict, "table") <- FALSE
+    colTables <- list()
   }
   
 }
@@ -317,23 +394,5 @@ getTables <- function(dict, cols = NULL) {
     }
     
   }
-  
-}
-
-
-# Set `[[` to do the same as `[`(?)
-# `[[.dataDict` <- `[.dataDict`
-
-
-#' Update a \code{dataDict} Object
-#'
-#' @param dict A \code{dataDict} object.
-#' @param df The data.frame-like object to calculate information for.
-#'
-#' @export
-#'
-#' @examples
-#' 
-updateDD <- function(dict, df) {
   
 }
