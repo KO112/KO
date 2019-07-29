@@ -14,28 +14,38 @@
 #' This will allow for more functionality, and will help avoid errors, especially when lazy table mode is active.
 #' If you want to pass an expression, simple ones should work, but do so at your own risk.
 #' 
+#' The \code{table} parameter can have one of three values: c(TRUE, FALSE, "lazy").
 #' Lazy table mode means that columns are not tabulated until requested.
-#' When they are tabulated, they can be done one at a time, or all together.
-#' This setting is useful since this can take a long time for large datasets.
+#' When they are tabulated, they can be done one at a time (\code{table = "lazy"}),
+#'   or all together (\code{table = true}).
+#' This setting can be deactivated entirely (\code{table = FALSE}), but this is not suggesteds.
+#' This setting is useful since tabulation can take a long time for large datasets.
 #' 
-#' If \code{verbode > 0} (or not \code{FALSE}), a message will be printed out when lazy table mode is active,
-#'   as well as when \code{df} is passed as an expression .
+#' If \code{verbose > 0} (or \code{verbose != FALSE}), a message will be printed out when lazy table mode is active,
+#'   as well as when \code{df} is passed as an expression.
+#' If \code{verbose > 1}, a message will be printed out saying what object the \code{dataDict} is based on.
 #'
 #' @param df The data.frame-like object to calculate information for (should be a name, not an expression).
-#' @param table Whether or not to tabulate each column (logical scalar).
-#' @param lazyTable Whether or not to enable lazy table mode (see below for more) (logical scalar).
+#' @param table What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
 #' @param verbose How verbose you want the function to be (higher prints more information) (integer scalar).
 #' 
 #' @return A \code{dataDict} object.
 #' @export
 #'
 #' @examples
-#' dd <- dataDict(mtcars)
-#' dd <- dataDict(mtcars, table = TRUE)
-#' dd <- dataDict(mtcars, table = TRUE, lazyTable = FALSE)
-#' dd <- dataDict(mtcars, table = TRUE, lazyTable = FALSE, verbose = 0)
+#' dd1 <- dataDict(mtcars)
+#' dd2 <- dataDict(mtcars, table = "lazy")
+#' dd3 <- dataDict(mtcars, table = TRUE)
+#' dd5 <- dataDict(mtcars, table = FALSE)
+#' dd4 <- dataDict(mtcars, table = "lazy", verbose = 0)
+#' dd4 <- dataDict(mtcars, table = TRUE, verbose = 0)
+#' dd4 <- dataDict(mtcars, table = FALSE, verbose = 0)
 #' 
-dataDict <- function(df, table = FALSE, lazyTable = TRUE, verbose = Inf) {
+#' # The line below works, since the expression is rather simple, but should be avoided
+#' # It is better to declare use something like `df <- tibble(mtcars); dd <- dataDict(df)`
+#' dd <- dataDict(tibble(mtcars))
+#' 
+dataDict <- function(df, table = "lazy", verbose = Inf) {
   
   # Ensure that we have a data.frame-like object
   if (!inherits(df, "data.frame")) stop("dataDict: 'df' must inherit from a 'data.frame'.")
@@ -55,23 +65,23 @@ dataDict <- function(df, table = FALSE, lazyTable = TRUE, verbose = Inf) {
     
     # Attempt to set the name of the original data
     if (length(dfCall) > 1) {
-      message("'df' has been passed an an expression (", deparse(dfCall),
-              "). This may result in some problems when using this 'dataDict' object, but may be fine.")
+      message("`df` has been passed an an expression (", deparse(dfCall),
+              "). This may result in some problems when using this `dataDict` object, but may be fine.")
       dfName <- dfCall[sapply(dfCall, function(x) is.data.frame(eval(x)))][[1]] %>% deparse()
     } else {
       dfName <- deparse(dfCall)
     }
     
+    # If
+    if (verbose > 1) message(
+        "This `dataDict` will be based off of the object named '", dfName, "'.\n",
+        "To ensure that this `dataDict` will continue to work, do not change the name of the object, ",
+        "and use the `updateDD` function if the object changes."
+      )
     
-    # Get the dimensions from the original df object
+    # Get the dimensions/dimension names from the original df object
     dims <- dim(df)
-    # ncol <- ncol(df)
-    # nrow <- nrow(df)
-    
-    # Get the dimension names from the original df object
     dimNames <- dimnames(df)
-    # colNames <- colnames(df)
-    # rowNames <- rownames(df)
     
     # Set the class of the original df object, & the classes of each column
     dfClass <- class(df)
@@ -81,7 +91,7 @@ dataDict <- function(df, table = FALSE, lazyTable = TRUE, verbose = Inf) {
     numUnique <- sapply(df, function(x) length(unique(x)))
     
     # Set the column tables element
-    colTables <- columnTables(dict, df, table, lazyTable)
+    colTables <- columnTables(dict, df, table)
     
   })
   
@@ -130,9 +140,9 @@ print.dataDict <- function(dict) {
   # Print some information about the data that the dict is based off of
   dictName <- deparse(substitute(dict)) %>% {ifelse(. == "x", "", paste0("(", ., ") "))}
   cat(
-    "This 'dataDict' object ", dictName, "was based off of '", dict$dfName,
+    "This `dataDict` object ", dictName, "was based off of '", dict$dfName,
     "' (a '", dict$dfClass[1], "') in the '", dict$dfEnvName, "' environment,\n",
-    "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this 'dataDict' was constructed.\n",
+    "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this `dataDict` was constructed.\n",
     "The 'table' mode is set to '", attr(dict, "table"), "', and the 'verbose' level is '", attr(dict, "verbose"), "'.\n",
     sep = ""
   )
@@ -173,7 +183,7 @@ print.dataDict <- function(dict) {
 #' dd["colTables", c("mpg", "cyl")]
 #' dd["colTables", NA]
 #' 
-#' dd2 <- dataDict(mtcars, table = TRUE, lazyTable = FALSE)
+#' dd2 <- dataDict(mtcars, table = TRUE)
 #' dd2["colTables", "mpg"]
 #' dd2["colTables", c("mpg", "cyl")]
 #' dd2["colTables", NA]
@@ -205,7 +215,7 @@ print.dataDict <- function(dict) {
   } else {
     
     # Throw an error if the element requested does not exist
-    stop("The requested element (", elem, ") does not exist in this 'dataDict' object (",
+    stop("The requested element (", elem, ") does not exist in this `dataDict` object (",
          deparse(substitute(dict)), ".")
     
   }
@@ -290,25 +300,31 @@ updateDD <- function(dict, df) {
 #'
 #' @param dict A \code{dataDict} object.
 #' @param df The data.frame-like object to calculate information for (should be a name, not an expression).
-#' @param table Whether or not to tabulate each column (logical scalar).
-#' @param lazyTable Whether or not to enable lazy table mode (see below for more) (logical scalar).
+#' @param table What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
 #'
 #' @return
 #'
 #' @examples
 #' 
-columnTables <- function(dict, df, table, lazyTable) {
+columnTables <- function(dict, df, table) {
+  
+  # Standardize the `table` parameter
+  table <- switch(tolower("false"), lazy = "lazy", t = , true = TRUE, f = , false = FALSE)
   
   # Tabulate the results, if desired, setting the 'table' attribute
-  if (lazyTable) {
+  if (table == "lazy") {
     if (attr(dict, "verbose") > 0) message("dataDict: Lazy table mode active.")
     attr(dict, "table") <- "lazy"
     colTables <- list()
-  } else if (table) {
+  } else if (isTRUE(table)) {
     attr(dict, "table") <- TRUE
     colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE)
-  } else {
+  } else if (isFALSE(table)) {
     attr(dict, "table") <- FALSE
+    colTables <- list()
+  } else {
+    if (attr(dict, "verbose") > 1) message("dataDict: Invalid table mode (", table, "). Lazy table mode will be used instead.")
+    attr(dict, "table") <- "lazy"
     colTables <- list()
   }
   
@@ -400,7 +416,7 @@ getTables <- function(dict, cols = NULL) {
     # If the tables were disabled, print a warning, & return nothing
     warning("`[.dataDict`: The columns were not tabulated for this dataDict object.\n",
             "Please re-run with `dataDict(", deparse(dict$dfCall), ", table = TRUE)` or ",
-            "`dataDict(", deparse(dict$dfCall), ", lazyTable = TRUE)` if you want to access this field.")
+            "`dataDict(", deparse(dict$dfCall), ", table = 'lazy')` if you want to access this field.")
     return(NULL)
     
   } else if (isTRUE(attr(dict, "table"))) {
@@ -424,7 +440,7 @@ getTables <- function(dict, cols = NULL) {
       df <- eval(dict$dfCall, dict$dfEnv)
     } else {
       stop(
-        "`[.dataDict`: The object that this 'dataDict' (", deparse(substitute(dict)), ") was based off (",
+        "`[.dataDict`: The object that this `dataDict` (", deparse(substitute(dict)), ") was based off (",
         dict$dfName, ") no longer exists in its original environment (", dict$dfEnvName, ").\n",
         "Please update the reference using updateDD(", deparse(substitute(dict)), "df)."
       )
