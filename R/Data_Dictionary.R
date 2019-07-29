@@ -63,13 +63,17 @@ dataDict <- function(df, table = FALSE, lazyTable = TRUE, verbose = Inf) {
     }
     
     
-    # Set the dimensions of the original df object
-    dim <- dim(df)
-    ncol <- ncol(df)
-    nrow <- nrow(df)
+    # Get the dimensions from the original df object
+    dims <- dim(df)
+    # ncol <- ncol(df)
+    # nrow <- nrow(df)
     
-    # Set the column names & class of the original df object, & the classes of each column
-    colNames <- colnames(df)
+    # Get the dimension names from the original df object
+    dimNames <- dimnames(df)
+    # colNames <- colnames(df)
+    # rowNames <- rownames(df)
+    
+    # Set the class of the original df object, & the classes of each column
     dfClass <- class(df)
     classes <- sapply(df, class)
     
@@ -77,12 +81,12 @@ dataDict <- function(df, table = FALSE, lazyTable = TRUE, verbose = Inf) {
     numUnique <- sapply(df, function(x) length(unique(x)))
     
     # Set the column tables element
-    colTables <- columnTables(dict, df, table, lazyTable, verbose)
+    colTables <- columnTables(dict, df, table, lazyTable)
     
   })
   
   # Set the dataDict class, & return it
-  class(dict) <- c("dataDict") # , class(dict))
+  class(dict) <- "dataDict"
   return(dict)
   
 }
@@ -101,12 +105,12 @@ summary.dataDict <- function(dict) {
   
   # Cretae a tibble of the column names, classes, number of unique elements,
   #   & whether or not the column has been tabulated
-  tibble::tibble(
+  return(tibble::tibble(
     Column = dict$colNames
     , Class = dict$classes
     , NumUnique = dict$numUnique
     , Tabulated = dict$colNames %in% names(dict$colTables)
-  )
+  ))
   
 }
 
@@ -128,7 +132,7 @@ print.dataDict <- function(dict) {
   cat(
     "This 'dataDict' object ", dictName, "was based off of '", dict$dfName,
     "' (a '", dict$dfClass[1], "') in the '", dict$dfEnvName, "' environment,\n",
-    "  which had ", dict$nrow, " rows and ", dict$ncol, " columns when this 'dataDict' was constructed.\n",
+    "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this 'dataDict' was constructed.\n",
     "The 'table' mode is set to '", attr(dict, "table"), "', and the 'verbose' level is '", attr(dict, "verbose"), "'.\n",
     sep = ""
   )
@@ -157,13 +161,12 @@ print.dataDict <- function(dict) {
 #'
 #' @param dict A \code{dataDict} object.
 #' @param elem The element to extract (character scalar).
-#' @param cols If \code{elem == "colTables"}, the column(s) to extract.
+#' @param cols If \code{elem == "colTables"}, the column(s) to extract (character vector).
 #'
 #' @return The desired element extracted from the \code{dataDict} object.
 #'
 #' @examples
 #' dd <- dataDict(mtcars)
-#' dd["ncol"]
 #' dd["numUnique"]
 #' dd["colTables"]
 #' dd["colTables", "mpg"]
@@ -210,15 +213,19 @@ print.dataDict <- function(dict) {
 }
 
 
+# Set `[[` to do the same as `[`(?)
+# `[[.dataDict` <- `[.dataDict`
+
+
 #' Dimensions of a \code{dataDict}
 #' 
-#' Generic functions to retrieve the dimensions of the data.frame-like object
+#' Generic function to retrieve the dimensions of the data.frame-like object
 #'   that the \code{dataDict} is based on.
+#' `ncol` and `nrow` will also work, since they call `dim` in their implementation.
 #'
 #' @param dict A \code{dataDict} object.
 #'
-#' @return \code{dim}: The dimensions.
-#' @name dimensions
+#' @return The dimensions of the original data.frame-like object.
 #'
 #' @examples
 #' dd <- dataDict(mtcars)
@@ -227,12 +234,38 @@ print.dataDict <- function(dict) {
 #' nrow(dd)
 #' 
 dim.dataDict <- function(dict) {
-  dict$dim
+  return(dict$dims)
 }
 
 
-# Set `[[` to do the same as `[`(?)
-# `[[.dataDict` <- `[.dataDict`
+#' Dimension Names of a \code{dataDict}
+#' 
+#' Generic function to retrieve the dimension names of the data.frame-like object
+#'   that the \code{dataDict} is based on.
+#' `colnames` and `rownames` will also work, since they call `dimnames` in their implementation.
+#'
+#' @param dict A \code{dataDict} object.
+#'
+#' @return \code{dimnames}: The dimension names of the original data.frame-like object.
+#' @name dimensionNames
+#'
+#' @examples
+#' dd <- dataDict(mtcars)
+#' dimnames(dd)
+#' colnames(dd) # Same as names(dd)
+#' rownames(dd)
+#' names(dd) # Same as colnames(dd)
+#' 
+dimnames.dataDict <- function(dict) {
+  return(dict$dimNames)
+}
+
+
+#' @return \code{names}: The column names of the original data.frame-like object.
+#' @rdname dimensionNames
+names.dataDict <- function(dict) {
+  return(colnames(dict))
+}
 
 
 #' Update a \code{dataDict} Object
@@ -264,11 +297,11 @@ updateDD <- function(dict, df) {
 #'
 #' @examples
 #' 
-columnTables <- function(dict, df, table, lazyTable, verbose) {
+columnTables <- function(dict, df, table, lazyTable) {
   
   # Tabulate the results, if desired, setting the 'table' attribute
   if (lazyTable) {
-    if (verbose > 0) message("dataDict: Lazy table mode active.")
+    if (attr(dict, "verbose") > 0) message("dataDict: Lazy table mode active.")
     attr(dict, "table") <- "lazy"
     colTables <- list()
   } else if (table) {
@@ -279,13 +312,75 @@ columnTables <- function(dict, df, table, lazyTable, verbose) {
     colTables <- list()
   }
   
+  # Create the columnTables object, holding the dataDict, and the list of the tables
+  colTables <- list(
+    dict = dict
+    , colTables = colTables
+  )
+  
+  # Set the dataDict class, & return it
+  class(colTables) <- "columnTables"
+  return(colTables)
+  
+}
+
+
+#' Extract Elements from a \code{columnTables} Object
+#'
+#' @param colTables A \code{columnTables} object.
+#' @param col The column to extract the table for (character scalar).
+#'
+#' @return A \code{table} of the desired column.
+#'
+#' @examples
+#' dd <- dataDict(mtcars)
+#' dd$colTables$mpg
+#' 
+`$.columnTables` <- function(colTables, col) {
+  
+}
+
+
+#' Extract Elements from a \code{columnTables} Object
+#'
+#' @param colTables A \code{columnTables} object.
+#' @param cols The columns to extract the tables for (character vector).
+#'
+#' @return A list of \code{table}s of the desired columns.
+#'
+#' @examples
+#' dd <- dataDict(mtcars)
+#' dd$colTables$mpg
+#' 
+`[.columnTables` <- function(colTables, cols) {
+  
+  # getTables()
+  
+}
+
+
+#' Get the Names of a \code{columnTables}
+#' 
+#' Get the names of the columns from a \code{columnTables} object that have
+#'   been tabulated already (character vector).
+#' 
+#' @param colTables A \code{columnTables} object.
+#'
+#' @return The names of the columns that have been tabulated already (character vector).
+#'
+#' @examples
+#' dd <- dataDict(mtcars)
+#' names(dd$colTables)
+#' 
+names.colTables <- function(colTables) {
+  return(names(colTables[["colTables"]]))
 }
 
 
 #' Extract Tabuated Columns from a \code{dataDict}
 #'
 #' @param elem The element to extract (character scalar).
-#' @param cols If \code{elem == "colTables"}, the column(s) to extract.
+#' @param cols The columns to extract the tables for (character vector).
 #'
 #' @return A named list of tables, corresponding to the requested columns.
 #'
@@ -350,7 +445,7 @@ getTables <- function(dict, cols = NULL) {
       if (!all(is.na(cols))) message("Some of the names in `cols` were NA, so data was returned for all columns.")
       
       # Return all the tabulated columns, tabulating & saving them if need be
-      if (length(dict$colTables) == dict$ncol) {
+      if (length(dict$colTables) == ncol(dict)) {
         return(dict$colTables)
       } else {
         return(dict$colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE))

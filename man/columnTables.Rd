@@ -4,7 +4,7 @@
 \alias{columnTables}
 \title{Create a \code{columnTables} Object}
 \usage{
-columnTables(dict, df, table, lazyTable, verbose)
+columnTables(dict, df, table, lazyTable)
 }
 \arguments{
 \item{dict}{A \code{dataDict} object.}

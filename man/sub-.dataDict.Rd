@@ -11,7 +11,7 @@
 
 \item{elem}{The element to extract (character scalar).}
 
-\item{cols}{If \code{elem == "colTables"}, the column(s) to extract.}
+\item{cols}{If \code{elem == "colTables"}, the column(s) to extract (character vector).}
 }
 \value{
 The desired element extracted from the \code{dataDict} object.
@@ -21,7 +21,6 @@ Extract Elements from a \code{dataDict} Object
 }
 \examples{
 dd <- dataDict(mtcars)
-dd["ncol"]
 dd["numUnique"]
 dd["colTables"]
 dd["colTables", "mpg"]

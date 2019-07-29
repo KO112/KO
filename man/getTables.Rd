@@ -7,7 +7,7 @@
 getTables(dict, cols = NULL)
 }
 \arguments{
-\item{cols}{If \code{elem == "colTables"}, the column(s) to extract.}
+\item{cols}{The columns to extract the tables for (character vector).}
 
 \item{elem}{The element to extract (character scalar).}
 }
