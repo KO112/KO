@@ -3,6 +3,7 @@
 #   Override `[.dataDict` with special handler for table being NULL
 #   Add lazy loading ability, maybe add attributes (logical vector of colum names?)?
 #   For printing, change from tibble to something easier to read in bulk, maybe multiple columns
+#   Add colHash, maybe use constructor for both colTables/colHash
 
 
 #' Create a Data Dictionary
@@ -14,11 +15,11 @@
 #' This will allow for more functionality, and will help avoid errors, especially when lazy table mode is active.
 #' If you want to pass an expression, simple ones should work, but do so at your own risk.
 #' 
-#' The \code{table} parameter can have one of three values: c(TRUE, FALSE, "lazy").
+#' The \code{tableMode} parameter can have one of three values: c(TRUE, FALSE, "lazy").
 #' Lazy table mode means that columns are not tabulated until requested.
-#' When they are tabulated, they can be done one at a time (\code{table = "lazy"}),
-#'   or all together (\code{table = true}).
-#' This setting can be deactivated entirely (\code{table = FALSE}), but this is not suggesteds.
+#' When they are tabulated, they can be done one at a time (\code{tableMode = "lazy"}),
+#'   or all together (\code{tableMode = true}).
+#' This setting can be deactivated entirely (\code{tableMode = FALSE}), but this is not suggesteds.
 #' This setting is useful since tabulation can take a long time for large datasets.
 #' 
 #' If \code{verbose > 0} (or \code{verbose != FALSE}), a message will be printed out when lazy table mode is active,
@@ -26,7 +27,7 @@
 #' If \code{verbose > 1}, a message will be printed out saying what object the \code{dataDict} is based on.
 #'
 #' @param df The data.frame-like object to calculate information for (should be a name, not an expression).
-#' @param table What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
+#' @param tableMode What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
 #' @param verbose How verbose you want the function to be (higher prints more information) (integer scalar).
 #' 
 #' @return A \code{dataDict} object.
@@ -34,18 +35,18 @@
 #'
 #' @examples
 #' dd1 <- dataDict(mtcars)
-#' dd2 <- dataDict(mtcars, table = "lazy")
-#' dd3 <- dataDict(mtcars, table = TRUE)
-#' dd5 <- dataDict(mtcars, table = FALSE)
-#' dd4 <- dataDict(mtcars, table = "lazy", verbose = 0)
-#' dd4 <- dataDict(mtcars, table = TRUE, verbose = 0)
-#' dd4 <- dataDict(mtcars, table = FALSE, verbose = 0)
+#' dd2 <- dataDict(mtcars, tableMode = "lazy")
+#' dd3 <- dataDict(mtcars, tableMode = TRUE)
+#' dd5 <- dataDict(mtcars, tableMode = FALSE)
+#' dd4 <- dataDict(mtcars, tableMode = "lazy", verbose = 0)
+#' dd4 <- dataDict(mtcars, tableMode = TRUE, verbose = 0)
+#' dd4 <- dataDict(mtcars, tableMode = FALSE, verbose = 0)
 #' 
 #' # The line below works, since the expression is rather simple, but should be avoided
 #' # It is better to declare use something like `df <- tibble(mtcars); dd <- dataDict(df)`
 #' dd <- dataDict(tibble(mtcars))
 #' 
-dataDict <- function(df, table = "lazy", verbose = Inf) {
+dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
   # Ensure that we have a data.frame-like object
   if (!inherits(df, "data.frame")) stop("dataDict: `df`` must inherit from a `data.frame`.")
@@ -67,13 +68,13 @@ dataDict <- function(df, table = "lazy", verbose = Inf) {
     if (length(dfCall) > 1) {
       message("`df` has been passed an an expression (", deparse(dfCall),
               "). This may result in some problems when using this `dataDict` object, but may be fine.")
-      dfName <- dfCall[sapply(dfCall, function(x) is.data.frame(eval(x)))][[1]] %>% deparse()
+      dfName <- dfCall[purrr::map_lgl(dfCall, ~ is.data.frame(eval(.x)))][[1]] %>% deparse()
     } else {
       dfName <- deparse(dfCall)
     }
     
-    # If
-    if (verbose > 1) message(
+    # If desired & relevant, print out a message about not changing the original object
+    if ((tableMode != "lazy") && (verbose > 1)) message(
         "This `dataDict` will be based off of the object named '", dfName, "'.\n",
         "To ensure that this `dataDict` will continue to work, do not change the name of the object, ",
         "and use the `updateDD` function if the object changes."
@@ -81,17 +82,17 @@ dataDict <- function(df, table = "lazy", verbose = Inf) {
     
     # Get the dimensions/dimension names from the original df object
     dims <- dim(df)
-    dimNames <- dimnames(df)
+    dimnames <- dimnames(df)
     
     # Set the class of the original df object, & the classes of each column
     dfClass <- class(df)
-    classes <- sapply(df, class)
+    classes <- purrr::map_chr(df, class)
     
     # Get the number of unique elements
-    numUnique <- sapply(df, function(x) length(unique(x)))
+    numUnique <- purrr::map_int(df, ~ length(unique(.x)))
     
     # Set the column tables element
-    colTables <- columnTables(dict, df, table)
+    colTables <- columnTables(dict, df, tableMode)
     
   })
   
@@ -116,10 +117,10 @@ summary.dataDict <- function(dict) {
   # Cretae a tibble of the column names, classes, number of unique elements,
   #   & whether or not the column has been tabulated
   return(tibble::tibble(
-    Column = dict$colNames
+    Column = colnames(dict)
     , Class = dict$classes
     , NumUnique = dict$numUnique
-    , Tabulated = dict$colNames %in% names(dict$colTables)
+    , Tabulated = colnames(dict) %in% names(dict$colTables)
   ))
   
 }
@@ -143,7 +144,7 @@ print.dataDict <- function(dict) {
     "This `dataDict` object ", dictName, "was based off of '", dict$dfName,
     "' (a '", dict$dfClass[1], "') in the '", dict$dfEnvName, "' environment,\n",
     "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this `dataDict` was constructed.\n",
-    "The `table` mode is set to '", attr(dict, "table"), "', and the `verbose` level is '", attr(dict, "verbose"), "'.\n",
+    "The `tableMode` mode is set to '", attr(dict, "tableMode"), "', and the `verbose` level is '", attr(dict, "verbose"), "'.\n",
     sep = ""
   )
   
@@ -192,7 +193,7 @@ print.dataDict <- function(dict) {
   
   # If more than one element was requested, print a message, & take the first one
   if (length(elem) > 1) {
-    message("`[.dataDict`: `length(elem) > 1`, so only the first one will be used.")
+    warning("`[.dataDict`: `length(elem) > 1`, so only the first one will be used.")
     elem <- elem[1]
   }
   
@@ -278,7 +279,7 @@ dim.dataDict <- function(dict) {
 #' names(dd) # Same as colnames(dd)
 #' 
 dimnames.dataDict <- function(dict) {
-  return(dict$dimNames)
+  return(dict$dimnames)
 }
 
 
@@ -312,39 +313,39 @@ updateDD <- function(dict, df) {
 #'
 #' @param dict A \code{dataDict} object.
 #' @param df The data.frame-like object to calculate information for (should be a name, not an expression).
-#' @param table What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
+#' @param tableMode What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
 #'
 #' @return
 #'
 #' @examples
 #' 
-columnTables <- function(dict, df, table) {
+columnTables <- function(dict, df, tableMode) {
   
-  # Standardize the `table` parameter
-  table <- switch(tolower("false"), lazy = "lazy", t = , true = TRUE, f = , false = FALSE)
+  # Standardize the `tableMode` parameter
+  tableMode <- switch(tolower(tableMode), lazy = "lazy", t = , true = TRUE, f = , false = FALSE)
   
-  # Tabulate the results, if desired, & set the `table` attribute
-  if (table == "lazy") {
+  # Tabulate the results, if desired, & set the `tableMode` attribute
+  attr(dict, "tableMode") <- tableMode
+  if (tableMode == "lazy") {
     if (attr(dict, "verbose") > 0) message("`dataDict`: Lazy table mode active.")
-    attr(dict, "table") <- "lazy"
-    colTables <- new.env()
-  } else if (isTRUE(table)) {
-    attr(dict, "table") <- TRUE
-    colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE) %>% as.environment()
-  } else if (isFALSE(table)) {
-    attr(dict, "table") <- FALSE
-    colTables <- new.env()
+    colTables <- vector(mode = "list", length = dict$dims[[2]]) %>% setNames(dict$dimnames[[2]]) %>% as.environment()
+  } else if (isTRUE(tableMode)) {
+    colTables <- purrr::map(df, table, useNA = "ifany", dnn = NULL) %>% as.environment()
+  } else if (isFALSE(tableMode)) {
+    colTables <- NULL
   } else {
-    if (attr(dict, "verbose") > 1) message("`dataDict`: Invalid table mode (", table, "). Lazy table mode will be used instead.")
-    attr(dict, "table") <- "lazy"
-    colTables <- new.env()
+    if (attr(dict, "verbose") > 1) warning("`dataDict`: Invalid table mode (", tableMode,
+                                           "). Lazy table mode will be used instead.")
+    attr(dict, "tableMode") <- "lazy"
+    colTables <- vector(mode = "list", length = dict$dims[[2]]) %>% setNames(dict$dimnames[[2]]) %>% as.environment()
   }
   
   # Create the columnTables object, holding the dataDict, & the list of the tables
-  colTables <- list(dict = dict, colTables = colTables)
+  # colTables <- list(dict = dict, colTables = colTables)
+  attr(colTables, "dict") <- dict
   
   # Set the dataDict class, & return it
-  class(colTables) <- "columnTables"
+  class(colTables) <- c("columnTables", class(colTables))
   return(colTables)
   
 }
@@ -380,13 +381,25 @@ columnTables <- function(dict, df, table) {
 `[.columnTables` <- function(colTables, cols) {
   
   # Get the `colTables` & `dict` objects (for convenience)
-  actualTables <- colTables$colTables
-  dict <- colTables$dict
+  # actualTables <- colTables # [["colTables"]]
+  dict <- attr(colTables, "dict")
   
   browser()
-  # Retrieve existing column tables, & set the ones that we need to calculate
-  existingTables <- cols[cols %in% names(actualTables)] %>% sapply(get, actualTables)
-  colsToCalc <- cols[!(cols %in% names(actualTables))]
+  # Retrieve existing column tables, & set the ones that we need to calculate/aren't in the data
+  # existingTables <- cols[cols %in% names(colTables)] %>% sapply(get, colTables, simplify = FALSE)
+  # otherCols <- cols[!(cols %in% names(colTables))]
+  tabulatedCols <- names(colTables)[!sapply(colTables, is.null)]
+  otherCols <- names(colTables)[sapply(colTables, is.null)]
+  colsToCalc <- intersect(cols, colnames(dict))
+  invalidCols <- setdiff(cols, colnames(dict))
+  # colsToCalc <- intersect(otherCols, colnames(dict)) %>% intersect(cols)
+  # invalidCols <- setdiff(otherCols, colnames(dict)) %>% intersect(cols)
+  
+  # If there are any invlaid columns (i.e. ones not in the data)
+  if (length(invalidCols) > 0) warning(
+      "`[.columnTables`: Some invalid columns were selected:\n",
+      paste0(invalidCols, sep = ", ")
+    )
   
   # If there are any columns we need to calculate, try to get them, else return the existing tables
   if (length(colsToCalc) > 0) {
@@ -403,21 +416,27 @@ columnTables <- function(dict, df, table) {
     }
     
     # Calculate the new column tables, save them to the tables environment, & return them in the desired order
-    newTables <- sapply(`[.data.frame`(df, colsToCalc), table, useNA = "ifany", dnn = NULL)
-    for (i in seq_along(newTables)) actualTables[[names(newTables[[i]])]] <- newTables[[i]]
-    return(c(existingTables, newTables)[cols])
+    newTables <- purrr::map(`[.data.frame`(df, colsToCalc), table, useNA = "ifany", dnn = NULL)
+    purrr::walk2(newTables, names(newTables), ~ assign(.y, .x, colTables))
+    # for (i in seq_along(newTables)) newTables[[i]] %>% assign(names(.), ., colTables)
+      # colTables[[names(newTables[[i]])]] <- newTables[[i]]
+    # tabulatedCols <- c(tabulatedCols, names(newTables))
+    # return(c(existingTables, newTables)[cols])
     
-  } else {
-    
-    # If the requested tables have all already been calculated, return the existing tables
-    return(existingTables)
+  # } else {
+  #   
+  #   # If the requested tables have all already been calculated, return the existing tables
+  #   return(existingTables)
     
   }
+  
+  # Return the desired columns
+  return(purrr::map(cols, ~ get(.x, colTables)) %>% setNames(cols))
   
 }
 
 
-#' Get the Names of a \code{columnTables}
+#' Get the Names of a \code{columnTables} Object
 #' 
 #' Get the names of the columns from a \code{columnTables} object that have
 #'   been tabulated already (character vector).
@@ -431,7 +450,8 @@ columnTables <- function(dict, df, table) {
 #' names(dd$colTables)
 #' 
 names.colTables <- function(colTables) {
-  return(names(colTables[["colTables"]]))
+  # return(names(colTables[["colTables"]]))
+  return(names(colTables)[!sapply(colTables, is.null)])
 }
 
 
