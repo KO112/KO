@@ -435,103 +435,103 @@ names.colTables <- function(colTables) {
 }
 
 
-#' Extract Tabuated Columns from a \code{dataDict}
-#'
-#' @param elem The element to extract (character scalar).
-#' @param cols The columns to extract the tables for (character vector).
-#'
-#' @return A named list of tables, corresponding to the requested columns.
-#'
-#' @examples
-#' dd <- dataDict(mtcars)
-#' getTables(dd)
-#' getTables(dd, cols = NA)
-#' getTables(dd, cols = NA)
-#' getTables(dd, cols = "mpg")
-#' getTables(dd, cols = c("mpg", "cyl"))
-#' 
-getTables <- function(dict, cols = NULL) {
-  
-  # Either throw an error if tables were disabled, return them, or calculate them
-  if (isFALSE(attr(dict, "table"))) {
-    
-    # If the tables were disabled, print a warning, & return nothing
-    warning("`[.dataDict`: The columns were not tabulated for this `dataDict` object.\n",
-            "Please re-run with `dataDict(", deparse(dict$dfCall), ", table = TRUE)` or ",
-            "`dataDict(", deparse(dict$dfCall), ", table = 'lazy')` if you want to access this field.")
-    return(NULL)
-    
-  } else if (isTRUE(attr(dict, "table"))) {
-    
-    # If `cols` is NULL or NA, return all the tabulated columns, or just the desired ones,
-    #   printing a warning message if some column names aren't found
-    if (is.null(cols) || is.na(cols)) {
-      return(dict$colTables)
-    } else if (all(cols %in% names(dict$colTables))) {
-      return(dict$colTables[cols])
-    } else {
-      warning("`[.dataDict`: Columns not found in the `dataDict`: ",
-              paste0(cols[!(cols %in% names(dict$colTables))], collapse = ", "))
-      return(dict$colTables[cols[cols %in% names(dict$colTables)]])
-    }
-    
-  } else {
-    
-    # If the original object that this dataDict was based off of still exists, get it, else throw an error
-    if ((!is.null(dict$dfEnv)) && exists(dict$dfName, where = dict$dfEnv)) {
-      df <- eval(dict$dfCall, dict$dfEnv)
-    } else {
-      stop(
-        "`[.dataDict`: The object that this `dataDict` (", deparse(substitute(dict)), ") was based off (",
-        dict$dfName, ") no longer exists in its original environment (", dict$dfEnvName, ").\n",
-        "Please update the reference using updateDD(", deparse(substitute(dict)), "df)."
-      )
-    }
-    
-    # Either throw an error if no column was specified, return all the tabulated columns,
-    #   or calculate them & save the results
-    if (is.null(cols)) {
-      
-      # If no column is specified, print a warning, & return nothing
-      warning("`[.dataDict`: Lazy table mode is active, so you must specify a column name ",
-              "(or use `cols = NA` to get all the columns.")
-      return(NULL)
-      
-    } else if (any(is.na(cols))) {
-      
-      # If any of the names were not NA, print a message
-      if (!all(is.na(cols))) message("Some of the names in `cols` were NA, so data was returned for all columns.")
-      
-      # Return all the tabulated columns, tabulating & saving them if need be
-      if (length(dict$colTables) == ncol(dict)) {
-        return(dict$colTables)
-      } else {
-        return(dict$colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE))
-      }
-      
-    } else if (!all(cols %in% dict$colNames)) {
-      
-      # If any of the columns don't exist in the data, throw an error
-      warning("`[.dataDict`: Columns not found in the data: ",
-              paste0(cols[!(cols %in% names(dict$colNames))], collapse = ", "))
-      
-      # } else if (all(cols %in% names(dict$colTables))) {
-      #   
-      #   # If the columns have already been tabulated, return them
-      #   return(dict$colTables %>% .[names(.) %in% cols])
-      
-    } else {
-      
-      # Else retrieve the columns that have already been calculated, & calculate/save the others
-      colTable <- dict$colTables %>% .[names(.) %in% cols]
-      
-      # Else tabulate the desired columns, & save them
-      # colTable <- sapply(df[cols], table, useNA = "ifany", dnn = NULL, simplify = FALSE)
-      # dict$colTables <- c(dict$colTables, colTable) # list(colTable) %>% setNames(cols))
-      # return(colTable)
-      
-    }
-    
-  }
-  
-}
+# #' Extract Tabuated Columns from a \code{dataDict}
+# #'
+# #' @param elem The element to extract (character scalar).
+# #' @param cols The columns to extract the tables for (character vector).
+# #'
+# #' @return A named list of tables, corresponding to the requested columns.
+# #'
+# #' @examples
+# #' dd <- dataDict(mtcars)
+# #' getTables(dd)
+# #' getTables(dd, cols = NA)
+# #' getTables(dd, cols = NA)
+# #' getTables(dd, cols = "mpg")
+# #' getTables(dd, cols = c("mpg", "cyl"))
+# #' 
+# getTables <- function(dict, cols = NULL) {
+#   
+#   # Either throw an error if tables were disabled, return them, or calculate them
+#   if (isFALSE(attr(dict, "table"))) {
+#     
+#     # If the tables were disabled, print a warning, & return nothing
+#     warning("`[.dataDict`: The columns were not tabulated for this `dataDict` object.\n",
+#             "Please re-run with `dataDict(", deparse(dict$dfCall), ", table = TRUE)` or ",
+#             "`dataDict(", deparse(dict$dfCall), ", table = 'lazy')` if you want to access this field.")
+#     return(NULL)
+#     
+#   } else if (isTRUE(attr(dict, "table"))) {
+#     
+#     # If `cols` is NULL or NA, return all the tabulated columns, or just the desired ones,
+#     #   printing a warning message if some column names aren't found
+#     if (is.null(cols) || is.na(cols)) {
+#       return(dict$colTables)
+#     } else if (all(cols %in% names(dict$colTables))) {
+#       return(dict$colTables[cols])
+#     } else {
+#       warning("`[.dataDict`: Columns not found in the `dataDict`: ",
+#               paste0(cols[!(cols %in% names(dict$colTables))], collapse = ", "))
+#       return(dict$colTables[cols[cols %in% names(dict$colTables)]])
+#     }
+#     
+#   } else {
+#     
+#     # If the original object that this dataDict was based off of still exists, get it, else throw an error
+#     if ((!is.null(dict$dfEnv)) && exists(dict$dfName, where = dict$dfEnv)) {
+#       df <- eval(dict$dfCall, dict$dfEnv)
+#     } else {
+#       stop(
+#         "`[.dataDict`: The object that this `dataDict` (", deparse(substitute(dict)), ") was based off (",
+#         dict$dfName, ") no longer exists in its original environment (", dict$dfEnvName, ").\n",
+#         "Please update the reference using updateDD(", deparse(substitute(dict)), "df)."
+#       )
+#     }
+#     
+#     # Either throw an error if no column was specified, return all the tabulated columns,
+#     #   or calculate them & save the results
+#     if (is.null(cols)) {
+#       
+#       # If no column is specified, print a warning, & return nothing
+#       warning("`[.dataDict`: Lazy table mode is active, so you must specify a column name ",
+#               "(or use `cols = NA` to get all the columns.")
+#       return(NULL)
+#       
+#     } else if (any(is.na(cols))) {
+#       
+#       # If any of the names were not NA, print a message
+#       if (!all(is.na(cols))) message("Some of the names in `cols` were NA, so data was returned for all columns.")
+#       
+#       # Return all the tabulated columns, tabulating & saving them if need be
+#       if (length(dict$colTables) == ncol(dict)) {
+#         return(dict$colTables)
+#       } else {
+#         return(dict$colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE))
+#       }
+#       
+#     } else if (!all(cols %in% dict$colNames)) {
+#       
+#       # If any of the columns don't exist in the data, throw an error
+#       warning("`[.dataDict`: Columns not found in the data: ",
+#               paste0(cols[!(cols %in% names(dict$colNames))], collapse = ", "))
+#       
+#       # } else if (all(cols %in% names(dict$colTables))) {
+#       #   
+#       #   # If the columns have already been tabulated, return them
+#       #   return(dict$colTables %>% .[names(.) %in% cols])
+#       
+#     } else {
+#       
+#       # Else retrieve the columns that have already been calculated, & calculate/save the others
+#       colTable <- dict$colTables %>% .[names(.) %in% cols]
+#       
+#       # Else tabulate the desired columns, & save them
+#       # colTable <- sapply(df[cols], table, useNA = "ifany", dnn = NULL, simplify = FALSE)
+#       # dict$colTables <- c(dict$colTables, colTable) # list(colTable) %>% setNames(cols))
+#       # return(colTable)
+#       
+#     }
+#     
+#   }
+#   
+# }
