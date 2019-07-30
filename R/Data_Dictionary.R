@@ -1,7 +1,5 @@
 # To-Do
-#   Make class for single column summary, and a list of them
-#   Override `[.dataDict` with special handler for table being NULL
-#   Add lazy loading ability, maybe add attributes (logical vector of colum names?)?
+#   Make class for single column summary, and a list of them(?)
 #   For printing, change from tibble to something easier to read in bulk, maybe multiple columns
 #   Add colHash, maybe use constructor for both colTables/colHash
 
@@ -43,8 +41,8 @@
 #' dd4 <- dataDict(mtcars, tableMode = FALSE, verbose = 0)
 #' 
 #' # The line below works, since the expression is rather simple, but should be avoided
-#' # It is better to declare use something like `df <- tibble(mtcars); dd <- dataDict(df)`
-#' dd <- dataDict(tibble(mtcars))
+#' # It is better to declare use something like: `df <- as_tibble(mtcars); dd <- dataDict(df)`
+#' dd <- dataDict(as_tibble(mtcars))
 #' 
 dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
@@ -53,31 +51,34 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
   # Create the data dictionary object, & set the call/verbosity attribute
   dict <- new.env()
-  dict$call <- match.call()
-  attr(dict, "verbose") <- verbose
+  call <- match.call()
+  dfCall <- substitute(df)
+  
+  # Set some attributes of the data dictionary object
+  attributes(dict) <- dplyr::lst(
+    verbose, call, dfCall
+    , dfEnv = parent.frame(2)
+    , dfEnvName = environmentName(dfEnv) %>% ifelse(. == "", pryr::address(dfEnv), .)
+  )
+  
+  # Attempt to set the name of the original data
+  if (length(dfCall) > 1) {
+    message("`dataDict`: `df` has been passed an an expression (", deparse(dfCall), ").\n", strrep(" ", 12),
+            "This may result in some problems when using this `dataDict` object, but should be fine.")
+    attr(dict, "dfName") <- dfCall[purrr::map_lgl(dfCall, ~ is.data.frame(eval(.x)))][[1]] %>% deparse()
+  } else {
+    attr(dict, "dfName") <- deparse(dfCall)
+  }
+  
   
   # Add various values to the dictionary
   evalq(envir = dict, expr = {
     
-    # Set the df call, & the environment holding it
-    dfCall <- substitute(df, env = parent.frame(2))
-    dfEnv <- parent.frame(3) # try(pryr::where(deparse(dfName)))
-    dfEnvName <- environmentName(dfEnv) %>% ifelse(. == "", pryr::address(dfEnv), .)
-    
-    # Attempt to set the name of the original data
-    if (length(dfCall) > 1) {
-      message("`df` has been passed an an expression (", deparse(dfCall),
-              "). This may result in some problems when using this `dataDict` object, but may be fine.")
-      dfName <- dfCall[purrr::map_lgl(dfCall, ~ is.data.frame(eval(.x)))][[1]] %>% deparse()
-    } else {
-      dfName <- deparse(dfCall)
-    }
-    
     # If desired & relevant, print out a message about not changing the original object
-    if ((tableMode != "lazy") && (verbose > 1)) message(
-        "This `dataDict` will be based off of the object named '", dfName, "'.\n",
-        "To ensure that this `dataDict` will continue to work, do not change the name of the object, ",
-        "and use the `updateDD` function if the object changes."
+    if ((tableMode == "lazy") && (verbose > 1)) message(
+        "`dataDict`: This `dataDict` will be based off of the object named '", attr(dict, "dfName"), "'.\n", strrep(" ", 12),
+        "To ensure that this `dataDict` will continue to work, do not change the name of the object,\n", strrep(" ", 14),
+        "or use the `updateDD` function after the object changes."
       )
     
     # Get the dimensions/dimension names from the original df object
@@ -97,75 +98,10 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   })
   
   # Set the dataDict class, & return it
-  class(dict) <- "dataDict"
+  class(dict) <- c("dataDict", class(dict))
   return(dict)
   
 }
-
-
-#' Summarize a \code{dayaDict} Object
-#'
-#' @param dict A \code{dataDict} object.
-#'
-#' @return
-#'
-#' @examples
-#' summary(dataDict(mtcars))
-#' 
-summary.dataDict <- function(dict) {
-  
-  # Cretae a tibble of the column names, classes, number of unique elements,
-  #   & whether or not the column has been tabulated
-  return(tibble::tibble(
-    Column = colnames(dict)
-    , Class = dict$classes
-    , NumUnique = dict$numUnique
-    , Tabulated = colnames(dict) %in% names(dict$colTables)
-  ))
-  
-}
-
-
-#' Print a \code{dataDict} Object
-#'
-#' @param dict A \code{dataDict} object.
-#'
-#' @examples
-#' dataDict(mtcars)
-#' print(dataDict(mtcars))
-#' dd <- dataDict(mtcars)
-#' print(dd)
-#' 
-print.dataDict <- function(dict) {
-  
-  # Print some information about the data that the dict is based off of
-  dictName <- deparse(substitute(dict)) %>% {ifelse(. == "x", "", paste0("(", ., ") "))}
-  cat(
-    "This `dataDict` object ", dictName, "was based off of '", dict$dfName,
-    "' (a '", dict$dfClass[1], "') in the '", dict$dfEnvName, "' environment,\n",
-    "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this `dataDict` was constructed.\n",
-    "The `tableMode` mode is set to '", attr(dict, "tableMode"), "', and the `verbose` level is '", attr(dict, "verbose"), "'.\n",
-    sep = ""
-  )
-  
-  # Print the summary object
-  print(summary(dict))
-  
-}
-
-
-# #' Title
-# #'
-# #' @param dict 
-# #' @param elem 
-# #'
-# #' @return
-# #' @export
-# #'
-# #' @examples
-# `$.dataDict` <- function(dict, elem) {
-#   `[.dataDict`(dict, elem)
-# }
 
 
 #' Extract Elements from a \code{dataDict} Object
@@ -179,12 +115,12 @@ print.dataDict <- function(dict) {
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dd["numUnique"]
-#' dd["colTables"]
 #' dd["colTables", "mpg"]
 #' dd["colTables", c("mpg", "cyl")]
 #' dd["colTables", NA]
+#' dd["colTables"]
 #' 
-#' dd2 <- dataDict(mtcars, table = TRUE)
+#' dd2 <- dataDict(mtcars, tableMode = TRUE)
 #' dd2["colTables", "mpg"]
 #' dd2["colTables", c("mpg", "cyl")]
 #' dd2["colTables", NA]
@@ -204,10 +140,9 @@ print.dataDict <- function(dict) {
     warning("`[.dataDict`: Element '", elem, "' does not exist in '", deparse(substitute(dict)), "'.")
     return(NULL)
     
-  } else if (elem == "colTables") {
+  } else if (tolower(elem) == "coltables") {
     
     # Get the desired tables
-    # return(getTables(dict, cols))
     return(dict$colTables[cols])
     
   } else if (elem %in% ls(dict)) (
@@ -227,7 +162,7 @@ print.dataDict <- function(dict) {
   } else {
     
     # Throw an error if the element requested does not exist
-    stop("The requested element (", elem, ") does not exist in this `dataDict` object (",
+    stop("`[.dataDict`: The requested element (", elem, ") does not exist in this `dataDict` object (",
          deparse(substitute(dict)), ".")
     
   }
@@ -235,8 +170,57 @@ print.dataDict <- function(dict) {
 }
 
 
-# Set `[[` to do the same as `[`(?)
-# `[[.dataDict` <- `[.dataDict`
+#' Summarize a \code{dataDict} Object
+#'
+#' @param dict A \code{dataDict} object.
+#'
+#' @return
+#'
+#' @examples
+#' summary(dataDict(mtcars))
+#' 
+summary.dataDict <- function(dict) {
+  
+  # Cretae a tibble of the column names, classes, number of unique elements,
+  #   & whether or not the column has been tabulated
+  return(tibble::tibble(
+    Column = colnames(dict)
+    , Class = dict$classes
+    , NumUnique = dict$numUnique
+    , Tabulated = colnames(dict) %in% names(dict$colTables)[!sapply(dict$colTables, is.null)]
+  ))
+  
+}
+
+
+#' Print a \code{dataDict} Object
+#'
+#' @param dict A \code{dataDict} object.
+#' 
+#' @return The summary of \code{dict}, invisibly (i.e. \code{summary(dict)}).
+#'
+#' @examples
+#' dataDict(mtcars)
+#' print(dataDict(mtcars))
+#' dd <- dataDict(mtcars)
+#' print(dd)
+#' 
+print.dataDict <- function(dict) {
+  
+  # Print some information about the data that the `dataDict` is based off of
+  dictName <- deparse(substitute(dict)) %>% {ifelse(. == "x", "", paste0("(", ., ") "))}
+  cat(
+    "This `dataDict` object ", dictName, "was based off of '", attr(dict, "dfName"),
+    "' (a '", dict$dfClass[1], "') in the '", attr(dict, "dfEnvName"), "' environment,\n",
+    "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this `dataDict` was constructed.\n",
+    "The `tableMode` mode is set to '", attr(dict, "tableMode"), "', and the `verbose` level is '", attr(dict, "verbose"), "'.\n",
+    sep = ""
+  )
+  
+  # Print the summary object
+  return(print(summary(dict)))
+  
+}
 
 
 #' Dimensions of a \code{dataDict}
@@ -298,11 +282,16 @@ names.dataDict <- function(dict) {
 #' @export
 #'
 #' @examples
+#' df <- mtcars
+#' dd <- dataDict(df)
+#' dd$colTables$mpg
+#' df$mpg <- df$mpg * 2
+#' update(dd, df)
+#' dd$colTables$mpg
 #' 
 updateDD <- function(dict, df) {
   stop("`updateDD`: This function has not yet been implemented.")
 }
-
 
 
 
@@ -327,21 +316,20 @@ columnTables <- function(dict, df, tableMode) {
   # Tabulate the results, if desired, & set the `tableMode` attribute
   attr(dict, "tableMode") <- tableMode
   if (tableMode == "lazy") {
-    if (attr(dict, "verbose") > 0) message("`dataDict`: Lazy table mode active.")
+    if (attr(dict, "verbose") > 0) message("`columnTables`: Lazy table mode active.")
     colTables <- vector(mode = "list", length = dict$dims[[2]]) %>% setNames(dict$dimnames[[2]]) %>% as.environment()
   } else if (isTRUE(tableMode)) {
     colTables <- purrr::map(df, table, useNA = "ifany", dnn = NULL) %>% as.environment()
   } else if (isFALSE(tableMode)) {
-    colTables <- NULL
+    colTables <- new.env()
   } else {
-    if (attr(dict, "verbose") > 1) warning("`dataDict`: Invalid table mode (", tableMode,
+    if (attr(dict, "verbose") > 1) warning("`columnTables`: Invalid table mode (", tableMode,
                                            "). Lazy table mode will be used instead.")
     attr(dict, "tableMode") <- "lazy"
     colTables <- vector(mode = "list", length = dict$dims[[2]]) %>% setNames(dict$dimnames[[2]]) %>% as.environment()
   }
   
   # Create the columnTables object, holding the dataDict, & the list of the tables
-  # colTables <- list(dict = dict, colTables = colTables)
   attr(colTables, "dict") <- dict
   
   # Set the dataDict class, & return it
@@ -362,7 +350,7 @@ columnTables <- function(dict, df, tableMode) {
 #' dd <- dataDict(mtcars)
 #' dd$colTables$mpg
 #' 
-`$.columnTables` <- function(colTables, col) {
+`$.columnTables` <- function(colTables, col = NULL) {
   colTables[col]
 }
 
@@ -376,26 +364,20 @@ columnTables <- function(dict, df, tableMode) {
 #'
 #' @examples
 #' dd <- dataDict(mtcars)
-#' dd$colTables$mpg
+#' dd$colTables["mpg"]
+#' dd$colTables[c("mpg", "cyl", "am")]
 #' 
-`[.columnTables` <- function(colTables, cols) {
+`[.columnTables` <- function(colTables, cols = NULL) {
   
-  # Get the `colTables` & `dict` objects (for convenience)
-  # actualTables <- colTables # [["colTables"]]
+  # Get the `dict` object (for convenience), & deal with cols being NULL or NA
   dict <- attr(colTables, "dict")
+  if (is.null(cols) || is.na(cols)) cols <- colnames(dict)
   
-  browser()
-  # Retrieve existing column tables, & set the ones that we need to calculate/aren't in the data
-  # existingTables <- cols[cols %in% names(colTables)] %>% sapply(get, colTables, simplify = FALSE)
-  # otherCols <- cols[!(cols %in% names(colTables))]
-  tabulatedCols <- names(colTables)[!sapply(colTables, is.null)]
-  otherCols <- names(colTables)[sapply(colTables, is.null)]
+  # Determine which columns we need to calculate, & if any are invalid
   colsToCalc <- intersect(cols, colnames(dict))
   invalidCols <- setdiff(cols, colnames(dict))
-  # colsToCalc <- intersect(otherCols, colnames(dict)) %>% intersect(cols)
-  # invalidCols <- setdiff(otherCols, colnames(dict)) %>% intersect(cols)
   
-  # If there are any invlaid columns (i.e. ones not in the data)
+  # If there are any invalid columns (i.e. ones not in the data), print a warning
   if (length(invalidCols) > 0) warning(
       "`[.columnTables`: Some invalid columns were selected:\n",
       paste0(invalidCols, sep = ", ")
@@ -405,33 +387,58 @@ columnTables <- function(dict, df, tableMode) {
   if (length(colsToCalc) > 0) {
     
     # If the original object that this dataDict was based off of still exists, get it, else throw an error
-    if ((!is.null(dict$dfEnv)) && exists(dict$dfName, where = dict$dfEnv)) {
-      df <- eval(dict$dfCall, dict$dfEnv)
+    if ((!is.null(attr(dict, "dfEnv"))) && exists(attr(dict, "dfName"), where = attr(dict, "dfEnv"))) {
+      df <- eval(attr(dict, "dfCall"), attr(dict, "dfEnv"))
     } else {
       stop(
         "`[.dataDict`: The object that this `dataDict` was based off (",
-        dict$dfName, ") no longer exists in its original environment (", dict$dfEnvName, ").\n",
+        attr(dict, "dfName"), ") no longer exists in its original environment (", attr(dict, "dfEnvName"), ").\n",
         "Please update the reference using `updateDD(dict, df)`."
       )
     }
     
-    # Calculate the new column tables, save them to the tables environment, & return them in the desired order
-    newTables <- purrr::map(`[.data.frame`(df, colsToCalc), table, useNA = "ifany", dnn = NULL)
-    purrr::walk2(newTables, names(newTables), ~ assign(.y, .x, colTables))
-    # for (i in seq_along(newTables)) newTables[[i]] %>% assign(names(.), ., colTables)
-      # colTables[[names(newTables[[i]])]] <- newTables[[i]]
-    # tabulatedCols <- c(tabulatedCols, names(newTables))
-    # return(c(existingTables, newTables)[cols])
-    
-  # } else {
-  #   
-  #   # If the requested tables have all already been calculated, return the existing tables
-  #   return(existingTables)
+    # Calculate the new column tables, & save them to the tables environment
+    purrr::walk(colsToCalc, ~ table(df[[.x]], useNA = "ifany", dnn = NULL) %>% assign(.x, ., colTables))
     
   }
   
-  # Return the desired columns
+  # Return the tables for the desired columns
   return(purrr::map(cols, ~ get(.x, colTables)) %>% setNames(cols))
+  
+}
+
+
+#' Summarize a \code{dataDict} Object
+#'
+#' @param colTables A \code{columnTables} object.
+#'
+#' @return The summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
+#'
+#' @examples
+#' dd <- dataDict(mtcars)
+#' summary(dd$colTables)
+#' 
+summary.colTables <- function(colTables) {
+  
+  # 
+  
+}
+
+
+#' Print a \code{dataDict} Object
+#'
+#' @param colTables A \code{columnTables} object.
+#'
+#' @return The summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
+#'
+#' @examples
+#' dd <- dataDict(mtcars)
+#' dd$colTables
+#' print(dd$colTables)
+#' 
+print.colTables <- function(colTables) {
+  
+  # 
   
 }
 
@@ -450,108 +457,5 @@ columnTables <- function(dict, df, tableMode) {
 #' names(dd$colTables)
 #' 
 names.colTables <- function(colTables) {
-  # return(names(colTables[["colTables"]]))
   return(names(colTables)[!sapply(colTables, is.null)])
 }
-
-
-# #' Extract Tabuated Columns from a \code{dataDict}
-# #'
-# #' @param elem The element to extract (character scalar).
-# #' @param cols The columns to extract the tables for (character vector).
-# #'
-# #' @return A named list of tables, corresponding to the requested columns.
-# #'
-# #' @examples
-# #' dd <- dataDict(mtcars)
-# #' getTables(dd)
-# #' getTables(dd, cols = NA)
-# #' getTables(dd, cols = NA)
-# #' getTables(dd, cols = "mpg")
-# #' getTables(dd, cols = c("mpg", "cyl"))
-# #' 
-# getTables <- function(dict, cols = NULL) {
-#   
-#   # Either throw an error if tables were disabled, return them, or calculate them
-#   if (isFALSE(attr(dict, "table"))) {
-#     
-#     # If the tables were disabled, print a warning, & return nothing
-#     warning("`[.dataDict`: The columns were not tabulated for this `dataDict` object.\n",
-#             "Please re-run with `dataDict(", deparse(dict$dfCall), ", table = TRUE)` or ",
-#             "`dataDict(", deparse(dict$dfCall), ", table = 'lazy')` if you want to access this field.")
-#     return(NULL)
-#     
-#   } else if (isTRUE(attr(dict, "table"))) {
-#     
-#     # If `cols` is NULL or NA, return all the tabulated columns, or just the desired ones,
-#     #   printing a warning message if some column names aren't found
-#     if (is.null(cols) || is.na(cols)) {
-#       return(dict$colTables)
-#     } else if (all(cols %in% names(dict$colTables))) {
-#       return(dict$colTables[cols])
-#     } else {
-#       warning("`[.dataDict`: Columns not found in the `dataDict`: ",
-#               paste0(cols[!(cols %in% names(dict$colTables))], collapse = ", "))
-#       return(dict$colTables[cols[cols %in% names(dict$colTables)]])
-#     }
-#     
-#   } else {
-#     
-#     # If the original object that this dataDict was based off of still exists, get it, else throw an error
-#     if ((!is.null(dict$dfEnv)) && exists(dict$dfName, where = dict$dfEnv)) {
-#       df <- eval(dict$dfCall, dict$dfEnv)
-#     } else {
-#       stop(
-#         "`[.dataDict`: The object that this `dataDict` (", deparse(substitute(dict)), ") was based off (",
-#         dict$dfName, ") no longer exists in its original environment (", dict$dfEnvName, ").\n",
-#         "Please update the reference using updateDD(", deparse(substitute(dict)), "df)."
-#       )
-#     }
-#     
-#     # Either throw an error if no column was specified, return all the tabulated columns,
-#     #   or calculate them & save the results
-#     if (is.null(cols)) {
-#       
-#       # If no column is specified, print a warning, & return nothing
-#       warning("`[.dataDict`: Lazy table mode is active, so you must specify a column name ",
-#               "(or use `cols = NA` to get all the columns.")
-#       return(NULL)
-#       
-#     } else if (any(is.na(cols))) {
-#       
-#       # If any of the names were not NA, print a message
-#       if (!all(is.na(cols))) message("Some of the names in `cols` were NA, so data was returned for all columns.")
-#       
-#       # Return all the tabulated columns, tabulating & saving them if need be
-#       if (length(dict$colTables) == ncol(dict)) {
-#         return(dict$colTables)
-#       } else {
-#         return(dict$colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE))
-#       }
-#       
-#     } else if (!all(cols %in% dict$colNames)) {
-#       
-#       # If any of the columns don't exist in the data, throw an error
-#       warning("`[.dataDict`: Columns not found in the data: ",
-#               paste0(cols[!(cols %in% names(dict$colNames))], collapse = ", "))
-#       
-#       # } else if (all(cols %in% names(dict$colTables))) {
-#       #   
-#       #   # If the columns have already been tabulated, return them
-#       #   return(dict$colTables %>% .[names(.) %in% cols])
-#       
-#     } else {
-#       
-#       # Else retrieve the columns that have already been calculated, & calculate/save the others
-#       colTable <- dict$colTables %>% .[names(.) %in% cols]
-#       
-#       # Else tabulate the desired columns, & save them
-#       # colTable <- sapply(df[cols], table, useNA = "ifany", dnn = NULL, simplify = FALSE)
-#       # dict$colTables <- c(dict$colTables, colTable) # list(colTable) %>% setNames(cols))
-#       # return(colTable)
-#       
-#     }
-#     
-#   }
-#   
-# }
