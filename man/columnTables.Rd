@@ -4,16 +4,14 @@
 \alias{columnTables}
 \title{Create a \code{columnTables} Object}
 \usage{
-columnTables(dict, df, table, lazyTable)
+columnTables(dict, df, table)
 }
 \arguments{
 \item{dict}{A \code{dataDict} object.}
 
 \item{df}{The data.frame-like object to calculate information for (should be a name, not an expression).}
 
-\item{table}{Whether or not to tabulate each column (logical scalar).}
-
-\item{lazyTable}{Whether or not to enable lazy table mode (see below for more) (logical scalar).}
+\item{table}{What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).}
 }
 \value{
 

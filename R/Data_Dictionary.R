@@ -48,7 +48,7 @@
 dataDict <- function(df, table = "lazy", verbose = Inf) {
   
   # Ensure that we have a data.frame-like object
-  if (!inherits(df, "data.frame")) stop("dataDict: 'df' must inherit from a 'data.frame'.")
+  if (!inherits(df, "data.frame")) stop("dataDict: `df`` must inherit from a `data.frame`.")
   
   # Create the data dictionary object, & set the call/verbosity attribute
   dict <- new.env()
@@ -143,7 +143,7 @@ print.dataDict <- function(dict) {
     "This `dataDict` object ", dictName, "was based off of '", dict$dfName,
     "' (a '", dict$dfClass[1], "') in the '", dict$dfEnvName, "' environment,\n",
     "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this `dataDict` was constructed.\n",
-    "The 'table' mode is set to '", attr(dict, "table"), "', and the 'verbose' level is '", attr(dict, "verbose"), "'.\n",
+    "The `table` mode is set to '", attr(dict, "table"), "', and the `verbose` level is '", attr(dict, "verbose"), "'.\n",
     sep = ""
   )
   
@@ -190,6 +190,12 @@ print.dataDict <- function(dict) {
 #' 
 `[.dataDict` <- function(dict, elem, cols = NULL) {
   
+  # If more than one element was requested, print a message, & take the first one
+  if (length(elem) > 1) {
+    message("`[.dataDict`: `length(elem) > 1`, so only the first one will be used.")
+    elem <- elem[1]
+  }
+  
   # Either throw an error if the element doesn't exist, or try to return the desired element
   if (!exists(elem, dict)) {
     
@@ -200,17 +206,22 @@ print.dataDict <- function(dict) {
   } else if (elem == "colTables") {
     
     # Get the desired tables
-    return(getTables(dict, cols))
+    # return(getTables(dict, cols))
+    return(dict$colTables[cols])
     
   } else if (elem %in% ls(dict)) (
     
     # Return the desired element
     return(get(x = elem, envir = dict))
     
-  ) else if (elem %in% dict$colNames) {
+  ) else if (elem %in% colNames(dict)) {
     
     # Return data on the desired column
-    # ...
+    return(list(
+      class = dict$classes %>% .[names(.) == elem]
+      , numUnique = dict$numUnique %>% .[names(.) == elem]
+      , table = dict$colTables[elem]
+    ))
     
   } else {
     
@@ -288,8 +299,9 @@ names.dataDict <- function(dict) {
 #' @examples
 #' 
 updateDD <- function(dict, df) {
-  
+  stop("`updateDD`: This function has not yet been implemented.")
 }
+
 
 
 
@@ -311,28 +323,25 @@ columnTables <- function(dict, df, table) {
   # Standardize the `table` parameter
   table <- switch(tolower("false"), lazy = "lazy", t = , true = TRUE, f = , false = FALSE)
   
-  # Tabulate the results, if desired, setting the 'table' attribute
+  # Tabulate the results, if desired, & set the `table` attribute
   if (table == "lazy") {
-    if (attr(dict, "verbose") > 0) message("dataDict: Lazy table mode active.")
+    if (attr(dict, "verbose") > 0) message("`dataDict`: Lazy table mode active.")
     attr(dict, "table") <- "lazy"
-    colTables <- list()
+    colTables <- new.env()
   } else if (isTRUE(table)) {
     attr(dict, "table") <- TRUE
-    colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE)
+    colTables <- sapply(df, table, useNA = "ifany", dnn = NULL, simplify = FALSE) %>% as.environment()
   } else if (isFALSE(table)) {
     attr(dict, "table") <- FALSE
-    colTables <- list()
+    colTables <- new.env()
   } else {
-    if (attr(dict, "verbose") > 1) message("dataDict: Invalid table mode (", table, "). Lazy table mode will be used instead.")
+    if (attr(dict, "verbose") > 1) message("`dataDict`: Invalid table mode (", table, "). Lazy table mode will be used instead.")
     attr(dict, "table") <- "lazy"
-    colTables <- list()
+    colTables <- new.env()
   }
   
-  # Create the columnTables object, holding the dataDict, and the list of the tables
-  colTables <- list(
-    dict = dict
-    , colTables = colTables
-  )
+  # Create the columnTables object, holding the dataDict, & the list of the tables
+  colTables <- list(dict = dict, colTables = colTables)
   
   # Set the dataDict class, & return it
   class(colTables) <- "columnTables"
@@ -353,7 +362,7 @@ columnTables <- function(dict, df, table) {
 #' dd$colTables$mpg
 #' 
 `$.columnTables` <- function(colTables, col) {
-  
+  colTables[col]
 }
 
 
@@ -370,7 +379,40 @@ columnTables <- function(dict, df, table) {
 #' 
 `[.columnTables` <- function(colTables, cols) {
   
-  # getTables()
+  # Get the `colTables` & `dict` objects (for convenience)
+  actualTables <- colTables$colTables
+  dict <- colTables$dict
+  
+  browser()
+  # Retrieve existing column tables, & set the ones that we need to calculate
+  existingTables <- cols[cols %in% names(actualTables)] %>% sapply(get, actualTables)
+  colsToCalc <- cols[!(cols %in% names(actualTables))]
+  
+  # If there are any columns we need to calculate, try to get them, else return the existing tables
+  if (length(colsToCalc) > 0) {
+    
+    # If the original object that this dataDict was based off of still exists, get it, else throw an error
+    if ((!is.null(dict$dfEnv)) && exists(dict$dfName, where = dict$dfEnv)) {
+      df <- eval(dict$dfCall, dict$dfEnv)
+    } else {
+      stop(
+        "`[.dataDict`: The object that this `dataDict` was based off (",
+        dict$dfName, ") no longer exists in its original environment (", dict$dfEnvName, ").\n",
+        "Please update the reference using `updateDD(dict, df)`."
+      )
+    }
+    
+    # Calculate the new column tables, save them to the tables environment, & return them in the desired order
+    newTables <- sapply(`[.data.frame`(df, colsToCalc), table, useNA = "ifany", dnn = NULL)
+    for (i in seq_along(newTables)) actualTables[[names(newTables[[i]])]] <- newTables[[i]]
+    return(c(existingTables, newTables)[cols])
+    
+  } else {
+    
+    # If the requested tables have all already been calculated, return the existing tables
+    return(existingTables)
+    
+  }
   
 }
 
@@ -414,7 +456,7 @@ getTables <- function(dict, cols = NULL) {
   if (isFALSE(attr(dict, "table"))) {
     
     # If the tables were disabled, print a warning, & return nothing
-    warning("`[.dataDict`: The columns were not tabulated for this dataDict object.\n",
+    warning("`[.dataDict`: The columns were not tabulated for this `dataDict` object.\n",
             "Please re-run with `dataDict(", deparse(dict$dfCall), ", table = TRUE)` or ",
             "`dataDict(", deparse(dict$dfCall), ", table = 'lazy')` if you want to access this field.")
     return(NULL)
@@ -428,7 +470,7 @@ getTables <- function(dict, cols = NULL) {
     } else if (all(cols %in% names(dict$colTables))) {
       return(dict$colTables[cols])
     } else {
-      warning("`[.dataDict`: Columns not found in the dataDict: ",
+      warning("`[.dataDict`: Columns not found in the `dataDict`: ",
               paste0(cols[!(cols %in% names(dict$colTables))], collapse = ", "))
       return(dict$colTables[cols[cols %in% names(dict$colTables)]])
     }
