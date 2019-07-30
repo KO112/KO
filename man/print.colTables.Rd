@@ -10,7 +10,7 @@
 \item{colTables}{A \code{columnTables} object.}
 }
 \value{
-The summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
+A summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
 }
 \description{
 Print a \code{dataDict} Object

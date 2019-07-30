@@ -10,7 +10,7 @@
 \item{dict}{A \code{dataDict} object.}
 }
 \value{
-
+A summary of \code{dict}.
 }
 \description{
 Summarize a \code{dataDict} Object

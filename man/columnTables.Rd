@@ -14,12 +14,9 @@ columnTables(dict, df, tableMode)
 \item{tableMode}{What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).}
 }
 \value{
-
+A \code{columnTables} object.
 }
 \description{
 Create an object that is used to store the results of tabulating columns in a data.frame-like object.
 This is currently only called from with a \code{dataDict} object.
-}
-\examples{
-
 }

@@ -4,6 +4,16 @@
 #   Add colHash, maybe use constructor for both colTables/colHash
 
 
+# Include other functions in package
+#' @include Pipes.R
+#' @include Error_Handling.R
+#' @importFrom data.table :=
+NULL
+
+# Avoid "undefined variable" notes in package checking
+globalVariables(c("dfEnv"))
+
+
 #' Create a Data Dictionary
 #' 
 #' Create a data dictionary object which holds information on the columns of a data.frame-like object.
@@ -23,14 +33,14 @@
 #' If \code{verbose > 0} (or \code{verbose != FALSE}), a message will be printed out when lazy table mode is active,
 #'   as well as when \code{df} is passed as an expression.
 #' If \code{verbose > 1}, a message will be printed out saying what object the \code{dataDict} is based on.
-#'
+#' 
 #' @param df The data.frame-like object to calculate information for (should be a name, not an expression).
 #' @param tableMode What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
 #' @param verbose How verbose you want the function to be (higher prints more information) (integer scalar).
 #' 
 #' @return A \code{dataDict} object.
 #' @export
-#'
+#' 
 #' @examples
 #' dd1 <- dataDict(mtcars)
 #' dd2 <- dataDict(mtcars, tableMode = "lazy")
@@ -42,7 +52,7 @@
 #' 
 #' # The line below works, since the expression is rather simple, but should be avoided
 #' # It is better to declare use something like: `df <- as_tibble(mtcars); dd <- dataDict(df)`
-#' dd <- dataDict(as_tibble(mtcars))
+#' dd <- dataDict(tibble::as_tibble(mtcars))
 #' 
 dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
@@ -107,13 +117,13 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 
 
 #' Extract Elements from a \code{dataDict} Object
-#'
+#' 
 #' @param dict A \code{dataDict} object.
 #' @param elem The element to extract (character scalar).
 #' @param cols If \code{elem == "colTables"}, the column(s) to extract (character vector).
-#'
+#' 
 #' @return The desired element extracted from the \code{dataDict} object.
-#'
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dd["numUnique"]
@@ -152,7 +162,7 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     # Return the desired element
     return(get(x = elem, envir = dict))
     
-  ) else if (elem %in% colNames(dict)) {
+  ) else if (elem %in% colnames(dict)) {
     
     # Return data on the desired column
     return(list(
@@ -173,11 +183,11 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 
 
 #' Summarize a \code{dataDict} Object
-#'
+#' 
 #' @param dict A \code{dataDict} object.
-#'
-#' @return
-#'
+#' 
+#' @return A summary of \code{dict}.
+#' 
 #' @examples
 #' summary(dataDict(mtcars))
 #' 
@@ -196,11 +206,11 @@ summary.dataDict <- function(dict) {
 
 
 #' Print a \code{dataDict} Object
-#'
+#' 
 #' @param dict A \code{dataDict} object.
 #' 
 #' @return The summary of \code{dict}, invisibly (i.e. \code{summary(dict)}).
-#'
+#' 
 #' @examples
 #' dataDict(mtcars)
 #' print(dataDict(mtcars))
@@ -230,11 +240,11 @@ print.dataDict <- function(dict) {
 #' Generic function to retrieve the dimensions of the data.frame-like object
 #'   that the \code{dataDict} is based on.
 #' `ncol` and `nrow` will also work, since they call `dim` in their implementation.
-#'
+#' 
 #' @param dict A \code{dataDict} object.
-#'
+#' 
 #' @return The dimensions of the original data.frame-like object.
-#'
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dim(dd)
@@ -251,12 +261,12 @@ dim.dataDict <- function(dict) {
 #' Generic function to retrieve the dimension names of the data.frame-like object
 #'   that the \code{dataDict} is based on.
 #' `colnames` and `rownames` will also work, since they call `dimnames` in their implementation.
-#'
+#' 
 #' @param dict A \code{dataDict} object.
-#'
+#' 
 #' @return \code{dimnames}: The dimension names of the original data.frame-like object.
 #' @name dimensionNames
-#'
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dimnames(dd)
@@ -271,18 +281,19 @@ dimnames.dataDict <- function(dict) {
 
 #' @return \code{names}: The column names of the original data.frame-like object.
 #' @rdname dimensionNames
+#' 
 names.dataDict <- function(dict) {
   return(colnames(dict))
 }
 
 
 #' Update a \code{dataDict} Object
-#'
+#' 
 #' @param dict A \code{dataDict} object.
 #' @param df The data.frame-like object to calculate information for.
-#'
+#' 
 #' @export
-#'
+#' 
 #' @examples
 #' df <- mtcars
 #' dd <- dataDict(df)
@@ -301,14 +312,12 @@ updateDD <- function(dict, df) {
 #' 
 #' Create an object that is used to store the results of tabulating columns in a data.frame-like object.
 #' This is currently only called from with a \code{dataDict} object.
-#'
+#' 
 #' @param dict A \code{dataDict} object.
 #' @param df The data.frame-like object to calculate information for (should be a name, not an expression).
 #' @param tableMode What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).
-#'
-#' @return
-#'
-#' @examples
+#' 
+#' @return A \code{columnTables} object.
 #' 
 columnTables <- function(dict, df, tableMode) {
   
@@ -344,12 +353,12 @@ columnTables <- function(dict, df, tableMode) {
 
 
 #' Extract Elements from a \code{columnTables} Object
-#'
+#' 
 #' @param colTables A \code{columnTables} object.
 #' @param col The column to extract the table for (character scalar).
-#'
+#' 
 #' @return A \code{table} of the desired column.
-#'
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dd$colTables$mpg
@@ -360,12 +369,12 @@ columnTables <- function(dict, df, tableMode) {
 
 
 #' Extract Elements from a \code{columnTables} Object
-#'
+#' 
 #' @param colTables A \code{columnTables} object.
 #' @param cols The columns to extract the tables for (character vector).
-#'
+#' 
 #' @return A list of \code{table}s of the desired columns.
-#'
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dd$colTables["mpg"]
@@ -415,11 +424,11 @@ columnTables <- function(dict, df, tableMode) {
 
 
 #' Summarize a \code{dataDict} Object
-#'
+#' 
 #' @param colTables A \code{columnTables} object.
-#'
-#' @return The summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
-#'
+#' 
+#' @return A summary of \code{colTables}.
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' summary(dd$colTables)
@@ -432,11 +441,11 @@ summary.colTables <- function(colTables) {
 
 
 #' Print a \code{dataDict} Object
-#'
+#' 
 #' @param colTables A \code{columnTables} object.
-#'
-#' @return The summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
-#'
+#' 
+#' @return A summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dd$colTables
@@ -455,9 +464,9 @@ print.colTables <- function(colTables) {
 #'   been tabulated already (character vector).
 #' 
 #' @param colTables A \code{columnTables} object.
-#'
+#' 
 #' @return The names of the columns that have been tabulated already (character vector).
-#'
+#' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' names(dd$colTables)

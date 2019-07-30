@@ -47,6 +47,6 @@ dd4 <- dataDict(mtcars, tableMode = FALSE, verbose = 0)
 
 # The line below works, since the expression is rather simple, but should be avoided
 # It is better to declare use something like: `df <- as_tibble(mtcars); dd <- dataDict(df)`
-dd <- dataDict(as_tibble(mtcars))
+dd <- dataDict(tibble::as_tibble(mtcars))
 
 }
