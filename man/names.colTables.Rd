@@ -2,7 +2,7 @@
 % Please edit documentation in R/Data_Dictionary.R
 \name{names.colTables}
 \alias{names.colTables}
-\title{Get the Names of a \code{columnTables}}
+\title{Get the Names of a \code{columnTables} Object}
 \usage{
 \method{names}{colTables}(colTables)
 }

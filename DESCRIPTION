@@ -23,6 +23,8 @@ Imports:
     lubridate,
     magrittr,
     plotly,
+    pryr,
+    purrr,
     scales,
     stats,
     tibble

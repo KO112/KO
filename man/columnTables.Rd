@@ -4,14 +4,14 @@
 \alias{columnTables}
 \title{Create a \code{columnTables} Object}
 \usage{
-columnTables(dict, df, table)
+columnTables(dict, df, tableMode)
 }
 \arguments{
 \item{dict}{A \code{dataDict} object.}
 
 \item{df}{The data.frame-like object to calculate information for (should be a name, not an expression).}
 
-\item{table}{What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).}
+\item{tableMode}{What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).}
 }
 \value{
 

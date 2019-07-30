@@ -4,7 +4,7 @@
 \alias{$.columnTables}
 \title{Extract Elements from a \code{columnTables} Object}
 \usage{
-\method{$}{columnTables}(colTables, col)
+\method{$}{columnTables}(colTables, col = NULL)
 }
 \arguments{
 \item{colTables}{A \code{columnTables} object.}

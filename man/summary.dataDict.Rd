@@ -2,7 +2,7 @@
 % Please edit documentation in R/Data_Dictionary.R
 \name{summary.dataDict}
 \alias{summary.dataDict}
-\title{Summarize a \code{dayaDict} Object}
+\title{Summarize a \code{dataDict} Object}
 \usage{
 \method{summary}{dataDict}(dict)
 }
@@ -13,7 +13,7 @@
 
 }
 \description{
-Summarize a \code{dayaDict} Object
+Summarize a \code{dataDict} Object
 }
 \examples{
 summary(dataDict(mtcars))

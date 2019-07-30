@@ -4,7 +4,7 @@
 \alias{[.columnTables}
 \title{Extract Elements from a \code{columnTables} Object}
 \usage{
-\method{[}{columnTables}(colTables, cols)
+\method{[}{columnTables}(colTables, cols = NULL)
 }
 \arguments{
 \item{colTables}{A \code{columnTables} object.}
@@ -19,6 +19,7 @@ Extract Elements from a \code{columnTables} Object
 }
 \examples{
 dd <- dataDict(mtcars)
-dd$colTables$mpg
+dd$colTables["mpg"]
+dd$colTables[c("mpg", "cyl", "am")]
 
 }

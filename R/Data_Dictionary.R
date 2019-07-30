@@ -56,43 +56,45 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
   # Set some attributes of the data dictionary object
   attributes(dict) <- dplyr::lst(
+    
+    # Set simple attributes (calculated outside)
     verbose, call, dfCall
+    
+    # Set the environment of the `df` object, & get the environment name/address
     , dfEnv = parent.frame(2)
     , dfEnvName = environmentName(dfEnv) %>% ifelse(. == "", pryr::address(dfEnv), .)
+    
+    # Get the dimensions/dimension names from the original df object
+    , dims = dim(df)
+    , dimNames = dimnames(df)
+    
   )
   
   # Attempt to set the name of the original data
   if (length(dfCall) > 1) {
     message("`dataDict`: `df` has been passed an an expression (", deparse(dfCall), ").\n", strrep(" ", 12),
-            "This may result in some problems when using this `dataDict` object, but should be fine.")
+            "This may result in problems when using this `dataDict` object, but should be fine.")
     attr(dict, "dfName") <- dfCall[purrr::map_lgl(dfCall, ~ is.data.frame(eval(.x)))][[1]] %>% deparse()
   } else {
     attr(dict, "dfName") <- deparse(dfCall)
   }
   
+  # If desired & relevant, print out a message about not changing the original object
+  if ((tableMode == "lazy") && (verbose > 1)) message(
+    "`dataDict`: This `dataDict` will be based off of the object named '", attr(dict, "dfName"), "'.\n", strrep(" ", 12),
+    "To ensure that this `dataDict` will continue to work, do not change the name of the object,\n", strrep(" ", 14),
+    "or use the `updateDD` function after the object changes."
+  )
   
   # Add various values to the dictionary
   evalq(envir = dict, expr = {
-    
-    # If desired & relevant, print out a message about not changing the original object
-    if ((tableMode == "lazy") && (verbose > 1)) message(
-        "`dataDict`: This `dataDict` will be based off of the object named '", attr(dict, "dfName"), "'.\n", strrep(" ", 12),
-        "To ensure that this `dataDict` will continue to work, do not change the name of the object,\n", strrep(" ", 14),
-        "or use the `updateDD` function after the object changes."
-      )
-    
-    # Get the dimensions/dimension names from the original df object
-    dims <- dim(df)
-    dimnames <- dimnames(df)
     
     # Set the class of the original df object, & the classes of each column
     dfClass <- class(df)
     classes <- purrr::map_chr(df, class)
     
-    # Get the number of unique elements
+    # Get the number of unique elements, & the column tables object
     numUnique <- purrr::map_int(df, ~ length(unique(.x)))
-    
-    # Set the column tables element
     colTables <- columnTables(dict, df, tableMode)
     
   })
@@ -240,7 +242,7 @@ print.dataDict <- function(dict) {
 #' nrow(dd)
 #' 
 dim.dataDict <- function(dict) {
-  return(dict$dims)
+  return(attr(dict, "dims"))
 }
 
 
@@ -263,7 +265,7 @@ dim.dataDict <- function(dict) {
 #' names(dd) # Same as colnames(dd)
 #' 
 dimnames.dataDict <- function(dict) {
-  return(dict$dimnames)
+  return(attr(dict, "dimNames"))
 }
 
 
@@ -317,16 +319,18 @@ columnTables <- function(dict, df, tableMode) {
   attr(dict, "tableMode") <- tableMode
   if (tableMode == "lazy") {
     if (attr(dict, "verbose") > 0) message("`columnTables`: Lazy table mode active.")
-    colTables <- vector(mode = "list", length = dict$dims[[2]]) %>% setNames(dict$dimnames[[2]]) %>% as.environment()
+    colTables <- vector(mode = "list", length = attr(dict, "dims")[[2]]) %>%
+      stats::setNames(., attr(dict, "dimNames")[[2]]) %>% as.environment()
   } else if (isTRUE(tableMode)) {
     colTables <- purrr::map(df, table, useNA = "ifany", dnn = NULL) %>% as.environment()
   } else if (isFALSE(tableMode)) {
     colTables <- new.env()
   } else {
-    if (attr(dict, "verbose") > 1) warning("`columnTables`: Invalid table mode (", tableMode,
-                                           "). Lazy table mode will be used instead.")
+    if (attr(dict, "verbose") > 1)
+      warning("`columnTables`: Invalid table mode (", tableMode, "). Lazy table mode will be used instead.")
     attr(dict, "tableMode") <- "lazy"
-    colTables <- vector(mode = "list", length = dict$dims[[2]]) %>% setNames(dict$dimnames[[2]]) %>% as.environment()
+    colTables <- vector(mode = "list", length = attr(dict, "dims")[[2]]) %>%
+      stats::setNames(., attr(dict, "dimNames")[[2]]) %>% as.environment()
   }
   
   # Create the columnTables object, holding the dataDict, & the list of the tables
@@ -373,15 +377,17 @@ columnTables <- function(dict, df, tableMode) {
   dict <- attr(colTables, "dict")
   if (is.null(cols) || is.na(cols)) cols <- colnames(dict)
   
-  # Determine which columns we need to calculate, & if any are invalid
-  colsToCalc <- intersect(cols, colnames(dict))
+  # Determine which columns have already been tabulated, & which we need to calculate
+  tabulatedCols <- names(colTables)[!sapply(colTables, is.null)]
+  colsToCalc <- intersect(cols, colnames(dict)) %>% setdiff(tabulatedCols)
+  
+  # Determine which columns are valid/invalid
   invalidCols <- setdiff(cols, colnames(dict))
+  validCols <- setdiff(cols, invalidCols)
   
   # If there are any invalid columns (i.e. ones not in the data), print a warning
-  if (length(invalidCols) > 0) warning(
-      "`[.columnTables`: Some invalid columns were selected:\n",
-      paste0(invalidCols, sep = ", ")
-    )
+  if (length(invalidCols) > 0)
+    warning("`[.columnTables`: Some invalid columns were selected:\n\t", paste0(invalidCols, collapse = ", "))
   
   # If there are any columns we need to calculate, try to get them, else return the existing tables
   if (length(colsToCalc) > 0) {
@@ -402,8 +408,8 @@ columnTables <- function(dict, df, tableMode) {
     
   }
   
-  # Return the tables for the desired columns
-  return(purrr::map(cols, ~ get(.x, colTables)) %>% setNames(cols))
+  # Return the tables for the desired valid columns
+  return(purrr::map(validCols, ~ get(.x, colTables)) %>% stats::setNames(., validCols))
   
 }
 

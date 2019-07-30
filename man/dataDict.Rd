@@ -4,12 +4,12 @@
 \alias{dataDict}
 \title{Create a Data Dictionary}
 \usage{
-dataDict(df, table = "lazy", verbose = Inf)
+dataDict(df, tableMode = "lazy", verbose = Inf)
 }
 \arguments{
 \item{df}{The data.frame-like object to calculate information for (should be a name, not an expression).}
 
-\item{table}{What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).}
+\item{tableMode}{What mode to use for tabulating each column (see \code{details} for more) (character/logical scalar).}
 
 \item{verbose}{How verbose you want the function to be (higher prints more information) (integer scalar).}
 }
@@ -25,11 +25,11 @@ E.g. call the function as \code{dataDict(mtcars)}, instead of \code{dataDict(as_
 This will allow for more functionality, and will help avoid errors, especially when lazy table mode is active.
 If you want to pass an expression, simple ones should work, but do so at your own risk.
 
-The \code{table} parameter can have one of three values: c(TRUE, FALSE, "lazy").
+The \code{tableMode} parameter can have one of three values: c(TRUE, FALSE, "lazy").
 Lazy table mode means that columns are not tabulated until requested.
-When they are tabulated, they can be done one at a time (\code{table = "lazy"}),
-  or all together (\code{table = true}).
-This setting can be deactivated entirely (\code{table = FALSE}), but this is not suggesteds.
+When they are tabulated, they can be done one at a time (\code{tableMode = "lazy"}),
+  or all together (\code{tableMode = true}).
+This setting can be deactivated entirely (\code{tableMode = FALSE}), but this is not suggesteds.
 This setting is useful since tabulation can take a long time for large datasets.
 
 If \code{verbose > 0} (or \code{verbose != FALSE}), a message will be printed out when lazy table mode is active,
@@ -38,15 +38,15 @@ If \code{verbose > 1}, a message will be printed out saying what object the \cod
 }
 \examples{
 dd1 <- dataDict(mtcars)
-dd2 <- dataDict(mtcars, table = "lazy")
-dd3 <- dataDict(mtcars, table = TRUE)
-dd5 <- dataDict(mtcars, table = FALSE)
-dd4 <- dataDict(mtcars, table = "lazy", verbose = 0)
-dd4 <- dataDict(mtcars, table = TRUE, verbose = 0)
-dd4 <- dataDict(mtcars, table = FALSE, verbose = 0)
+dd2 <- dataDict(mtcars, tableMode = "lazy")
+dd3 <- dataDict(mtcars, tableMode = TRUE)
+dd5 <- dataDict(mtcars, tableMode = FALSE)
+dd4 <- dataDict(mtcars, tableMode = "lazy", verbose = 0)
+dd4 <- dataDict(mtcars, tableMode = TRUE, verbose = 0)
+dd4 <- dataDict(mtcars, tableMode = FALSE, verbose = 0)
 
 # The line below works, since the expression is rather simple, but should be avoided
-# It is better to declare use something like `df <- tibble(mtcars); dd <- dataDict(df)`
-dd <- dataDict(tibble(mtcars))
+# It is better to declare use something like: `df <- as_tibble(mtcars); dd <- dataDict(df)`
+dd <- dataDict(as_tibble(mtcars))
 
 }
