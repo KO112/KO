@@ -4,10 +4,10 @@
 \alias{dim.dataDict}
 \title{Dimensions of a \code{dataDict}}
 \usage{
-\method{dim}{dataDict}(dict)
+\method{dim}{dataDict}(x)
 }
 \arguments{
-\item{dict}{A \code{dataDict} object.}
+\item{x}{A \code{dataDict} object.}
 }
 \value{
 The dimensions of the original data.frame-like object.

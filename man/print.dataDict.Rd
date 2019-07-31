@@ -4,13 +4,15 @@
 \alias{print.dataDict}
 \title{Print a \code{dataDict} Object}
 \usage{
-\method{print}{dataDict}(dict)
+\method{print}{dataDict}(x, ...)
 }
 \arguments{
-\item{dict}{A \code{dataDict} object.}
+\item{x}{A \code{dataDict} object.}
+
+\item{...}{Currently not used.}
 }
 \value{
-The summary of \code{dict}, invisibly (i.e. \code{summary(dict)}).
+The summary of \code{x}, invisibly (i.e. \code{summary(x)}).
 }
 \description{
 Print a \code{dataDict} Object

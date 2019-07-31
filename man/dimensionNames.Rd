@@ -6,12 +6,12 @@
 \alias{names.dataDict}
 \title{Dimension Names of a \code{dataDict}}
 \usage{
-\method{dimnames}{dataDict}(dict)
+\method{dimnames}{dataDict}(x)
 
-\method{names}{dataDict}(dict)
+\method{names}{dataDict}(x)
 }
 \arguments{
-\item{dict}{A \code{dataDict} object.}
+\item{x}{A \code{dataDict} object.}
 }
 \value{
 \code{dimnames}: The dimension names of the original data.frame-like object.

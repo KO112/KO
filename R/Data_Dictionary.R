@@ -123,6 +123,7 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 #' @param cols If \code{elem == "colTables"}, the column(s) to extract (character vector).
 #' 
 #' @return The desired element extracted from the \code{dataDict} object.
+#' @export
 #' 
 #' @examples
 #' \dontrun{
@@ -186,24 +187,26 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 
 #' Summarize a \code{dataDict} Object
 #' 
-#' @param dict A \code{dataDict} object.
+#' @param object A \code{dataDict} object.
+#' @param ... Currently not used.
 #' 
-#' @return A summary of \code{dict}.
+#' @return A summary of \code{object}.
+#' @export
 #' 
 #' @examples
 #' \dontrun{
 #'   summary(dataDict(mtcars))
 #' }
 #' 
-summary.dataDict <- function(dict) {
+summary.dataDict <- function(object, ...) {
   
   # Cretae a tibble of the column names, classes, number of unique elements,
   #   & whether or not the column has been tabulated
   return(tibble::tibble(
-    Column = colnames(dict)
-    , Class = dict$classes
-    , NumUnique = dict$numUnique
-    , Tabulated = colnames(dict) %in% names(dict$colTables)[!sapply(dict$colTables, is.null)]
+    Column = colnames(object)
+    , Class = object$classes
+    , NumUnique = object$numUnique
+    , Tabulated = colnames(object) %in% names(object$colTables)
   ))
   
 }
@@ -211,9 +214,11 @@ summary.dataDict <- function(dict) {
 
 #' Print a \code{dataDict} Object
 #' 
-#' @param dict A \code{dataDict} object.
+#' @param x A \code{dataDict} object.
+#' @param ... Currently not used.
 #' 
-#' @return The summary of \code{dict}, invisibly (i.e. \code{summary(dict)}).
+#' @return The summary of \code{x}, invisibly (i.e. \code{summary(x)}).
+#' @export
 #' 
 #' @examples
 #' dataDict(mtcars)
@@ -221,20 +226,20 @@ summary.dataDict <- function(dict) {
 #' dd <- dataDict(mtcars)
 #' print(dd)
 #' 
-print.dataDict <- function(dict) {
+print.dataDict <- function(x, ...) {
   
   # Print some information about the data that the `dataDict` is based off of
-  dictName <- deparse(substitute(dict)) %>% {ifelse(. == "x", "", paste0("(", ., ") "))}
+  dictName <- deparse(substitute(x)) %>% {ifelse(. == "x", "", paste0("(", ., ") "))}
   cat(
-    "This `dataDict` object ", dictName, "was based off of '", attr(dict, "dfName"),
-    "' (a '", dict$dfClass[1], "') in the '", attr(dict, "dfEnvName"), "' environment,\n",
-    "  which had ", nrow(dict), " rows and ", ncol(dict), " columns when this `dataDict` was constructed.\n",
-    "The `tableMode` mode is set to '", attr(dict, "tableMode"), "', and the `verbose` level is '", attr(dict, "verbose"), "'.\n",
+    "This `dataDict` object ", dictName, "was based off of '", attr(x, "dfName"),
+    "' (a '", x$dfClass[1], "') in the '", attr(x, "dfEnvName"), "' environment,\n",
+    "  which had ", nrow(x), " rows and ", ncol(x), " columns when this `dataDict` was constructed.\n",
+    "The `tableMode` mode is set to '", attr(x, "tableMode"), "', and the `verbose` level is '", attr(x, "verbose"), "'.\n",
     sep = ""
   )
   
   # Print the summary object
-  return(print(summary(dict)))
+  return(print(summary(x)))
   
 }
 
@@ -245,9 +250,10 @@ print.dataDict <- function(dict) {
 #'   that the \code{dataDict} is based on.
 #' `ncol` and `nrow` will also work, since they call `dim` in their implementation.
 #' 
-#' @param dict A \code{dataDict} object.
+#' @param x A \code{dataDict} object.
 #' 
 #' @return The dimensions of the original data.frame-like object.
+#' @export
 #' 
 #' @examples
 #' dd <- dataDict(mtcars)
@@ -255,8 +261,8 @@ print.dataDict <- function(dict) {
 #' ncol(dd)
 #' nrow(dd)
 #' 
-dim.dataDict <- function(dict) {
-  return(attr(dict, "dims"))
+dim.dataDict <- function(x) {
+  return(attr(x, "dims"))
 }
 
 
@@ -266,9 +272,10 @@ dim.dataDict <- function(dict) {
 #'   that the \code{dataDict} is based on.
 #' `colnames` and `rownames` will also work, since they call `dimnames` in their implementation.
 #' 
-#' @param dict A \code{dataDict} object.
+#' @param x A \code{dataDict} object.
 #' 
 #' @return \code{dimnames}: The dimension names of the original data.frame-like object.
+#' @export
 #' @name dimensionNames
 #' 
 #' @examples
@@ -278,16 +285,17 @@ dim.dataDict <- function(dict) {
 #' rownames(dd)
 #' names(dd) # Same as colnames(dd)
 #' 
-dimnames.dataDict <- function(dict) {
-  return(attr(dict, "dimNames"))
+dimnames.dataDict <- function(x) {
+  return(attr(x, "dimNames"))
 }
 
 
 #' @return \code{names}: The column names of the original data.frame-like object.
+#' @export
 #' @rdname dimensionNames
 #' 
-names.dataDict <- function(dict) {
-  return(colnames(dict))
+names.dataDict <- function(x) {
+  return(colnames(x))
 }
 
 
@@ -365,6 +373,7 @@ columnTables <- function(dict, df, tableMode) {
 #' @param col The column to extract the table for (character scalar).
 #' 
 #' @return A \code{table} of the desired column.
+#' @export
 #' 
 #' @examples
 #' dd <- dataDict(mtcars)
@@ -381,6 +390,7 @@ columnTables <- function(dict, df, tableMode) {
 #' @param cols The columns to extract the tables for (character vector).
 #' 
 #' @return A list of \code{table}s of the desired columns.
+#' @export
 #' 
 #' @examples
 #' \dontrun{
@@ -395,7 +405,7 @@ columnTables <- function(dict, df, tableMode) {
   if (is.null(cols) || is.na(cols)) cols <- colnames(dict)
   
   # Determine which columns have already been tabulated, & which we need to calculate
-  tabulatedCols <- names(colTables)[!sapply(colTables, is.null)]
+  tabulatedCols <- names(colTables) # ls(colTables)[!sapply(colTables, is.null)]
   colsToCalc <- intersect(cols, colnames(dict)) %>% setdiff(tabulatedCols)
   
   # Determine which columns are valid/invalid
@@ -433,9 +443,11 @@ columnTables <- function(dict, df, tableMode) {
 
 #' Summarize a \code{dataDict} Object
 #' 
-#' @param colTables A \code{columnTables} object.
+#' @param object A \code{columnTables} object.
+#' @param ... Currently not used.
 #' 
-#' @return A summary of \code{colTables}.
+#' @return A summary of \code{object}.
+#' @export
 #' 
 #' @examples
 #' \dontrun{
@@ -443,42 +455,46 @@ columnTables <- function(dict, df, tableMode) {
 #'   summary(dd$colTables)
 #' }
 #' 
-summary.colTables <- function(colTables) {
-  # stop("`summary.colTables`: This function has not yet been implemented.")
+summary.columnTables <- function(object, ...) {
+  # stop("`summary.columnTables`: This function has not yet been implemented.")
   return(NULL)
 }
 
 
 #' Print a \code{dataDict} Object
 #' 
-#' @param colTables A \code{columnTables} object.
+#' @param x A \code{columnTables} object.
+#' @param ... Currently not used.
 #' 
-#' @return A summary of \code{colTables}, invisibly (i.e. \code{summary(colTables)}).
+#' @return A summary of \code{x}, invisibly (i.e. \code{summary(x)}).
+#' @export
 #' 
 #' @examples
 #' dd <- dataDict(mtcars)
 #' dd$colTables
 #' print(dd$colTables)
 #' 
-print.colTables <- function(colTables) {
-  # stop("`print.ColTables`: This function has not yet been implemented.")
+print.columnTables <- function(x, ...) {
+  # stop("`print.columnTables`: This function has not yet been implemented.")
   return(NULL)
 }
 
 
-# #' Get the Names of a \code{columnTables} Object
-# #' 
-# #' Get the names of the columns from a \code{columnTables} object that have
-# #'   been tabulated already (character vector).
-# #' 
-# #' @param colTables A \code{columnTables} object.
-# #' 
-# #' @return The names of the columns that have been tabulated already (character vector).
-# #' 
-# #' @examples
-# #' dd <- dataDict(mtcars)
-# #' names(dd$colTables)
-# #' 
-# names.colTables <- function(colTables) {
-#   return(names(colTables)[!sapply(colTables, is.null)])
-# }
+#' Get the Names of a \code{columnTables} Object
+#' 
+#' Get the names of the columns from a \code{columnTables} object that have
+#'   been tabulated already (character vector).
+#' 
+#' @param x A \code{columnTables} object.
+#' 
+#' @return The names of the columns that have been tabulated already (character vector).
+#' @export
+#' 
+#' @examples
+#' dd <- dataDict(mtcars)
+#' names(dd$colTables)
+#' 
+names.columnTables <- function(x) {
+  # return(ls(x)[!sapply(x, is.null)])
+  return(ls(x) %>% .[!sapply(., function(y) is.null(get(y, x)))])
+}

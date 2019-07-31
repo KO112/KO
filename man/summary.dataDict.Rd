@@ -4,13 +4,15 @@
 \alias{summary.dataDict}
 \title{Summarize a \code{dataDict} Object}
 \usage{
-\method{summary}{dataDict}(dict)
+\method{summary}{dataDict}(object, ...)
 }
 \arguments{
-\item{dict}{A \code{dataDict} object.}
+\item{object}{A \code{dataDict} object.}
+
+\item{...}{Currently not used.}
 }
 \value{
-A summary of \code{dict}.
+A summary of \code{object}.
 }
 \description{
 Summarize a \code{dataDict} Object
