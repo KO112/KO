@@ -18,8 +18,9 @@ A list of \code{table}s of the desired columns.
 Extract Elements from a \code{columnTables} Object
 }
 \examples{
-dd <- dataDict(mtcars)
-dd$colTables["mpg"]
-dd$colTables[c("mpg", "cyl", "am")]
-
+\dontrun{
+  dd <- dataDict(mtcars)
+  dd$colTables["mpg"]
+  dd$colTables[c("mpg", "cyl", "am")]
+}
 }

@@ -20,16 +20,18 @@ The desired element extracted from the \code{dataDict} object.
 Extract Elements from a \code{dataDict} Object
 }
 \examples{
-dd <- dataDict(mtcars)
-dd["numUnique"]
-dd["colTables", "mpg"]
-dd["colTables", c("mpg", "cyl")]
-dd["colTables", NA]
-dd["colTables"]
+\dontrun{
+  dd <- dataDict(mtcars)
+  dd["numUnique"]
+  dd["colTables", "mpg"]
+  dd["colTables", c("mpg", "cyl")]
+  dd["colTables", NA]
+  dd["colTables"]
 
-dd2 <- dataDict(mtcars, tableMode = TRUE)
-dd2["colTables", "mpg"]
-dd2["colTables", c("mpg", "cyl")]
-dd2["colTables", NA]
+  dd2 <- dataDict(mtcars, tableMode = TRUE)
+  dd2["colTables", "mpg"]
+  dd2["colTables", c("mpg", "cyl")]
+  dd2["colTables", NA]
+}
 
 }

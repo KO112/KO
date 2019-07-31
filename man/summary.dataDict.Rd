@@ -16,6 +16,8 @@ A summary of \code{dict}.
 Summarize a \code{dataDict} Object
 }
 \examples{
-summary(dataDict(mtcars))
+\dontrun{
+  summary(dataDict(mtcars))
+}
 
 }

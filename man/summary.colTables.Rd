@@ -16,7 +16,9 @@ A summary of \code{colTables}.
 Summarize a \code{dataDict} Object
 }
 \examples{
-dd <- dataDict(mtcars)
-summary(dd$colTables)
+\dontrun{
+  dd <- dataDict(mtcars)
+  summary(dd$colTables)
+}
 
 }

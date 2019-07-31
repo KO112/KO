@@ -82,7 +82,7 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
   # Attempt to set the name of the original data
   if (length(dfCall) > 1) {
-    message("`dataDict`: `df` has been passed an an expression (", deparse(dfCall), ").\n", strrep(" ", 12),
+    message("`dataDict`: `df` has been passed as an expression (", deparse(dfCall), ").\n", strrep(" ", 12),
             "This may result in problems when using this `dataDict` object, but should be fine.")
     attr(dict, "dfName") <- dfCall[purrr::map_lgl(dfCall, ~ is.data.frame(eval(.x)))][[1]] %>% deparse()
   } else {
@@ -125,17 +125,19 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 #' @return The desired element extracted from the \code{dataDict} object.
 #' 
 #' @examples
-#' dd <- dataDict(mtcars)
-#' dd["numUnique"]
-#' dd["colTables", "mpg"]
-#' dd["colTables", c("mpg", "cyl")]
-#' dd["colTables", NA]
-#' dd["colTables"]
+#' \dontrun{
+#'   dd <- dataDict(mtcars)
+#'   dd["numUnique"]
+#'   dd["colTables", "mpg"]
+#'   dd["colTables", c("mpg", "cyl")]
+#'   dd["colTables", NA]
+#'   dd["colTables"]
 #' 
-#' dd2 <- dataDict(mtcars, tableMode = TRUE)
-#' dd2["colTables", "mpg"]
-#' dd2["colTables", c("mpg", "cyl")]
-#' dd2["colTables", NA]
+#'   dd2 <- dataDict(mtcars, tableMode = TRUE)
+#'   dd2["colTables", "mpg"]
+#'   dd2["colTables", c("mpg", "cyl")]
+#'   dd2["colTables", NA]
+#' }
 #' 
 `[.dataDict` <- function(dict, elem, cols = NULL) {
   
@@ -189,7 +191,9 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 #' @return A summary of \code{dict}.
 #' 
 #' @examples
-#' summary(dataDict(mtcars))
+#' \dontrun{
+#'   summary(dataDict(mtcars))
+#' }
 #' 
 summary.dataDict <- function(dict) {
   
@@ -295,15 +299,18 @@ names.dataDict <- function(dict) {
 #' @export
 #' 
 #' @examples
-#' df <- mtcars
-#' dd <- dataDict(df)
-#' dd$colTables$mpg
-#' df$mpg <- df$mpg * 2
-#' update(dd, df)
-#' dd$colTables$mpg
+#' \dontrun{
+#'   df <- mtcars
+#'   dd <- dataDict(df)
+#'   dd$colTables$mpg
+#'   df$mpg <- df$mpg * 2
+#'   updateDD(dd, df)
+#'   dd$colTables$mpg
+#' }
 #' 
 updateDD <- function(dict, df) {
-  stop("`updateDD`: This function has not yet been implemented.")
+  # stop("`updateDD`: This function has not yet been implemented.")
+  return(NULL)
 }
 
 
@@ -376,10 +383,11 @@ columnTables <- function(dict, df, tableMode) {
 #' @return A list of \code{table}s of the desired columns.
 #' 
 #' @examples
-#' dd <- dataDict(mtcars)
-#' dd$colTables["mpg"]
-#' dd$colTables[c("mpg", "cyl", "am")]
-#' 
+#' \dontrun{
+#'   dd <- dataDict(mtcars)
+#'   dd$colTables["mpg"]
+#'   dd$colTables[c("mpg", "cyl", "am")]
+#' }
 `[.columnTables` <- function(colTables, cols = NULL) {
   
   # Get the `dict` object (for convenience), & deal with cols being NULL or NA
@@ -430,13 +438,14 @@ columnTables <- function(dict, df, tableMode) {
 #' @return A summary of \code{colTables}.
 #' 
 #' @examples
-#' dd <- dataDict(mtcars)
-#' summary(dd$colTables)
+#' \dontrun{
+#'   dd <- dataDict(mtcars)
+#'   summary(dd$colTables)
+#' }
 #' 
 summary.colTables <- function(colTables) {
-  
-  # 
-  
+  # stop("`summary.colTables`: This function has not yet been implemented.")
+  return(NULL)
 }
 
 
@@ -452,25 +461,24 @@ summary.colTables <- function(colTables) {
 #' print(dd$colTables)
 #' 
 print.colTables <- function(colTables) {
-  
-  # 
-  
+  # stop("`print.ColTables`: This function has not yet been implemented.")
+  return(NULL)
 }
 
 
-#' Get the Names of a \code{columnTables} Object
-#' 
-#' Get the names of the columns from a \code{columnTables} object that have
-#'   been tabulated already (character vector).
-#' 
-#' @param colTables A \code{columnTables} object.
-#' 
-#' @return The names of the columns that have been tabulated already (character vector).
-#' 
-#' @examples
-#' dd <- dataDict(mtcars)
-#' names(dd$colTables)
-#' 
-names.colTables <- function(colTables) {
-  return(names(colTables)[!sapply(colTables, is.null)])
-}
+# #' Get the Names of a \code{columnTables} Object
+# #' 
+# #' Get the names of the columns from a \code{columnTables} object that have
+# #'   been tabulated already (character vector).
+# #' 
+# #' @param colTables A \code{columnTables} object.
+# #' 
+# #' @return The names of the columns that have been tabulated already (character vector).
+# #' 
+# #' @examples
+# #' dd <- dataDict(mtcars)
+# #' names(dd$colTables)
+# #' 
+# names.colTables <- function(colTables) {
+#   return(names(colTables)[!sapply(colTables, is.null)])
+# }
