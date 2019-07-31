@@ -18,8 +18,6 @@ A summary of \code{object}.
 Summarize a \code{dataDict} Object
 }
 \examples{
-\dontrun{
-  summary(dataDict(mtcars))
-}
+summary(dataDict(mtcars))
 
 }

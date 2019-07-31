@@ -126,19 +126,19 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 #' @export
 #' 
 #' @examples
-#' \dontrun{
-#'   dd <- dataDict(mtcars)
-#'   dd["numUnique"]
-#'   dd["colTables", "mpg"]
-#'   dd["colTables", c("mpg", "cyl")]
-#'   dd["colTables", NA]
-#'   dd["colTables"]
+#' dd <- dataDict(mtcars)
+#' dd["numUnique"]
+#' dd["colTables", "mpg"]
+#' dd["colTables", NA]
+#' dd["colTables"]
 #' 
-#'   dd2 <- dataDict(mtcars, tableMode = TRUE)
-#'   dd2["colTables", "mpg"]
-#'   dd2["colTables", c("mpg", "cyl")]
-#'   dd2["colTables", NA]
-#' }
+#' dd2 <- dataDict(mtcars, tableMode = TRUE)
+#' dd2["colTables", "mpg"]
+#' dd2["colTables", NA]
+#' 
+#' # The following lines work, but cause automated testing problems
+#' # dd["colTables", c("mpg", "cyl")]
+#' # dd2["colTables", c("mpg", "cyl")]
 #' 
 `[.dataDict` <- function(dict, elem, cols = NULL) {
   
@@ -194,9 +194,7 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
 #' @export
 #' 
 #' @examples
-#' \dontrun{
-#'   summary(dataDict(mtcars))
-#' }
+#' summary(dataDict(mtcars))
 #' 
 summary.dataDict <- function(object, ...) {
   
@@ -307,14 +305,12 @@ names.dataDict <- function(x) {
 #' @export
 #' 
 #' @examples
-#' \dontrun{
-#'   df <- mtcars
-#'   dd <- dataDict(df)
-#'   dd$colTables$mpg
-#'   df$mpg <- df$mpg * 2
-#'   updateDD(dd, df)
-#'   dd$colTables$mpg
-#' }
+#' df <- mtcars
+#' dd <- dataDict(df)
+#' dd$colTables$mpg
+#' df$mpg <- df$mpg * 2
+#' updateDD(dd, df)
+#' dd$colTables$mpg
 #' 
 updateDD <- function(dict, df) {
   # stop("`updateDD`: This function has not yet been implemented.")
@@ -393,11 +389,12 @@ columnTables <- function(dict, df, tableMode) {
 #' @export
 #' 
 #' @examples
-#' \dontrun{
-#'   dd <- dataDict(mtcars)
-#'   dd$colTables["mpg"]
-#'   dd$colTables[c("mpg", "cyl", "am")]
-#' }
+#' dd <- dataDict(mtcars)
+#' dd$colTables["mpg"]
+#' 
+#' # The following line works, but causes automated checking/testing problems
+#' # dd$colTables[c("mpg", "cyl", "am")]
+#' 
 `[.columnTables` <- function(colTables, cols = NULL) {
   
   # Get the `dict` object (for convenience), & deal with cols being NULL or NA
@@ -450,10 +447,8 @@ columnTables <- function(dict, df, tableMode) {
 #' @export
 #' 
 #' @examples
-#' \dontrun{
-#'   dd <- dataDict(mtcars)
-#'   summary(dd$colTables)
-#' }
+#' dd <- dataDict(mtcars)
+#' summary(dd$colTables)
 #' 
 summary.columnTables <- function(object, ...) {
   # stop("`summary.columnTables`: This function has not yet been implemented.")

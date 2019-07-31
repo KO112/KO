@@ -15,13 +15,11 @@ updateDD(dict, df)
 Update a \code{dataDict} Object
 }
 \examples{
-\dontrun{
-  df <- mtcars
-  dd <- dataDict(df)
-  dd$colTables$mpg
-  df$mpg <- df$mpg * 2
-  updateDD(dd, df)
-  dd$colTables$mpg
-}
+df <- mtcars
+dd <- dataDict(df)
+dd$colTables$mpg
+df$mpg <- df$mpg * 2
+updateDD(dd, df)
+dd$colTables$mpg
 
 }
