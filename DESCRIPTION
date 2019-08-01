@@ -46,6 +46,7 @@ Collate:
     'Formatting.R'
     'Inline_If.R'
     'Missing_Values.R'
+    'Printing.R'
     'Quasi_Poisson.R'
     'Summarize.R'
     'Trimming.R'
