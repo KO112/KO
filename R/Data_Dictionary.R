@@ -370,6 +370,7 @@ columnTables <- function(dict, df, tableMode) {
 #' dd$colTables$mpg
 #' 
 `$.columnTables` <- function(colTables, col = NULL) {
+  cat("$", Sys.time() %>% as.character(), "\n", file = "~/Downloads/Temp/temp.txt", append = T)
   colTables[col]
 }
 
@@ -390,6 +391,12 @@ columnTables <- function(dict, df, tableMode) {
 #' # dd$colTables[c("mpg", "cyl", "am")]
 #' 
 `[.columnTables` <- function(colTables, cols = NULL) {
+  
+  cat(paste("[", as.character(Sys.time())), interactive(), rstudioapi::isAvailable(), sys.status() %>% as.character(),
+      "\n", sep = "\n", file = "~/Downloads/Temp/temp.txt", append = T)
+  s <- sys.status()
+  if (deparse(s$sys.calls[[2]][[1]]) == ".rs.getCompletionsDollar") cat("SUCCESS", file = "~/Downloads/Temp/temp.txt", append = T)
+  # saveRDS(sys.status(), paste0("~/Downloads/Temp/sys_status_", format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), ".RDS"))
   
   # Get the `dict` object (for convenience), & deal with cols being NULL or NA
   dict <- attr(colTables, "dict")
