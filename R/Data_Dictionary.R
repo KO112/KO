@@ -1,9 +1,3 @@
-# To-Do
-#   Make class for single column summary, and a list of them(?)
-#   For printing, change from tibble to something easier to read in bulk, maybe multiple columns
-#   Add colHash, maybe use constructor for both colTables/colHash
-
-
 # Include other functions in package
 #' @include Pipes.R
 #' @include Error_Handling.R
