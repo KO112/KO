@@ -10,6 +10,23 @@ summaryTbl <- tibble::tibble(
   , Tabulated = FALSE
 )
 
+
+# Set expected messages
+lazyTableStr <- "`columnTables`: Lazy table mode active."
+expressionMsg <- c(
+    "`dataDict`: `df` has been passed as an expression (tibble::as_tibble(mtcars)).",
+    "            This may result in problems when using this `dataDict` object, but should be fine."
+  ) %>%
+  paste0(collapse = "\n") %>%
+  info(printOut = FALSE)
+keepNameMsg <- c(
+    "`dataDict`: This `dataDict` will be based off of the object named 'mtcars'.",
+    "            To ensure that this `dataDict` will continue to work, do not change the name of the object,",
+    "              or use the `updateDD` function after the object changes."
+  ) %>%
+    paste0(collapse = "\n") %>%
+    info(printOut = FALSE)
+
 # Set the expected output
 outputStr <- paste0(c(
     "This `dataDict` object (dd) was based off of 'mtcars' (a 'data.frame') in the 'R_GlobalEnv' environment,"
@@ -36,25 +53,10 @@ outputStr <- paste0(c(
 test_that("dataDict messages", {
   
   expect_silent({dataDict(mtcars, verbose = 0)})
-  expect_message({dd <- dataDict(mtcars, verbose = 1)},
-                 "`columnTables`: Lazy table mode active.")
-  expect_message({dd <- dataDict(mtcars)},
-                 "`columnTables`: Lazy table mode active.")
-  expect_message(
-    {dd <- dataDict(tibble::as_tibble(mtcars))},
-    paste0(c(
-        "`dataDict`: `df` has been passed as an expression (tibble::as_tibble(mtcars)).",
-        "            This may result in problems when using this `dataDict` object, but should be fine."
-      ), collapse = "\n"), fixed = TRUE
-  )
-  expect_message(
-    {dd <- dataDict(mtcars)},
-    paste0(c(
-        "`dataDict`: This `dataDict` will be based off of the object named 'mtcars'.",
-        "            To ensure that this `dataDict` will continue to work, do not change the name of the object,",
-        "              or use the `updateDD` function after the object changes."
-      ), collapse = "\n"), fixed = TRUE
-  )
+  expect_message({dd <- dataDict(mtcars, verbose = 1)}, lazyTableStr)
+  expect_message({dd <- dataDict(mtcars)}, lazyTableStr)
+  expect_message({dd <- dataDict(tibble::as_tibble(mtcars))}, expressionMsg, fixed = TRUE)
+  expect_message({dd <- dataDict(mtcars)}, keepNameMsg, fixed = TRUE)
   
 })
 

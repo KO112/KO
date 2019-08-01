@@ -76,18 +76,19 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
   # Attempt to set the name of the original data
   if (length(dfCall) > 1) {
-    message("`dataDict`: `df` has been passed as an expression (", deparse(dfCall), ").\n", strrep(" ", 12),
-            "This may result in problems when using this `dataDict` object, but should be fine.")
+    info("`dataDict`: `df` has been passed as an expression (", deparse(dfCall), ").\n", strrep(" ", 12),
+         "This may result in problems when using this `dataDict` object, but should be fine.", sep = "")
     attr(dict, "dfName") <- dfCall[purrr::map_lgl(dfCall, ~ is.data.frame(eval(.x)))][[1]] %>% deparse()
   } else {
     attr(dict, "dfName") <- deparse(dfCall)
   }
   
   # If desired & relevant, print out a message about not changing the original object
-  if ((tableMode == "lazy") && (verbose > 1)) message(
+  if ((tableMode == "lazy") && (verbose > 1)) info(
     "`dataDict`: This `dataDict` will be based off of the object named '", attr(dict, "dfName"), "'.\n", strrep(" ", 12),
     "To ensure that this `dataDict` will continue to work, do not change the name of the object,\n", strrep(" ", 14),
-    "or use the `updateDD` function after the object changes."
+    "or use the `updateDD` function after the object changes.",
+    sep = ""
   )
   
   # Add various values to the dictionary
@@ -143,13 +144,16 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   }
   
   # Either throw an error if the element doesn't exist, or try to return the desired element
-  if (!exists(elem, dict)) {
-    
-    # If the element doesn't exist, print a warning, & return nothing
-    warning("`[.dataDict`: Element '", elem, "' does not exist in '", deparse(substitute(dict)), "'.")
-    return(NULL)
-    
-  } else if (tolower(elem) == "coltables") {
+  # if (!exists(elem, dict)) {
+  #   
+  #   # If the element doesn't exist, print a warning, & return nothing
+  #   warning("`[.dataDict`: Element '", elem, "' does not exist in '", deparse(substitute(dict)), "'.")
+  #   return(NULL)
+  #   
+  # } else 
+  
+  # Try to return the desired element, else throw an error
+  if (tolower(elem) == "coltables") {
     
     # Get the desired tables
     return(dict$colTables[cols])
@@ -163,9 +167,9 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     
     # Return data on the desired column
     return(list(
-      class = dict$classes %>% .[names(.) == elem]
-      , numUnique = dict$numUnique %>% .[names(.) == elem]
-      , table = dict$colTables[elem]
+      class = dict$classes %>% .[names(.) == elem] %>% unname()
+      , numUnique = dict$numUnique %>% .[names(.) == elem] %>% unname()
+      , table = dict$colTables[elem][[1]]
     ))
     
   } else {
@@ -332,7 +336,7 @@ columnTables <- function(dict, df, tableMode) {
   # Tabulate the results, if desired, & set the `tableMode` attribute
   attr(dict, "tableMode") <- tableMode
   if (tableMode == "lazy") {
-    if (attr(dict, "verbose") > 0) message("`columnTables`: Lazy table mode active.")
+    if (attr(dict, "verbose") > 0) info("`columnTables`: Lazy table mode active.", sep = "")
     colTables <- vector(mode = "list", length = attr(dict, "dims")[[2]]) %>%
       stats::setNames(., attr(dict, "dimNames")[[2]]) %>% as.environment()
   } else if (isTRUE(tableMode)) {
@@ -370,7 +374,6 @@ columnTables <- function(dict, df, tableMode) {
 #' dd$colTables$mpg
 #' 
 `$.columnTables` <- function(colTables, col = NULL) {
-  cat("$", Sys.time() %>% as.character(), "\n", file = "~/Downloads/Temp/temp.txt", append = T)
   colTables[col]
 }
 

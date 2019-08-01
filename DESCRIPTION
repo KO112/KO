@@ -38,6 +38,7 @@ Collate:
     'Pipes.R'
     'Binned_Data_and_Plots.R'
     'Bounding_and_Rounding.R'
+    'Colored_Output.R'
     'Compare_DF.R'
     'Compare_ggplots.R'
     'Data_Dictionary.R'
