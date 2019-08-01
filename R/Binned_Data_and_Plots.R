@@ -9,9 +9,9 @@ globalVariables(c(".SD", ".I", "Weight__", "Index__", "Value__", "Variable__"))
 
 
 #' Binned One-Way Data/Plot
-#'
+#' 
 #' Calculate the (weighted) average value of a binned set of data, and plot it.
-#'
+#' 
 #' @param x The vector to perform binning by.
 #'   If numeric, it will be binned according to \code{type}.
 #'   If non-numeric, it will be binned according to all the unique values.
@@ -33,11 +33,11 @@ globalVariables(c(".SD", ".I", "Weight__", "Index__", "Value__", "Variable__"))
 #'       \code{bins} observations in each bin.
 #' @param bins The number of bins to create (or, if \code{type} is in \code{m == min == minimum},
 #'   the desired minimum number of observations per bin).
-#'
+#' 
 #' @return \code{binned_one_way_data}: a \code{data.table} holding the binned data.
 #' @name binned
 #' @export
-#'
+#' 
 #' @examples
 #' diamonds <- data.table::data.table(ggplot2::diamonds)
 #' binnedData1 <- binned_one_way_data(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
@@ -102,11 +102,11 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #' @param ylab The y-axis label of the data section of the plot.
 #' @param wlab The y-axis label of the weight section of the plot.
 #' @param title The title of the plot.
-#'
+#' 
 #' @return \code{binned_one_way_plot}: a \code{ggplot} object, or a \code{plotly} object if \code{plotly} is \code{TRUE}.
 #' @rdname binned
 #' @export
-#'
+#' 
 #' @examples
 #' binnedPlot1 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
 #'                                    diamonds[, price])

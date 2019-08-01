@@ -8,27 +8,27 @@ globalVariables(c("Lorentz", "random", "cumPosFound"))
 
 
 #' Weighted Gini
-#'
+#' 
 #' Calculate the (normalized) weighted Gini index of predictions against the solutions.
-#'
+#' 
 #' @param solutions Numerical vector of actual response values.
 #' @param predictions Predictions to score against the solution.
 #' @param weights Weights to assign to each prediction.
-#'
+#' 
 #' @return (Normalized) weighted Gini index (numeric scalar).
 #' @name gini_weighted
 #' @export
-#'
+#' 
 #' @examples
 #' # Create a GLM for testing
 #' \dontrun{
 #'   data(dataCar, package = "insuranceData")
 #'   dataCarGLM <- glm(numclaims ~ veh_value + veh_age + gender + agecat,
 #'                     data = dataCar, family = poisson, offset = log(exposure), x = TRUE)
-#'
+#' 
 #'   gini_weighted(dataCar$numclaims, predict(dataCarGLM, dataCar))
 #' }
-#'
+#' 
 gini_weighted <- function(solutions, predictions, weights = 1) {
 
   # Create a data frame of the solution, weights, predictions, arranging by the predictions
@@ -54,12 +54,12 @@ gini_weighted <- function(solutions, predictions, weights = 1) {
 
 #' @rdname gini_weighted
 #' @export
-#'
+#' 
 #' @examples
 #' \dontrun{
 #'   gini_weighted_normalized(dataCar$numclaims, predict(dataCarGLM, dataCar))
 #' }
-#'
+#' 
 gini_weighted_normalized <- function(solutions, predictions, weights = 1) {
   gini_weighted(solutions, predictions, weights) / gini_weighted(solutions, solutions, weights)
 }

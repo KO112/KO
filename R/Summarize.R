@@ -89,7 +89,7 @@ table_df <- function(data, max_distinct = 250, group = TRUE, useNA = "ifany", dn
 
 
 #' Statistical Mode
-#'
+#' 
 #' Ignoring NAs, find the most common element in a vector (statistical mode).
 #' If multiple elements are tied for the mode,
 #'   the last element in sorted order will be returned,

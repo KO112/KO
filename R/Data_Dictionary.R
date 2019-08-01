@@ -143,15 +143,6 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     elem <- elem[1]
   }
   
-  # Either throw an error if the element doesn't exist, or try to return the desired element
-  # if (!exists(elem, dict)) {
-  #   
-  #   # If the element doesn't exist, print a warning, & return nothing
-  #   warning("`[.dataDict`: Element '", elem, "' does not exist in '", deparse(substitute(dict)), "'.")
-  #   return(NULL)
-  #   
-  # } else 
-  
   # Try to return the desired element, else throw an error
   if (tolower(elem) == "coltables") {
     

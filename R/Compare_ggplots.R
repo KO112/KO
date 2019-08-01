@@ -1,13 +1,13 @@
 #' Compare two ggplot objects
-#'
+#' 
 #' @param plot1 First ggplot object to compare.
 #' @param plot2 Second ggplot object to compare.
 #' @param useTempFiles Whether or not to use temporary files in the comparison.
 #'   Using temp files is faster, but some may wish to compare purely in memory.
-#'
+#' 
 #' @return A boolean scalar showing whether the two plots are visually identical or not.
 #' @export
-#'
+#' 
 #' @examples
 #' plot1 <- ggplot2::qplot(mpg, wt, data = mtcars, colour = cyl)
 #' plot2 <- ggplot2::qplot(mpg, wt, data = mtcars, colour = cyl)

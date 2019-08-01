@@ -5,21 +5,21 @@ NULL
 
 
 #' Find the percent of missing values
-#'
+#' 
 #' Count the percent of missing values in a vector.
 #' Counts the percent of NA values for non-character vectors,
 #'   and the number of NA or "" values for characters.
-#'
+#' 
 #' @param vec Vector to count missing values in.
-#'
+#' 
 #' @return Numeric scalar containing the percent of missing values.
 #' @export
-#'
+#' 
 #' @examples
 #' percent_missing(c(NA))
 #' percent_missing(c(1, 2, 3, 4, 5))
 #' percent_missing(c(1, 2, NA, 4, 5))
-#'
+#' 
 percent_missing <- function(vec) {
   # if (is.numeric(vec) | is.logical(vec) | lubridate::is.Date(vec) | is.factor(vec)) {
   #   numMissing <- sum(is.na(vec))
@@ -34,21 +34,21 @@ percent_missing <- function(vec) {
 
 
 #' Find the number of missing values
-#'
+#' 
 #' Count the number of missing values in a vector.
 #' Counts the number of NA values for non-character vectors,
 #'   and the number of NA or "" values for characters.
-#'
+#' 
 #' @param vec Vector to count missing values in.
-#'
+#' 
 #' @return Numeric scalar containing the number of missing values.
 #' @export
-#'
+#' 
 #' @examples
 #' num_missing(c(NA))
 #' num_missing(c(1, 2, 3, 4, 5))
 #' num_missing(c(1, 2, NA, 4, 5))
-#'
+#' 
 num_missing <- function(vec) {
   if (is.numeric(vec) | is.logical(vec) | lubridate::is.Date(vec) | is.factor(vec)) {
     numMissing <- sum(is.na(vec))
@@ -63,19 +63,19 @@ num_missing <- function(vec) {
 
 
 #' Replace missing values in a vector
-#'
+#' 
 #' Replace missing values in a vector with either the mode, median,
 #'   or mean of the vector, removing NA values in the calculation.
-#'
+#' 
 #' @param vec Vector in which to replace missing values.
 #' @param method The method to use to determine the imputed value.
 #' @param with The value to impute missing values with (if specified, method will be ignored).
 #' @param return_imputed Whether or not to return the value that missing elements were imputed with.
-#'
+#' 
 #' @return Vector with missing values replaced as desired,
 #'   or a list of that and the replacement (imputed) value.
 #' @export
-#'
+#' 
 #' @examples
 #' replace_missing(c(1, 1, 1, 2, NA))
 #' replace_missing(c(1, 1, 1, 2, NA), method = "mode") # Same as above
@@ -84,7 +84,7 @@ num_missing <- function(vec) {
 #' replace_missing(c(1, NA, 1, 2), method = "mean", return_imputed = TRUE)
 #' replace_missing(c(1, NA, 1, 2), with = 5)
 #' replace_missing(c(1, NA, 1, 2), method = "mean", with = 5)
-#'
+#' 
 replace_missing <- function(vec, method = "mode", with, return_imputed = FALSE) {
 
   # Find the value to replace missing values with based on the desired method,

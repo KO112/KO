@@ -1,10 +1,10 @@
 #' Create a function to define AIC within a quasi Poisson family
-#'
+#' 
 #' @param ... Input values to families
-#'
+#' 
 #' @return Quasi-Poisson family with AIC/BIC defined.
 #' @export
-#'
+#' 
 #' @examples
 #' \dontrun{
 #'   data(dataCar, package = "insuranceData")
@@ -12,7 +12,7 @@
 #'                     data = dataCar, family = quasi_poisson, offset = log(exposure))
 #'   dataCarGLMSummary <- summary(dataCarGLM)
 #' }
-#'
+#' 
 quasi_poisson <- function(...) {
   res <- stats::quasipoisson(...)
   res$aic <- stats::poisson(...)$aic
@@ -21,14 +21,14 @@ quasi_poisson <- function(...) {
 
 
 #' Calculate AIC & BIC
-#'
+#' 
 #' Calculate the AIC and BIC for a quasi-Poisson GLM by training a normal Poisson GLM.
-#'
+#' 
 #' @param model Quasi-Poisson GLM to calculate the AIC/BIC for.
-#'
+#' 
 #' @return A list of two elements, AIC and BIC.
 #' @export
-#'
+#' 
 #' @examples
 #' \dontrun{
 #'   data(dataCar, package = "insuranceData")
@@ -36,7 +36,7 @@ quasi_poisson <- function(...) {
 #'                     data = dataCar, family = quasi_poisson, offset = log(exposure))
 #'   quasi_poisson_aic_bic(dataCarGLM)
 #' }
-#'
+#' 
 quasi_poisson_aic_bic <- function(model) {
 
   # Train a Poisson GLM based on the passed model

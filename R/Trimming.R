@@ -1,17 +1,17 @@
 #' Remove excess parts of a GLM
-#'
+#' 
 #' Remove parts of a GLM not needed for prediction to trim down size.
-#'
+#' 
 #' @param model A GLM object.
-#'
+#' 
 #' @return A trimmed-down GLM, with only the parts needed for predicton.
 #' @export
-#'
+#' 
 #' @examples
 #' mtcarsGLM <- glm(mpg ~ ., data = mtcars)
 #' object.size(mtcarsGLM)
 #' object.size(trim_glm(mtcarsGLM))
-#'
+#' 
 trim_glm <- function(model) {
 
   # Assert that the model object is a GLM
@@ -57,19 +57,19 @@ trim_glm <- function(model) {
 
 
 #' Remove excess parts of a GLM summary
-#'
+#' 
 #' Remove parts of a GLM summary to shrink the size.
-#'
+#' 
 #' @param model_smy Summary of a GLM object.
-#'
+#' 
 #' @return A trimmed-down GLM summary.
 #' @export
-#'
+#' 
 #' @examples
 #' mtcarsGLMSummary <- summary(glm(mpg ~ ., data = mtcars))
 #' object.size(mtcarsGLMSummary)
 #' object.size(trim_glm_summary(mtcarsGLMSummary))
-#'
+#' 
 trim_glm_summary <- function(model_smy) {
   stop_if(!inherits(model_smy, "summary.glm"), "Passed object is not a GLM model summary.")
   model_smy$deviance.resid <- NULL

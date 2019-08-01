@@ -2,7 +2,7 @@
 #' 
 #' Compare two data-frame (like) objects.
 #' The function will compare the objects by column names, and print information about differences.
-#'
+#' 
 #' @param df1 The first object inheriting from a data.frame.
 #' @param df2 The second object inheriting from a data.frame.
 #' @param printColDiffs What level of messages to print regarding
@@ -10,10 +10,10 @@
 #' @param tol The acceptable tolerance for equality between numeric columns (numeric scalar).
 #' @param trim Whether or not to trim whitespace from character columns (logical scalar).
 #' @param blankEqualsNA Whether or not blanks and considered equal to NA in character vectors (logical scalar).
-#'
+#' 
 #' @return A list of column comparison data for each non-identical column.
 #' @export
-#'
+#' 
 #' @examples
 #' 
 #' # Returns an empty list, since the objects are identical
