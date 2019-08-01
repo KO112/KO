@@ -392,11 +392,11 @@ columnTables <- function(dict, df, tableMode) {
 #' 
 `[.columnTables` <- function(colTables, cols = NULL) {
   
-  cat(paste("[", as.character(Sys.time())), interactive(), rstudioapi::isAvailable(), sys.status() %>% as.character(),
-      "\n", sep = "\n", file = "~/Downloads/Temp/temp.txt", append = T)
-  s <- sys.status()
-  if (deparse(s$sys.calls[[2]][[1]]) == ".rs.getCompletionsDollar") cat("SUCCESS", file = "~/Downloads/Temp/temp.txt", append = T)
-  # saveRDS(sys.status(), paste0("~/Downloads/Temp/sys_status_", format(Sys.time(), "%Y-%m-%d_%H-%M-%S"), ".RDS"))
+  # If the call comes from RStudio's auto-complete feature, handle it specially
+  if (deparse(sys.status()$sys.calls[[2]][[1]]) == ".rs.getCompletionsDollar") {
+    colStatus <- try(colTables[[cols]])
+    if (inherits(colStatus, "try-error")) return(NULL) else return(colStatus)
+  }
   
   # Get the `dict` object (for convenience), & deal with cols being NULL or NA
   dict <- attr(colTables, "dict")
