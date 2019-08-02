@@ -8,6 +8,7 @@ To-Do List:
 - plotly tests for BDP
 - replace_missing: fix for factors (relevel?)
 - Finish compare_df testing (test with dates, one col date one character, messages, etc.)
+- Test colored output
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

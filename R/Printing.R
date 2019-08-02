@@ -1,9 +1,22 @@
+# Include other functions in package
+#' @include Pipes.R
+NULL
+
+
 #' Prepare the Rows of the Output
+#' 
+#' Used as a helper function in \code{vec_print} to make output row strings.
+#'
+#' @param numCols The number of columns to use in the output (integer scalar).
+#' @param maxChars The maximum number of characters to print for each element of \code{vec} (integer scalar).
 #'
 #' @return The output rows vector.
-#' @rdname vecPrint
+#' @rdname vec_print
 #'
-makeOutputRows <- function(vec, numCols, maxChars) {
+make_output_rows <- function(vec, numCols, maxChars) {
+  
+  # If we have one column per element, just concatenate them
+  if (numCols >= length(vec)) return(paste0(vec, collapse = " | "))
   
   # Find the number of elements per column, & pad the vector with blanks
   perCol <- ceiling(length(vec) / numCols)
@@ -27,33 +40,77 @@ makeOutputRows <- function(vec, numCols, maxChars) {
 #' 
 #' Prints out a vector columnwise, using the full width available.
 #' This is usually called for its side effects, but will also return the (unformatted) output rows vector.
+#' 
+#' \code{order} can be one of three values: c("none" (default), "sort", "short"/"shortest")
+#' \code{order = "none"} will print out the vector in the same order it was supplied.
+#' \code{order = "sort"} will sort the vector before printing (using \code{sort}).
+#' \code{order = "short"/"shortest"} will sort the vector according to length,
+#'   which will ensure that the printing takes up as little space as possible.
 #'
 #' @param vec The (atomic) vector to print out.
 #' @param maxLen The maximum length of a string to print out (integer scalar).
 #' @param printOut Whether to print out the formatted output (logical scalar).
+#' @param maxWidth The mxximum width to print out per row (defaults to fill available space) (integer scalar).
+#' @param order How to order the \code{vec} before printing (see details for more) (character scalar).
 #'
 #' @return The final output row vector.
-#' @name vecPrint
+#' @name vec_print
 #' @export
 #'
 #' @examples
 #' 
-vecPrint <- function(vec, maxLen, printOut = TRUE) {
+#' set.seed(112)
+#' fruits <- sample(c("apple", "banana", "cherry", "orange", "pineapple",
+#'                    "really very long fruit name"), 100, replace = TRUE)
+#' vec_print(fruits)
+#' vec_print(fruits, maxLen = 20)
+#' vec_print(fruits, maxWidth = 50)
+#' vec_print(fruits, order = "sort")
+#' vec_print(fruits, order = "shortest")
+#' vp <- vec_print(fruits, printOut = FALSE)
+#' vp
+#' 
+#' \dontrun{
+#'   
+#'   vec_print(lexicon::sw_fry_25)
+#'   vec_print(rep(lexicon::sw_fry_25, 2))
+#'   vec_print(lexicon::sw_fry_100)
+#'   vec_print(lexicon::sw_fry_200)
+#'   vec_print(lexicon::sw_fry_1000)
+#'   
+#'   vec_print(lexicon::sw_fry_200, maxLen = 5)
+#'   vec_print(lexicon::sw_fry_200, maxLen = 20)
+#'   vec_print(lexicon::sw_fry_200, maxWidth = 50)
+#'   vec_print(lexicon::sw_fry_1000, order = "sort")
+#'   vec_print(lexicon::sw_fry_1000, order = "shortest")
+#'   
+#'   vp <- vec_print(lexicon::sw_fry_1000, order = "shortest", printOut = FALSE)
+#'   vp
+#'   
+#' }
+#' 
+vec_print <- function(vec, maxLen = 10, maxWidth = getOption("width"), order = "none", printOut = TRUE) {
   
   # Ensure that the input is atomic
-  if (!is.atomic(vec)) stop("`vecPrint`: `vec` must be atomic, not of class `", class(vec), "`.")
+  if (!is.atomic(vec)) stop("`vec_print`: `vec` must be atomic, not of class `", class(vec), "`.")
+  
+  # Order the vector as desired
+  order <- tolower(order)
+  if (order == "sort") vec <- sort(vec)
+  else if (order %in% c("short", "shortest")) vec <- vec[order(nchar(vec))]
+  else if (order != "none") message("`vec_print`: \"", order, "\" is not a valid value for `order`. No sorting will be done.")
   
   # Calculate maximum number of characters, & guess the number of columns we need
   maxChars <- min(maxLen, max(nchar(vec)))
-  numCols <- floor(getOption("width") / (maxChars + 4))
+  numCols <- floor(maxWidth / (maxChars + 4))
   
   # Iterate to find the maximum number of columns that fit
   numColsIter <- numCols
-  while (nchar(makeOutputRows(vec, numColsIter, maxChars)[1]) < getOption("width")) numColsIter <- numColsIter + 1
-  numColsIter <- numColsIter - 1
+  while (make_output_rows(vec, numColsIter, maxChars) %>% {(length(.) > 1) && (nchar(.[1]) <= maxWidth)}) numColsIter <- numColsIter + 1
+  if (length(vec) > numColsIter) numColsIter <- numColsIter - 1
   
   # Get the final output rows vector, & format it for printing
-  finalOutputRows <- makeOutputRows(vec, numColsIter, maxChars)
+  finalOutputRows <- make_output_rows(vec, numColsIter, maxChars) %>% gsub("( \\| )+$", "", .)
   printVec <- crayon::make_style("#00FF00")(finalOutputRows)
   
   # Print out the output, if desired, & return the final output rows vector (invisibly)

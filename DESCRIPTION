@@ -31,6 +31,7 @@ Imports:
     tibble
 Suggests: 
     insuranceData,
+    lexicon,
     magick,
     testthat
 Collate: 
