@@ -1,7 +1,5 @@
 # Include other functions in package
 #' @include Pipes.R
-#' @include Error_Handling.R
-#' @importFrom data.table :=
 NULL
 
 # Avoid "undefined variable" notes in package checking
@@ -17,11 +15,11 @@ globalVariables(c("dfEnv"))
 #' This will allow for more functionality, and will help avoid errors, especially when lazy table mode is active.
 #' If you want to pass an expression, simple ones should work, but do so at your own risk.
 #' 
-#' The \code{tableMode} parameter can have one of three values: c(TRUE, FALSE, "lazy").
+#' \code{tableMode} can be one of three values: c(TRUE, FALSE, "lazy").
 #' Lazy table mode means that columns are not tabulated until requested.
-#' When they are tabulated, they can be done one at a time (\code{tableMode = "lazy"}),
-#'   or all together (\code{tableMode = true}).
-#' This setting can be deactivated entirely (\code{tableMode = FALSE}), but this is not suggesteds.
+#' When they are tabulated, they can be done only when accessed (\code{tableMode = "lazy"}),
+#'   or all together up front (\code{tableMode = true}).
+#' This setting can be deactivated entirely (\code{tableMode = FALSE}), but this is not suggested.
 #' This setting is useful since tabulation can take a long time for large datasets.
 #' 
 #' If \code{verbose > 0} (or \code{verbose != FALSE}), a message will be printed out when lazy table mode is active,
