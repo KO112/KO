@@ -92,7 +92,7 @@ make_output_rows <- function(vec, numCols, maxChars) {
 vec_print <- function(vec, maxLen = 10, maxWidth = getOption("width"), order = "none", printOut = TRUE) {
   
   # Ensure that the input is atomic
-  if (!is.atomic(vec)) stop("`vec_print`: `vec` must be atomic, not of class `", class(vec), "`.")
+  if (!is.atomic(vec)) stop("`vec_print`: `vec` must be atomic, not of class `", class(vec)[1], "`.")
   
   # Order the vector as desired
   order <- tolower(order)
