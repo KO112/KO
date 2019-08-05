@@ -96,8 +96,13 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     dfClass <- class(df)
     classes <- purrr::map_chr(df, class)
     
+    # Get the number of missing values
+    numMissing <- purrr::map_int(df, num_missing)
+    numNA <- purrr::map_int(df, ~ sum(is.na(.x)))
+    
     # Get the number of unique elements, & the column tables object
-    numUnique <- purrr::map_int(df, ~ length(unique(.x)))
+    uniqueVals <- purrr::map(df, ~ sort(unique(.x)))
+    numUnique <- purrr::map_int(uniqueVals, length)
     colTables <- columnTables(dict, df, tableMode)
     
   })
@@ -157,6 +162,9 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     # Return data on the desired column
     return(list(
       class = dict$classes %>% .[names(.) == elem] %>% unname()
+      , numMissing = dict$numMissing %>% .[names(.) == elem] %>% unname()
+      , numNA = dict$numNA %>% .[names(.) == elem] %>% unname()
+      , uniqueVals = dict$uniqueVals %>% .[names(.) == elem] %>% .[[1]]
       , numUnique = dict$numUnique %>% .[names(.) == elem] %>% unname()
       , table = dict$colTables[elem][[1]]
     ))
@@ -300,7 +308,7 @@ names.dataDict <- function(x) {
 #' dd$colTables$mpg
 #' 
 updateDD <- function(dict, df) {
-  # stop("`updateDD`: This function has not yet been implemented.")
+  message("`updateDD`: This function has not yet been implemented.")
   return(NULL)
 }
 
@@ -363,7 +371,7 @@ columnTables <- function(dict, df, tableMode) {
 #' dd$colTables$mpg
 #' 
 `$.columnTables` <- function(colTables, col = NULL) {
-  colTables[col]
+  colTables[col][[1]]
 }
 
 
@@ -444,7 +452,7 @@ columnTables <- function(dict, df, tableMode) {
 #' summary(dd$colTables)
 #' 
 summary.columnTables <- function(object, ...) {
-  # stop("`summary.columnTables`: This function has not yet been implemented.")
+  message("`summary.columnTables`: This function has not yet been implemented.")
   return(NULL)
 }
 
@@ -463,7 +471,7 @@ summary.columnTables <- function(object, ...) {
 #' print(dd$colTables)
 #' 
 print.columnTables <- function(x, ...) {
-  # stop("`print.columnTables`: This function has not yet been implemented.")
+  message("`print.columnTables`: This function has not yet been implemented.")
   return(NULL)
 }
 

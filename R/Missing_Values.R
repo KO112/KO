@@ -53,7 +53,7 @@ num_missing <- function(vec) {
   if (is.numeric(vec) | is.logical(vec) | lubridate::is.Date(vec) | is.factor(vec)) {
     numMissing <- sum(is.na(vec))
   } else if (is.character(vec)) {
-    numMissing <- sum(vec == "", na.rm = TRUE) + sum(is.na(vec))
+    numMissing <- sum(is.na(vec)) + sum(vec == "", na.rm = TRUE)
   } else {
     message("Unknown vector data type: ", class(vec))
     numMissing <- sum(is.na(vec))

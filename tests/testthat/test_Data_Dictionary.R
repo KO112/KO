@@ -115,9 +115,9 @@ test_that("dataDict attributes", {
 # Test tabulation
 test_that("dataDict tabulation", {
   
-  expect_equal(dd$colTables$am, list(am = table(mtcars$am, useNA = "ifany", dnn = NULL)))
-  expect_equal(dd$colTables$disp, list(disp = table(mtcars$disp, useNA = "ifany", dnn = NULL)))
-  expect_equal(dd$colTables$mpg, list(mpg = table(mtcars$mpg, useNA = "ifany", dnn = NULL)))
+  expect_equal(dd$colTables$am, table(mtcars$am, useNA = "ifany", dnn = NULL))
+  expect_equal(dd$colTables$disp, table(mtcars$disp, useNA = "ifany", dnn = NULL))
+  expect_equal(dd$colTables$mpg, table(mtcars$mpg, useNA = "ifany", dnn = NULL))
   
   expect_equal(dd$colTables["am"], list(am = table(mtcars$am, useNA = "ifany", dnn = NULL)))
   expect_equal(dd$colTables["disp"], list(disp = table(mtcars$disp, useNA = "ifany", dnn = NULL)))
