@@ -100,6 +100,11 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     numMissing <- purrr::map_int(df, num_missing)
     numNA <- purrr::map_int(df, ~ sum(is.na(.x)))
     
+    # Summarize numeric columns
+    means <- dplyr::select_if(df, is.numeric) %>% purrr::map_dbl(mean, na.rm = TRUE)
+    medians <- dplyr::select_if(df, is.numeric) %>% purrr::map_dbl(stats::median, na.rm = TRUE)
+    modes <- dplyr::select_if(df, is.numeric) %>% purrr::map_dbl(mode_stat)
+    
     # Get the number of unique elements, & the column tables object
     uniqueVals <- purrr::map(df, ~ sort(unique(.x)))
     numUnique <- purrr::map_int(uniqueVals, length)
