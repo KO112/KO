@@ -301,6 +301,7 @@ names.dataDict <- function(x) {
 #' 
 #' @param dict A \code{dataDict} object.
 #' @param df The data.frame-like object to calculate information for.
+#' @param resetTables Whether or not to reset the \code{colTables} in \code{dict} (logical scalar).
 #' 
 #' @export
 #' 
@@ -312,7 +313,7 @@ names.dataDict <- function(x) {
 #' updateDD(dd, df)
 #' dd$colTables$mpg
 #' 
-updateDD <- function(dict, df) {
+updateDD <- function(dict, df, resetTables = TRUE) {
   message("`updateDD`: This function has not yet been implemented.")
   return(NULL)
 }
