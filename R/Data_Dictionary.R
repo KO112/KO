@@ -106,7 +106,7 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     # modes <- dplyr::select_if(df, is.numeric) %>% purrr::map_dbl(mode_stat)
     
     # Get the number of unique elements, & the column tables object
-    uniqueVals <- purrr::map(df, ~ sort(unique(.x)))
+    uniqueVals <- purrr::map(df, ~ sort(unique(.x), na.last = TRUE))
     numUnique <- purrr::map_int(uniqueVals, length)
     colTables <- columnTables(dict, df, tableMode)
     

@@ -4,12 +4,14 @@
 \alias{updateDD}
 \title{Update a \code{dataDict} Object}
 \usage{
-updateDD(dict, df)
+updateDD(dict, df, resetTables = TRUE)
 }
 \arguments{
 \item{dict}{A \code{dataDict} object.}
 
 \item{df}{The data.frame-like object to calculate information for.}
+
+\item{resetTables}{Whether or not to reset the \code{colTables} in \code{dict} (logical scalar).}
 }
 \description{
 Update a \code{dataDict} Object
