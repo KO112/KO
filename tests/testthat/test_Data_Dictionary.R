@@ -135,7 +135,7 @@ test_that("dataDict tabulation", {
 
 
 # Test tabulated names
-test_that("dataDict", {
+test_that("dataDict tabulated names", {
   
   expect_equal(names(dd$colTables), c("am", "disp", "mpg"))
   
@@ -143,8 +143,9 @@ test_that("dataDict", {
 
 
 # Test multiple tabulation
+# dd <- dataDict(mtcars)
 # test_that("dataDict multiple tabulation", {
-#   
+# 
 #   expect_identical(
 #     dd["colTables", c("am", "disp", "mpg")],
 #     list(
@@ -153,5 +154,5 @@ test_that("dataDict", {
 #       , mpg = table(mtcars$mpg, useNA = "ifany", dnn = NULL)
 #     )
 #   )
-#   
+# 
 # })

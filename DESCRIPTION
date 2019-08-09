@@ -26,6 +26,7 @@ Imports:
     plotly,
     pryr,
     purrr,
+    rlang,
     scales,
     stats,
     tibble
@@ -49,5 +50,6 @@ Collate:
     'Missing_Values.R'
     'Printing.R'
     'Quasi_Poisson.R'
+    'Select_Matrix.R'
     'Summarize.R'
     'Trimming.R'
