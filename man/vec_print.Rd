@@ -8,7 +8,7 @@
 make_output_rows(vec, numCols, maxChars)
 
 vec_print(vec, maxLen = 10, maxWidth = getOption("width"),
-  order = "none", printOut = TRUE)
+  order = "none", printOut = TRUE, color = "#00FF00")
 }
 \arguments{
 \item{vec}{The (atomic) vector to print out.}
@@ -24,6 +24,9 @@ vec_print(vec, maxLen = 10, maxWidth = getOption("width"),
 \item{order}{How to order the \code{vec} before printing (see details for more) (character scalar).}
 
 \item{printOut}{Whether to print out the formatted output (logical scalar).}
+
+\item{color}{The color of the output, which can be any valid input to \code{crayon::make_style}
+(e.g. 6/8 digit hex codes, RGB (as a 3 row, 1 column matrix), or an element from \code{colors()}).}
 }
 \value{
 The output rows vector.

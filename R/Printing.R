@@ -52,6 +52,8 @@ make_output_rows <- function(vec, numCols, maxChars) {
 #' @param printOut Whether to print out the formatted output (logical scalar).
 #' @param maxWidth The mxximum width to print out per row (defaults to fill available space) (integer scalar).
 #' @param order How to order the \code{vec} before printing (see details for more) (character scalar).
+#' @param color The color of the output, which can be any valid input to \code{crayon::make_style}
+#'   (e.g. 6/8 digit hex codes, RGB (as a 3 row, 1 column matrix), or an element from \code{colors()}).
 #'
 #' @return The final output row vector.
 #' @name vec_print
@@ -89,7 +91,7 @@ make_output_rows <- function(vec, numCols, maxChars) {
 #'   
 #' }
 #' 
-vec_print <- function(vec, maxLen = 10, maxWidth = getOption("width"), order = "none", printOut = TRUE) {
+vec_print <- function(vec, maxLen = 10, maxWidth = getOption("width"), order = "none", printOut = TRUE, color = "#00FF00") {
   
   # Ensure that the input is atomic
   if (!is.atomic(vec)) stop("`vec_print`: `vec` must be atomic, not of class `", class(vec)[1], "`.")
@@ -111,7 +113,7 @@ vec_print <- function(vec, maxLen = 10, maxWidth = getOption("width"), order = "
   
   # Get the final output rows vector, & format it for printing
   finalOutputRows <- make_output_rows(vec, numColsIter, maxChars) %>% gsub("( \\| )+$", "", .)
-  printVec <- crayon::make_style("#00FF00")(finalOutputRows)
+  printVec <- crayon::make_style(color)(finalOutputRows)
   
   # Print out the output, if desired, & return the final output rows vector (invisibly)
   if (printOut) {
