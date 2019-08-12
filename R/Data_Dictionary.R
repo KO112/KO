@@ -157,12 +157,17 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
     # Get the desired tables
     return(dict$colTables[cols])
     
-  } else if (elem %in% ls(dict)) (
+  } else if (elem %in% ls(dict)) {
     
     # Return the desired element
     return(get(x = elem, envir = dict))
     
-  ) else if (elem %in% colnames(dict)) {
+  } else if (elem %in% names(attributes(dict))) {
+    
+    # Return the desired element
+    return(attr(dict, elem))
+    
+  } else if (elem %in% colnames(dict)) {
     
     # Return data on the desired column
     return(list(

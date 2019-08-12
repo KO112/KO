@@ -8,6 +8,7 @@ To-Do List:
 - replace_missing: fix for factors (relevel?)
 - Finish compare_df testing (test with dates, one col date one character, messages, etc.)
 - Test colored output
+- Select function to match columns, case/columns insensitive
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
