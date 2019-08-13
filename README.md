@@ -9,6 +9,7 @@ To-Do List:
 - Finish compare_df testing (test with dates, one col date one character, messages, etc.)
 - Test colored output
 - Select function to match columns, case/columns insensitive
+- Head/tail assignment (`head<-`, `tail<-`)
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

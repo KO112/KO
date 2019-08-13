@@ -49,7 +49,7 @@ globalVariables(c("dfEnv"))
 dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   
   # Ensure that we have a data.frame-like object
-  if (!inherits(df, "data.frame")) stop("dataDict: `df`` must inherit from a `data.frame`.")
+  if (!inherits(df, "data.frame")) stop("dataDict: `df` must inherit from a `data.frame`.")
   
   # Create the data dictionary object, & set the call/verbosity attribute
   dict <- new.env()
