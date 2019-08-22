@@ -11,8 +11,14 @@ To-Do List:
 - Select function to match columns, case/columns insensitive
 - Head/tail assignment (`head<-`, `tail<-`)
 
+Add-In:
+- Printing selected variable
+- Showing option values
+- Query auto-complete (no need for q prefix)
+
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
 - For printing, change from tibble to something easier to read in bulk, maybe multiple columns
 - Test new values in dataDict
 - Add colHash/colMode, maybe use constructor for all col(...)
+- Progress bar
