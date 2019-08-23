@@ -10,46 +10,35 @@
 #' 
 auto_complete_var <- function() {
   
+  # Get the context of the call, as well as the contents/selection/position of the context
   # context <- rstudioapi::getActiveDocumentContext()
   context <- rstudioapi::getConsoleEditorContext()
   contents <- context$contents
   selection <- context$selection %>% rstudioapi::primary_selection()
-  
   start <- selection$range$start
-  end <- selection$range$end
+  # end <- selection$range$end
   
-  # rstudioapi::getConsoleEditorContext() %$% rstudioapi::sendToConsole(paste0(contents, "#"), execute = FALSE)
-  # rstudioapi::insertText(selection$range, "banana\napple", id = "#console")
-  # rstudioapi::modifyRange(selection$range, "banana\napple", id = "#console")
-  # selection$text
-  
-  # banana
-  # insertText("banana", id = "#console")
-  # insertText(c(1, 1, 1, 6), "apple", id = "#console")
-  # modifyRange(c(1, 1, 1, 100), "apple", id = "#console")
-  
-  # if (context$id == "#console") {
-    
-    # if (start[[1]] == end[[2]])
-    
-  # } else if (selection$text == "") {
-  if (selection$text == "") {
-      varText <- contents[start[1]] %>%
-        substr(1, start[2]) %>%
-        stringi::stri_extract_all_regex("\\w+$") %>%
-        .[[1]]
-  } else {
+  # Set the variables search text, & the output range
+  if (selection$text != "") {
     varText <- selection$text
+    outputRange <- selection$range
+  } else {
+    varText <- substr(contents[start["row"]], 1, start["column"]) %>%
+      stringi::stri_extract_all_regex("\\w+$") %>% .[[1]]
+    outputRange <- rstudioapi::document_position(start["row"], start["column"] - nchar(varText)) %>%
+      rstudioapi::document_range(start)
   }
   
-  paste0(strsplit(varText, "")[[1]], collapse = ".*") %>%
-    grep(ls(envir = .GlobalEnv), ignore.case = T, value = T) %>%
-    ifelse(length(.) == 1, ., paste0("${", seq_along(.), ":", ., "}", collapse = ", ")) %>%
-    rstudioapi::sendToConsole(code = ., execute = FALSE)
+  # Create a regex pattern for matching, search for a match, get unique elements, & print them to the console
+  matchText <- paste0(strsplit(varText, "")[[1]], collapse = ".*")
+  purrr::map(c(environment(), .GlobalEnv), ~ grep(matchText, ls(.x), ignore.case = TRUE, value = TRUE)) %>%
+    unlist() %>% unique() %>% sort() %>%
+    ifelse(length(.) <= 1, ., paste0("${", seq_along(.), ":", ., "}", collapse = ", ")) %>%
+    rstudioapi::insertText(outputRange, ., context$id)
   
-  # paste0(c(letters, LETTERS, 0:9, "_-+=[]{}\\|;:'\",<.>/?)", "\\w+$"), collapse = "") %>%
-  #   stringi::stri_extract_all_regex("\\w") %>% {sort(.[[1]])}
-  
+  # rstudioapi::setSelectionRanges(list(c(1, 1, 1, 5), c(1, 6, 1, 10)), context$id)
+  rstudioapi::sourceMarkers("a", tibble::tibble(
+    type = "usage", file = "~/GitHub/KO/R/Auto_Complete.R", line = 45, column = 1, message = "hello"
+  ))
+  # auto_complete_var()
 }
-
-
