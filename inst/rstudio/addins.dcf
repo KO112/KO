@@ -1,0 +1,4 @@
+Name: Auto-Complete
+Description: Auto-completes the current variable, using pattern matching.
+Binding: auto_complete_var
+Interactive: false

@@ -10,6 +10,7 @@ To-Do List:
 - Test colored output
 - Select function to match columns, case/columns insensitive
 - Head/tail assignment (`head<-`, `tail<-`)
+- Allow select.matrix to accept variables (e.g. `a <- c("mpg", "cyl"); select(as.matrix(mtcars), a)`)
 
 Add-In:
 - Printing selected variable
