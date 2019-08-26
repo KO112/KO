@@ -37,8 +37,4 @@ auto_complete_var <- function() {
     rstudioapi::insertText(outputRange, ., context$id)
   
   # rstudioapi::setSelectionRanges(list(c(1, 1, 1, 5), c(1, 6, 1, 10)), context$id)
-  rstudioapi::sourceMarkers("a", tibble::tibble(
-    type = "usage", file = "~/GitHub/KO/R/Auto_Complete.R", line = 45, column = 1, message = "hello"
-  ))
-  # auto_complete_var()
 }
