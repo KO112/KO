@@ -7,6 +7,7 @@
 #' @examples
 #' apple <- 10
 #' # Type "ap" and run the add-in function
+#' # source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var(); ""
 #' 
 auto_complete_var <- function() {
   
