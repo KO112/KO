@@ -36,14 +36,15 @@ auto_complete_var <- function() {
   # If there is more than one match, create a drop-down list for the user to choose from
   if (length(varMatches) > 1) varMatches <- tkDropDown(varMatches)
   
-  # If only one element was selected, send it to the console, & return it, else throw an error
+  # If only one element was selected, send it to the console, & return it, else throw an error/do nothing
   if (length(varMatches) == 1) {
     rstudioapi::insertText(outputRange, varMatches, context$id)
-    return(invisible(varMatches))
   } else {
-    stop("An invalid selection was made. This should be impossible.",
-         length(varMatches), " elements were selected.")
+    # stop("An invalid selection was made. This should be impossible.",
+    #      length(varMatches), " elements were selected.")
   }
+  
+  return(invisible(varMatches))
   
 }
 # auto_complete_var()
@@ -51,40 +52,27 @@ auto_complete_var <- function() {
 
 
 # 
-tkDropDown <- function(opts, title = "Select a Word") {
+tkDropDown <- function(varList, title = "Select a Word") {
   
-  # Check that we have version 8.5 or later, & set the tkbutton object
+  # Check that we have version 8.5 or later, set the tcl object, & set the variable list
   have_ttk <- as.character(tcl("info", "tclversion")) >= "8.5"
-  # if (!have_ttk) ttkbutton <- tkbutton
-  
-  # Set the tcl object, adding the desired options
   lvar <- tclVar()
-  tclObj(lvar) <- opts
+  tclObj(lvar) <- varList
   
   # Hide the temporary widget, storing the original modal setting, & create the top-level widget
   oldMode <- tclServiceMode(FALSE)
   dlg <- tktoplevel()
   
-  # Set the title, remove the icon, get the set, & focus the widget
-  tkwm.title(dlg, title)
-  # tkwm.deiconify(dlg)
-  # tkgrab.set(dlg)
-  # tkfocus(dlg)
-  
   # Set the title label
   if (title != "") {
-    lab <- if (have_ttk) ttklabel(dlg, text = title, foreground = "blue")
-           else tklabel(dlg, text = title, fg = "blue")
+    tkwm.title(dlg, title)
+    lab <- if (have_ttk) ttklabel(dlg, text = title, foreground = "black")
+           else tklabel(dlg, text = title, fg = "black")
     tkpack(lab, side = "top")
   }
   
-  # Runs when the form is submitted
-  onOK <- function() {
-    res <- 1L + as.integer(tkcurselection(listBox))
-    selectedVar <<- opts[res]
-    tkgrab.release(dlg)
-    tkdestroy(dlg)
-  }
+  # Initialize the selected variable ()
+  selectedVar <- character(0)
   
   # Runs when the form is cancelled
   onCancel <- function() {
@@ -92,29 +80,29 @@ tkDropDown <- function(opts, title = "Select a Word") {
     tkdestroy(dlg)
   }
   
-  # 
-  # buttons <- tkframe(dlg)
-  # tkpack(buttons, side = "bottom")
-  # OK <- ttkbutton(buttons, text = gettext("OK"), width = 6, command = onOK)
-  # Cancel <- ttkbutton(buttons, text = gettext("Cancel"), command = onCancel)
-  # tkpack(OK, Cancel, side = "left", fill = "x", padx = "2m")
+  # Runs when the form is submitted
+  onOK <- function() {
+    res <- 1L + as.integer(tkcurselection(listBox))
+    selectedVar <<- varList[res]
+    onCancel()
+  }
   
-  # 
+  # Get the height of the list box
   scht <- as.numeric(tclvalue(tkwinfo("screenheight", dlg))) - 200L
-  ht <- min(length(opts), scht %/% 20)
+  ht <- min(length(varList), scht %/% 20)
   
-  # 
+  # Set the selection mode (follows cursor moved by arrow keys), create a temporary list box, & get its height
   selectionMode <- "browse" # "single"
   listBox <- tklistbox(dlg, height = ht, listvariable = lvar, bg = "white", setgrid = 1, selectmode = selectionMode)
   tmp <- tcl("font", "metrics", tkcget(listBox, font = NULL))
   tmp <- as.numeric(sub(".*linespace ([0-9]+) .*", "\\1", tclvalue(tmp))) + 3
-  ht <- min(length(opts), scht %/% tmp)
+  ht <- min(length(varList), scht %/% tmp)
   
   # Destroy the temporary list box
   tkdestroy(listBox)
   
-  # 
-  if (ht < length(opts)) {
+  # Create the list box based on the height and number of options
+  if (ht < length(varList)) {
     
     # 
     scr <- if (have_ttk) ttkscrollbar(dlg, command = function(...) tkyview(listBox, ...))
@@ -136,7 +124,6 @@ tkDropDown <- function(opts, title = "Select a Word") {
   
   # Select the first element
   tkselection.set(listBox, 0L)
-  selectedVar <- character(0)
   
   # Set key bindings
   tkbind(listBox, "<Double-ButtonPress-1>", onOK)

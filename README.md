@@ -22,4 +22,5 @@ Data Dictionary:
 - For printing, change from tibble to something easier to read in bulk, maybe multiple columns
 - Test new values in dataDict
 - Add colHash/colMode, maybe use constructor for all col(...)
-- Progress bar
+- Progress bar (progress::progress_bar)
+- .DollarNames
