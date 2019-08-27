@@ -81,8 +81,17 @@ tkDropDown <- function(varList, title = "Select a Word") {
     onCancel()
   }
   
-  # Get the height of the list box
-  scht <- as.numeric(tclvalue(tkwinfo("screenheight", dlg))) - 200L
+  # Run when the Home/End buttons are pressed
+  moveSelection <- function(index) {
+    tkselection.clear(listBox, tkcurselection(listBox))
+    tkselection.set(listBox, index) 
+    tkyview(listBox, index)
+  }
+  onHome <- function() moveSelection(0L)
+  onEnd <- function() moveSelection(length(varList) - 1L)
+  
+  # Get the height of the top-level widget
+  scht <- as.numeric(tclvalue(tkwinfo("screenheight", dlg))) - 200
   ht <- min(length(varList), scht %/% 20)
   
   # Set the selection mode (follows cursor moved by arrow keys), create a temporary list box, & get its height
@@ -116,26 +125,21 @@ tkDropDown <- function(varList, title = "Select a Word") {
     
   }
   
-  # Select the first element
-  tkselection.set(listBox, 0L)
-  
   # Set key bindings
   tkbind(listBox, "<Double-ButtonPress-1>", onOK)
   tkbind(dlg, "<Return>", onOK)
   tkbind(dlg, "<space>", onOK)
   tkbind(dlg, "<Destroy>", onCancel)
   tkbind(dlg, "<Escape>", onCancel)
-  # tkbind(dlg, "<Up>", onUp)
-  # tkbind(dlg, "<Down>", onDown)
+  tkbind(dlg, "<Home>", onHome)
+  tkbind(dlg, "<End>", onEnd)
   
-  # Activate the list box, show it modally, activate it, & wait for the user to take an action
+  # Select the first element, focus the list box, show it modally, activate it, & wait for the user
+  tkselection.set(listBox, 0L)
   tkfocus(listBox)
   tclServiceMode(TRUE) # oldMode)
   system(paste0("\"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe\" \"",
                 gsub("\\", "\\\\", title, fixed = TRUE), "\""))
-  # system(paste0("\"C:/Program Files/AutoHotkey/AutoHotkey.exe\" ",
-  #               "\"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.ahk\" \"",
-  #               gsub("\\", "\\\\", title, fixed = TRUE), "\""))
   tkwait.window(dlg)
   
   # Return the selection
