@@ -12,8 +12,8 @@
 auto_complete_var <- function() {
   
   # Get the context of the call, as well as the contents/selection/position of the context
-  # context <- rstudioapi::getActiveDocumentContext()
-  context <- rstudioapi::getConsoleEditorContext()
+  context <- rstudioapi::getActiveDocumentContext()
+  # context <- rstudioapi::getConsoleEditorContext()
   contents <- context$contents
   selection <- context$selection %>% rstudioapi::primary_selection()
   start <- selection$range$start
@@ -24,7 +24,7 @@ auto_complete_var <- function() {
     outputRange <- selection$range
   } else {
     varText <- substr(contents[start["row"]], 1, start["column"]) %>%
-      stringi::stri_extract_all_regex("\\w+$") %>% .[[1]]
+      stringi::stri_extract_last_regex("\\w+") %>% .[[1]]
     outputRange <- rstudioapi::document_position(start["row"], start["column"] - nchar(varText)) %>%
       rstudioapi::document_range(start)
   }
@@ -89,7 +89,7 @@ tkDropDown <- function(varList, title = "Select a Word") {
   # Runs when the form is submitted
   onOK <- function() {
     res <- 1L + as.integer(tcltk::tkcurselection(listBox))
-    selectedVar <<- varList[res]
+    selectedVar <- varList[res]
     onCancel()
   }
   
