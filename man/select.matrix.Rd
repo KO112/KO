@@ -4,7 +4,7 @@
 \alias{select.matrix}
 \title{Select Columns of a Matrix}
 \usage{
-select.matrix(.data, ..., throwError = TRUE)
+\method{select}{matrix}(.data, ..., throwError = TRUE)
 }
 \arguments{
 \item{.data}{The matrix to select columns from.}

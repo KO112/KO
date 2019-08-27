@@ -1,3 +1,8 @@
+# Include other functions in package
+#' @importFrom dplyr select
+NULL
+
+
 #' Select Columns of a Matrix
 #' 
 #' Select columns of a matrix by name, \code{dplyr} style.
