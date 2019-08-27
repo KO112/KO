@@ -36,14 +36,8 @@ auto_complete_var <- function() {
   # If there is more than one match, create a drop-down list for the user to choose from
   if (length(varMatches) > 1) varMatches <- tkDropDown(varMatches)
   
-  # If only one element was selected, send it to the console, & return it, else throw an error/do nothing
-  if (length(varMatches) == 1) {
-    rstudioapi::insertText(outputRange, varMatches, context$id)
-  } else {
-    # stop("An invalid selection was made. This should be impossible.",
-    #      length(varMatches), " elements were selected.")
-  }
-  
+  # If only one element was selected, send it to the console, & return the selected element invisibly
+  if (length(varMatches) == 1) rstudioapi::insertText(outputRange, varMatches, context$id)
   return(invisible(varMatches))
   
 }
@@ -51,13 +45,13 @@ auto_complete_var <- function() {
 
 
 
-# 
+
 tkDropDown <- function(varList, title = "Select a Word") {
   
-  # Check that we have version 8.5 or later, set the tcl object, & set the variable list
+  # Check that we have version 8.5 or later, set the list object, & set the variable list
   have_ttk <- as.character(tcl("info", "tclversion")) >= "8.5"
-  lvar <- tclVar()
-  tclObj(lvar) <- varList
+  listObj <- tclVar()
+  tclObj(listObj) <- varList
   
   # Hide the temporary widget, storing the original modal setting, & create the top-level widget
   oldMode <- tclServiceMode(FALSE)
@@ -92,8 +86,8 @@ tkDropDown <- function(varList, title = "Select a Word") {
   ht <- min(length(varList), scht %/% 20)
   
   # Set the selection mode (follows cursor moved by arrow keys), create a temporary list box, & get its height
-  selectionMode <- "browse" # "single"
-  listBox <- tklistbox(dlg, height = ht, listvariable = lvar, bg = "white", setgrid = 1, selectmode = selectionMode)
+  selectionMode <- "browse"
+  listBox <- tklistbox(dlg, height = ht, listvariable = listObj, setgrid = 1, selectmode = selectionMode)
   tmp <- tcl("font", "metrics", tkcget(listBox, font = NULL))
   tmp <- as.numeric(sub(".*linespace ([0-9]+) .*", "\\1", tclvalue(tmp))) + 3
   ht <- min(length(varList), scht %/% tmp)
@@ -101,23 +95,23 @@ tkDropDown <- function(varList, title = "Select a Word") {
   # Destroy the temporary list box
   tkdestroy(listBox)
   
-  # Create the list box based on the height and number of options
+  # Create the list box, adding scroll bars if necessary
   if (ht < length(varList)) {
     
-    # 
+    # Create a scroll bar object
     scr <- if (have_ttk) ttkscrollbar(dlg, command = function(...) tkyview(listBox, ...))
       else tkscrollbar(dlg, repeatinterval = 5, command = function(...) tkyview(listBox, ...))
     
-    # 
-    listBox <- tklistbox(dlg, height = ht, width = 0, listvariable = lvar, bg = "white", selectmode = selectionMode,
+    # Create the list box, adding the scroll bar
+    listBox <- tklistbox(dlg, height = ht, width = 0, listvariable = listObj, bg = "white", selectmode = selectionMode,
                          setgrid = 1, yscrollcommand = function(...) tkset(scr, ...))
     tkpack(listBox, side = "left", fill = "both", expand = TRUE)
     tkpack(scr, side = "right", fill = "y")
     
   } else {
     
-    # 
-    listBox <- tklistbox(dlg, height = ht, width = 0, listvariable = lvar, bg = "white", selectmode = selectionMode)
+    # Create the list box
+    listBox <- tklistbox(dlg, height = ht, width = 0, listvariable = listObj, bg = "white", selectmode = selectionMode)
     tkpack(listBox, side = "left", fill = "both")
     
   }
@@ -137,11 +131,15 @@ tkDropDown <- function(varList, title = "Select a Word") {
   # Activate the list box, show it modally, activate it, & wait for the user to take an action
   tkfocus(listBox)
   tclServiceMode(TRUE) # oldMode)
-  # system(paste0("WScript \"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.vbs\" \"", title, "\""))
-  system(paste0("\"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe\" \"", title, "\""))
+  system(paste0("\"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe\" \"",
+                gsub("\\", "\\\\", title, fixed = TRUE), "\""))
+  # system(paste0("\"C:/Program Files/AutoHotkey/AutoHotkey.exe\" ",
+  #               "\"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.ahk\" \"",
+  #               gsub("\\", "\\\\", title, fixed = TRUE), "\""))
   tkwait.window(dlg)
   
   # Return the selection
   return(selectedVar)
   
 }
+# auto_complete_var()
