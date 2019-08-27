@@ -27,8 +27,11 @@ Imports:
     pryr,
     purrr,
     rlang,
+    rstudioapi,
     scales,
     stats,
+    stringi,
+    tcltk,
     tibble
 Suggests: 
     insuranceData,
@@ -36,6 +39,7 @@ Suggests:
     magick,
     testthat
 Collate: 
+    'Auto_Complete.R'
     'Error_Handling.R'
     'Pipes.R'
     'Binned_Data_and_Plots.R'

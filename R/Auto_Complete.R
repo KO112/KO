@@ -41,28 +41,39 @@ auto_complete_var <- function() {
   return(invisible(varMatches))
   
 }
-# auto_complete_var()
 
 
-
-
+#' Create a TCL/TK Drop-Down List
+#'
+#' @param varList Variable names to choose from (character vector)/
+#' @param title Title of the pop-up (character scalar).
+#'
+#' @return The selected variable name.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#'   tkDropDown(letters)
+#'   tkDropDown(letters, "Select a Variable")
+#' }
+#' 
 tkDropDown <- function(varList, title = "Select a Word") {
   
   # Check that we have version 8.5 or later, set the list object, & set the variable list
-  have_ttk <- as.character(tcl("info", "tclversion")) >= "8.5"
-  listObj <- tclVar()
-  tclObj(listObj) <- varList
+  have_ttk <- as.character(tcltk::tcl("info", "tclversion")) >= "8.5"
+  listObj <- tcltk::tclVar()
+  tcltk::tclObj(listObj) <- varList
   
   # Hide the temporary widget, storing the original modal setting, & create the top-level widget
-  oldMode <- tclServiceMode(FALSE)
-  dlg <- tktoplevel()
+  oldMode <- tcltk::tclServiceMode(FALSE)
+  dlg <- tcltk::tktoplevel()
   
   # Set the title label
   if (title != "") {
-    tkwm.title(dlg, title)
-    lab <- if (have_ttk) ttklabel(dlg, text = title, foreground = "black")
-           else tklabel(dlg, text = title, fg = "black")
-    tkpack(lab, side = "top")
+    tcltk::tkwm.title(dlg, title)
+    lab <- if (have_ttk) tcltk::ttklabel(dlg, text = title, foreground = "black")
+           else tcltk::tklabel(dlg, text = title, fg = "black")
+    tcltk::tkpack(lab, side = "top")
   }
   
   # Initialize the selected variable ()
@@ -70,80 +81,84 @@ tkDropDown <- function(varList, title = "Select a Word") {
   
   # Runs when the form is cancelled
   onCancel <- function() {
-    tkgrab.release(dlg)
-    tkdestroy(dlg)
+    tcltk::tkgrab.release(dlg)
+    tcltk::tkdestroy(dlg)
   }
   
   # Runs when the form is submitted
   onOK <- function() {
-    res <- 1L + as.integer(tkcurselection(listBox))
+    res <- 1L + as.integer(tcltk::tkcurselection(listBox))
     selectedVar <<- varList[res]
     onCancel()
   }
   
-  # Run when the Home/End buttons are pressed
-  moveSelection <- function(index) {
-    tkselection.clear(listBox, tkcurselection(listBox))
-    tkselection.set(listBox, index) 
-    tkyview(listBox, index)
+  # Moves the selection in the list box
+  moveSelection <- function(index, moveView = TRUE) {
+    tcltk::tkselection.clear(listBox, tcltk::tkcurselection(listBox))
+    tcltk::tkselection.set(listBox, index)
+    tcltk::tkactivate(listBox, index)
+    if (moveView) tcltk::tkyview(listBox, index)
   }
-  onHome <- function() moveSelection(0L)
-  onEnd <- function() moveSelection(length(varList) - 1L)
   
   # Get the height of the top-level widget
-  scht <- as.numeric(tclvalue(tkwinfo("screenheight", dlg))) - 200
+  scht <- as.numeric(tcltk::tclvalue(tcltk::tkwinfo("screenheight", dlg))) - 200
   ht <- min(length(varList), scht %/% 20)
   
   # Set the selection mode (follows cursor moved by arrow keys), create a temporary list box, & get its height
   selectionMode <- "browse"
-  listBox <- tklistbox(dlg, height = ht, listvariable = listObj, setgrid = 1, selectmode = selectionMode)
-  tmp <- tcl("font", "metrics", tkcget(listBox, font = NULL))
-  tmp <- as.numeric(sub(".*linespace ([0-9]+) .*", "\\1", tclvalue(tmp))) + 3
+  listBox <- tcltk::tklistbox(dlg, height = ht, listvariable = listObj, setgrid = 1, selectmode = selectionMode)
+  tmp <- tcltk::tcl("font", "metrics", tcltk::tkcget(listBox, font = NULL))
+  tmp <- as.numeric(sub(".*linespace ([0-9]+) .*", "\\1", tcltk::tclvalue(tmp))) + 3
   ht <- min(length(varList), scht %/% tmp)
   
   # Destroy the temporary list box
-  tkdestroy(listBox)
+  tcltk::tkdestroy(listBox)
   
   # Create the list box, adding scroll bars if necessary
   if (ht < length(varList)) {
     
     # Create a scroll bar object
-    scr <- if (have_ttk) ttkscrollbar(dlg, command = function(...) tkyview(listBox, ...))
-      else tkscrollbar(dlg, repeatinterval = 5, command = function(...) tkyview(listBox, ...))
+    scr <- if (have_ttk) tcltk::ttkscrollbar(dlg, command = function(...) tcltk::tkyview(listBox, ...))
+      else tcltk::tkscrollbar(dlg, repeatinterval = 5, command = function(...) tcltk::tkyview(listBox, ...))
     
     # Create the list box, adding the scroll bar
-    listBox <- tklistbox(dlg, height = ht, width = 0, listvariable = listObj, bg = "white", selectmode = selectionMode,
-                         setgrid = 1, yscrollcommand = function(...) tkset(scr, ...))
-    tkpack(listBox, side = "left", fill = "both", expand = TRUE)
-    tkpack(scr, side = "right", fill = "y")
+    listBox <- tcltk::tklistbox(dlg, height = ht, width = 0, listvariable = listObj, bg = "white", selectmode = selectionMode,
+                         setgrid = 1, yscrollcommand = function(...) tcltk::tkset(scr, ...))
+    tcltk::tkpack(listBox, side = "left", fill = "both", expand = TRUE)
+    tcltk::tkpack(scr, side = "right", fill = "y")
     
   } else {
     
     # Create the list box
-    listBox <- tklistbox(dlg, height = ht, width = 0, listvariable = listObj, bg = "white", selectmode = selectionMode)
-    tkpack(listBox, side = "left", fill = "both")
+    listBox <- tcltk::tklistbox(dlg, height = ht, width = 0, listvariable = listObj, bg = "white", selectmode = selectionMode)
+    tcltk::tkpack(listBox, side = "left", fill = "both")
     
   }
   
-  # Set key bindings
-  tkbind(listBox, "<Double-ButtonPress-1>", onOK)
-  tkbind(dlg, "<Return>", onOK)
-  tkbind(dlg, "<space>", onOK)
-  tkbind(dlg, "<Destroy>", onCancel)
-  tkbind(dlg, "<Escape>", onCancel)
-  tkbind(dlg, "<Home>", onHome)
-  tkbind(dlg, "<End>", onEnd)
+  # Set key bindings for submitting
+  tcltk::tkbind(listBox, "<Double-ButtonPress-1>", onOK)
+  tcltk::tkbind(dlg, "<Return>", onOK)
+  tcltk::tkbind(dlg, "<space>", onOK)
+  
+  # Set key bindings for cancelling
+  tcltk::tkbind(dlg, "<Destroy>", onCancel)
+  tcltk::tkbind(dlg, "<Escape>", onCancel)
+  tcltk::tkbind(dlg, "<q>", onCancel)
+  
+  # Set key bindings for changing the selection
+  purrr::walk(0:9, ~ tcltk::tkbind(dlg, .x, function() moveSelection(.x))) # , moveView = FALSE)))
+  tcltk::tkbind(dlg, "<Home>", function() moveSelection(0L))
+  tcltk::tkbind(dlg, "<End>", function() moveSelection(length(varList) - 1L))
   
   # Select the first element, focus the list box, show it modally, activate it, & wait for the user
-  tkselection.set(listBox, 0L)
-  tkfocus(listBox)
-  tclServiceMode(TRUE) # oldMode)
+  tcltk::tkselection.set(listBox, 0L)
+  tcltk::tkfocus(listBox)
+  tcltk::tclServiceMode(TRUE) # oldMode)
   system(paste0("\"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe\" \"",
                 gsub("\\", "\\\\", title, fixed = TRUE), "\""))
-  tkwait.window(dlg)
+  tcltk::tkwait.window(dlg)
   
   # Return the selection
   return(selectedVar)
   
 }
-# auto_complete_var()
