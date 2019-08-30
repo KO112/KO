@@ -12,6 +12,6 @@ An add-in function used to help auto-complete variables in the global environmen
 \examples{
 apple <- 10
 # Type "ap" and run the add-in function
-# source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var(); ""
+# source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var()
 
 }

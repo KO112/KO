@@ -7,7 +7,7 @@
 #' @examples
 #' apple <- 10
 #' # Type "ap" and run the add-in function
-#' # source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var(); ""
+#' # source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var()
 #' 
 auto_complete_var <- function() {
   
@@ -89,7 +89,7 @@ tkDropDown <- function(varList, title = "Select a Word") {
   # Runs when the form is submitted
   onOK <- function() {
     res <- 1L + as.integer(tcltk::tkcurselection(listBox))
-    selectedVar <- varList[res]
+    selectedVar <<- varList[res]
     onCancel()
   }
   
