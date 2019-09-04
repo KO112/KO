@@ -15,7 +15,7 @@ To-Do List:
 Add-In:
 - Printing selected variable
 - Showing option values
-- Query auto-complete (no need for q prefix)
+- Make DLL specifically for activating/moving
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

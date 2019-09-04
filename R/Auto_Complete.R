@@ -7,6 +7,10 @@
 #' @examples
 #' apple <- 10
 #' # Type "ap" and run the add-in function
+#' 
+#' var1 <- 1; var2 <- 2; var3 <- 3
+#' # Type "var" and run the add-in function
+#' 
 #' # source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var()
 #' 
 auto_complete_var <- function() {
@@ -151,12 +155,17 @@ tkDropDown <- function(varList, title = "Select a Word") {
   tcltk::tkbind(dlg, "<Home>", function() moveSelection(0L))
   tcltk::tkbind(dlg, "<End>", function() moveSelection(length(varList) - 1L))
   
-  # Select the first element, focus the list box, show it modally, activate it, & wait for the user
+  # Select the first element, focus the list box, show it modally
   tcltk::tkselection.set(listBox, 0L)
   tcltk::tkfocus(listBox)
   tcltk::tclServiceMode(TRUE) # oldMode)
-  system(paste0("\"C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe\" \"",
-                gsub("\\", "\\\\", title, fixed = TRUE), "\""))
+  
+  # 
+  ahkPath <- "C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe"
+  if (file.exists(ahkPath))
+  system(paste0("\"", ahkPath,"\" \"", gsub("\\", "\\\\", title, fixed = TRUE), "\""))
+  
+  # Wait for the user to take actions
   tcltk::tkwait.window(dlg)
   
   # Return the selection
