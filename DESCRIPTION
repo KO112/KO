@@ -40,6 +40,7 @@ Suggests:
     testthat
 Collate: 
     'Auto_Complete.R'
+    'Auto_Surround.R'
     'Error_Handling.R'
     'Pipes.R'
     'Binned_Data_and_Plots.R'

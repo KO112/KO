@@ -16,6 +16,9 @@ Add-In:
 - Printing selected variable
 - Showing option values
 - Make DLL specifically for activating/moving
+- Add end bracket at next comma
+  - Extend to quotes & other characters as well
+    - Use general function, parameterize later
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

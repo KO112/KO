@@ -6,12 +6,19 @@
 \usage{
 auto_complete_var()
 }
+\value{
+The variable name that is inserted, invisibly (character scalar).
+}
 \description{
 An add-in function used to help auto-complete variables in the global environment.
 }
 \examples{
 apple <- 10
-# Type "ap" and run the add-in function
+# Type "ap" & run the add-in function
+
+var1 <- 1; var2 <- 2; var3 <- 3
+# Type "var" & run the add-in function
+
 # source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var()
 
 }

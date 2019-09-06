@@ -1,15 +1,16 @@
 #' Auto-Complete
 #' 
 #' An add-in function used to help auto-complete variables in the global environment.
-#'
+#' 
+#' @return The variable name that is inserted, invisibly (character scalar).
 #' @export
-#'
+#' 
 #' @examples
 #' apple <- 10
-#' # Type "ap" and run the add-in function
+#' # Type "ap" & run the add-in function
 #' 
 #' var1 <- 1; var2 <- 2; var3 <- 3
-#' # Type "var" and run the add-in function
+#' # Type "var" & run the add-in function
 #' 
 #' # source('~/GitHub/KO/R/Auto_Complete.R'); auto_complete_var()
 #' 
@@ -27,7 +28,7 @@ auto_complete_var <- function() {
     varText <- selection$text
     outputRange <- selection$range
   } else {
-    varText <- substr(contents[start["row"]], 1, start["column"]) %>%
+    varText <- substring(contents[start["row"]], 1, start["column"]) %>%
       stringi::stri_extract_last_regex("\\w+") %>% .[[1]]
     outputRange <- rstudioapi::document_position(start["row"], start["column"] - nchar(varText)) %>%
       rstudioapi::document_range(start)
