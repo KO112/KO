@@ -19,8 +19,8 @@ auto_surround <- function(char) {
   endChar <- switch(char, "(" = ")", "[" = "]", "{" = "}", char)
   
   # Get the context of the call, as well as the contents/selection/position of the context
-  # context <- rstudioapi::getActiveDocumentContext()
-  context <- rstudioapi::getConsoleEditorContext()
+  context <- rstudioapi::getActiveDocumentContext()
+  # context <- rstudioapi::getConsoleEditorContext()
   contents <- context$contents
   selection <- context$selection %>% rstudioapi::primary_selection()
   selStart <- selection$range$start
