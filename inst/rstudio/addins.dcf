@@ -7,3 +7,8 @@ Name: Auto-Surround
 Description: Auto-surrounds an expression the parentheses.
 Binding: auto_surround
 Interactive: false
+
+Name: Pipe Backspace
+Description: Deletes code back to the last pipe on the current line.
+Binding: pipe_backspace
+Interactive: false
