@@ -12,8 +12,3 @@ Name: Pipe Backspace
 Description: Deletes code back to the last pipe on the current line.
 Binding: pipe_backspace
 Interactive: false
-
-Name: Snippet Pipe Check
-Description: Decides whether or not to insert a pipe as well during snippet insertion.
-Binding: snippet_pipe_check
-Interactive: false

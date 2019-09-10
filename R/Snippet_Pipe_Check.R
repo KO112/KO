@@ -5,14 +5,18 @@ NULL
 
 #' Snippet Pipe Check
 #' 
-#' An add-in function that decides whether or not to insert a pipe as well during snippet insertion.
+#' Decides whether or not to insert a pipe as well during snippet insertion.
 #' 
+#' @param pipeStr The pipe to insert if needed (character scalar).
+#' @param afterStr Text to insert after the pipe (character scalar).
+#' @param elseStr Text to insert if no pipe is needed (character scalar).
+#'
 #' @return The deleted code (character scalar).
 #' 
 #' @examples
-#' # Type "1:10 %>% mean()", put your cursor anywhere after the pipe, & run the add-in function
 #' 
-snippet_pipe_check <- function() {
+#' 
+snippet_pipe_check <- function(pipeStr = "%>% ", afterStr = "", elseStr = "") {
   
   # Get the context of the call, as well as the contents/selection/position of the context
   context <- rstudioapi::getActiveDocumentContext()
@@ -21,9 +25,17 @@ snippet_pipe_check <- function() {
   selection <- rstudioapi::primary_selection(context$selection)
   selStart <- selection$range$start
   
+  # Extract the code before the cursor as a string
+  beforeStr <- substring(contents[selStart["row"]], 1, selStart["column"])
+  
+  # If the cursor is touching a word on the border, just return the after string
+  if (grepl("^(\\w)+$", beforeStr)) return(afterStr)
+  
   # Determine whether the current expressions has just been piped, & return a pipe if one is needed
-  isPiped <- substring(contents[selStart["row"]], 1, selStart["column"]) %>%
-    stringi::stri_extract_last_regex("(%>%)+[ ]*\\w+$") %>% .[[1]] %>% is.na()
-  if (isPiped) return("%>% ") else return("")
+  isPiped <- stringi::stri_extract_last_regex(
+      beforeStr, paste0("(", gsub("^[ ]*|[ ]*$", "", pipeStr), ")+[ ]*\\w+$")
+    ) %>% .[[1]] %>% is.na()
+  if (isPiped) return(paste0(pipeStr, afterStr)) else return(elseStr)
+  
   
 }

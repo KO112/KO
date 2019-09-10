@@ -4,7 +4,14 @@
 \alias{snippet_pipe_check}
 \title{Snippet Pipe Check}
 \usage{
-snippet_pipe_check()
+snippet_pipe_check(pipeStr = "\%>\% ", afterStr = "", elseStr = "")
+}
+\arguments{
+\item{pipeStr}{The pipe to insert if needed (character scalar).}
+
+\item{afterStr}{Text to insert after the pipe (character scalar).}
+
+\item{elseStr}{Text to insert if no pipe is needed (character scalar).}
 }
 \value{
 The deleted code (character scalar).
@@ -13,6 +20,6 @@ The deleted code (character scalar).
 An add-in function that decides whether or not to insert a pipe as well during snippet insertion.
 }
 \examples{
-# Type "1:10 \%>\% mean()", put your cursor anywhere after the pipe, & run the add-in function
+
 
 }

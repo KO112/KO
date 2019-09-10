@@ -13,6 +13,5 @@ The deleted code, invisibly (character scalar).
 An add-in function that deletes the code between the cursor and the last pipe.
 }
 \examples{
-# Type "1:10 \%>\% mean()", put your cursor anywhere after the pipe, & run the add-in function
 
 }

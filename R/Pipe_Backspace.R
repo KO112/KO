@@ -10,7 +10,6 @@ NULL
 #' @return The deleted code, invisibly (character scalar).
 #' 
 #' @examples
-#' # Type "1:10 %>% mean()", put your cursor anywhere after the pipe, & run the add-in function
 #' 
 pipe_backspace <- function() {
   
