@@ -1,3 +1,8 @@
+# Include other functions in package
+#' @include Pipes.R
+NULL
+
+
 #' Auto-Surround
 #' 
 #' An add-in function used to help auto-surround text with give characters.
@@ -5,7 +10,6 @@
 #' @param char The character to auto-surround with (character scalar).
 #'
 #' @return The output range, invisibly.
-#' @export
 #' 
 #' @examples
 #' # Type "apple, banana, cherry", put your cursor anywhere in a word (including on the edges),
@@ -22,7 +26,7 @@ auto_surround <- function(char) {
   context <- rstudioapi::getActiveDocumentContext()
   # context <- rstudioapi::getConsoleEditorContext()
   contents <- context$contents
-  selection <- context$selection %>% rstudioapi::primary_selection()
+  selection <- rstudioapi::primary_selection(context$selection)
   selStart <- selection$range$start
   selEnd <- selection$range$end
   

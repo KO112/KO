@@ -1,9 +1,13 @@
+# Include other functions in package
+#' @include Pipes.R
+NULL
+
+
 #' Auto-Complete
 #' 
 #' An add-in function used to help auto-complete variables in the global environment.
 #' 
 #' @return The variable name that is inserted, invisibly (character scalar).
-#' @export
 #' 
 #' @examples
 #' apple <- 10
@@ -20,18 +24,19 @@ auto_complete_var <- function() {
   context <- rstudioapi::getActiveDocumentContext()
   # context <- rstudioapi::getConsoleEditorContext()
   contents <- context$contents
-  selection <- context$selection %>% rstudioapi::primary_selection()
-  start <- selection$range$start
+  selection <- rstudioapi::primary_selection(context$selection)
+  selStart <- selection$range$start
+  
   
   # Set the variables search text, & the output range
   if (selection$text != "") {
     varText <- selection$text
     outputRange <- selection$range
   } else {
-    varText <- substring(contents[start["row"]], 1, start["column"]) %>%
+    varText <- substring(contents[selStart["row"]], 1, selStart["column"]) %>%
       stringi::stri_extract_last_regex("\\w+") %>% .[[1]]
-    outputRange <- rstudioapi::document_position(start["row"], start["column"] - nchar(varText)) %>%
-      rstudioapi::document_range(start)
+    outputRange <- rstudioapi::document_position(selStart["row"], selStart["column"] - nchar(varText)) %>%
+      rstudioapi::document_range(selStart)
   }
   
   # Create a regex pattern for matching, search for a match, get unique elements, & print them to the console

@@ -39,10 +39,10 @@ Suggests:
     magick,
     testthat
 Collate: 
+    'Pipes.R'
     'Auto_Complete.R'
     'Auto_Surround.R'
     'Error_Handling.R'
-    'Pipes.R'
     'Binned_Data_and_Plots.R'
     'Bounding_and_Rounding.R'
     'Colored_Output.R'
@@ -53,6 +53,7 @@ Collate:
     'Formatting.R'
     'Inline_If.R'
     'Missing_Values.R'
+    'Pipe_Backspace.R'
     'Printing.R'
     'Quasi_Poisson.R'
     'Select_Matrix.R'

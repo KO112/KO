@@ -19,7 +19,6 @@ Add-In:
 - Add end bracket at next comma
   - Extend to quotes & other characters as well
     - Use general function, parameterize later
-- Delete back to last pipe
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

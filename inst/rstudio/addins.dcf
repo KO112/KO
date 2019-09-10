@@ -1,7 +1,7 @@
 Name: Auto-Complete
 Description: Auto-completes the current variable, using pattern matching.
 Binding: auto_complete_var
-Interactive: true
+Interactive: false
 
 Name: Auto-Surround
 Description: Auto-surrounds an expression the parentheses.
