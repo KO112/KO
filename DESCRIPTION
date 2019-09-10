@@ -57,5 +57,6 @@ Collate:
     'Printing.R'
     'Quasi_Poisson.R'
     'Select_Matrix.R'
+    'Snippet_Pipe_Check.R'
     'Summarize.R'
     'Trimming.R'

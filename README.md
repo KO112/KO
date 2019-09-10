@@ -19,6 +19,7 @@ Add-In:
 - Add end bracket at next comma
   - Extend to quotes & other characters as well
     - Use general function, parameterize later
+- Make snippets use KO, check for pipe, insert only if needed
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
