@@ -7,7 +7,7 @@
 pipe_backspace()
 }
 \value{
-The deleted code (character scalar).
+The deleted code, invisibly (character scalar).
 }
 \description{
 An add-in function that deletes the code between the cursor and the last pipe.

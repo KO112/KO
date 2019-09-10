@@ -27,7 +27,6 @@ auto_complete_var <- function() {
   selection <- rstudioapi::primary_selection(context$selection)
   selStart <- selection$range$start
   
-  
   # Set the variables search text, & the output range
   if (selection$text != "") {
     varText <- selection$text
@@ -175,6 +174,6 @@ tkDropDown <- function(varList, title = "Select a Word") {
   tcltk::tkwait.window(dlg)
   
   # Return the selection
-  return(selectedVar)
+  return(invisible(selectedVar))
   
 }
