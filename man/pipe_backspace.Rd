@@ -13,5 +13,6 @@ The deleted code, invisibly (character scalar).
 An add-in function that deletes the code between the cursor and the last pipe.
 }
 \examples{
+# Type "mtcars \%>\% mutate(a = 1) \%>\% filter(cyl = 2)", & run the add-in function
 
 }

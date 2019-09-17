@@ -10,6 +10,7 @@ NULL
 #' @return The deleted code, invisibly (character scalar).
 #' 
 #' @examples
+#' # Type "mtcars %>% mutate(a = 1) %>% filter(cyl = 2)", & run the add-in function
 #' 
 pipe_backspace <- function() {
   

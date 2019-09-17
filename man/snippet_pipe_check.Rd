@@ -17,9 +17,15 @@ snippet_pipe_check(pipeStr = "\%>\% ", afterStr = "", elseStr = "")
 The deleted code (character scalar).
 }
 \description{
-An add-in function that decides whether or not to insert a pipe as well during snippet insertion.
+Decides whether or not to insert a pipe as well during snippet insertion.
 }
 \examples{
+# Set up a snippet as:
+# snippet mu
+# `r KO:::snippet_pipe_check();`mutate(${0})
 
+# Then type "mtcars mu", & run the add-in function
+# Or type "mtcars \%>\% mu", & run the add-in function
+# The output for both will be "mtcars \%>\% mutate()"
 
 }
