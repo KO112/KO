@@ -11,6 +11,8 @@ To-Do List:
 - Select function to match columns, case/columns insensitive
 - Head/tail assignment (`head<-`, `tail<-`)
 - Allow select.matrix to accept variables (e.g. `a <- c("mpg", "cyl"); select(as.matrix(mtcars), a)`)
+  - Maybe use `with = F` or just search up if not found, or implement `..a`
+- 
 
 Add-In:
 - Printing selected variable
@@ -18,7 +20,9 @@ Add-In:
 - Make DLL specifically for activating/moving
 - Add end bracket at next comma
   - Extend to quotes & other characters as well
-    - Use general function, parameterize later
+  - Use general function, parameterize later
+- Pop-up to select column names
+  - Maybe full preview popup, (semi) random sampling of rows?
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
