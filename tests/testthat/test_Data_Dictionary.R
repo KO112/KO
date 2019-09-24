@@ -22,7 +22,7 @@ expressionMsg <- c(
 keepNameMsg <- c(
     "`dataDict`: This `dataDict` will be based off of the object named 'mtcars'.",
     "            To ensure that this `dataDict` will continue to work, do not change the name of the object,",
-    "              or use the `updateDD` function after the object changes."
+    "            You can alternatively use the `updateDD` function to update this `dataDict` after the object changes."
   ) %>%
     paste0(collapse = "\n") %>%
     info(printOut = FALSE)

@@ -84,7 +84,7 @@ dataDict <- function(df, tableMode = "lazy", verbose = Inf) {
   # If desired & relevant, print out a message about not changing the original object
   if ((tableMode == "lazy") && (verbose > 1)) info(
     "`dataDict`: This `dataDict` will be based off of the object named '", attr(dict, "dfName"), "'.\n", strrep(" ", 12),
-    "To ensure that this `dataDict` will continue to work, do not change the name of the object,\n", strrep(" ", 14),
+    "To ensure that this `dataDict` will continue to work, do not change the name of the object,\n", strrep(" ", 12),
     "You can alternatively use the `updateDD` function to update this `dataDict` after the object changes.",
     sep = ""
   )
