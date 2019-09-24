@@ -37,11 +37,11 @@ snippet_pipe_check <- function(pipeStr = "%>% ", afterStr = "", elseStr = "") {
   # If the cursor is touching a word on the border, just return the after string
   if (grepl("^(\\w)+$", beforeStr)) return(afterStr)
   
-  # Determine whether the current expressions has just been piped, & return a pipe if one is needed
-  isPiped <- stringi::stri_extract_last_regex(
-      beforeStr, paste0("(", gsub("^[ ]*|[ ]*$", "", pipeStr), ")+[ ]*\\w+$")
-    ) %>% .[[1]] %>% is.na()
-  if (isPiped) return(paste0(pipeStr, afterStr)) else return(elseStr)
+  # Determine whether the current expressions needs a pipe, & return a pipe if one is needed
+  needsPipe <- stringi::stri_extract_last_regex(
+      beforeStr, paste0("(", gsub("^[ ]*|[ ]*$", "", pipeStr), "|<-|=)+[ ]*\\w+$")
+    ) %>% is.na()
+  if (needsPipe) return(paste0(pipeStr, afterStr)) else return(elseStr)
   
   
 }
