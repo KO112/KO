@@ -91,7 +91,7 @@ make_output_rows <- function(vec, numCols, maxChars) {
 #'   
 #' }
 #' 
-vec_print <- function(vec, maxLen = 10, maxWidth = getOption("width"), order = "none", printOut = TRUE, color = "#00FF00") {
+vec_print <- function(vec, maxLen = 20, maxWidth = getOption("width"), order = "none", printOut = TRUE, color = "#00FF00") {
   
   # Ensure that the input is atomic
   if (!is.atomic(vec)) stop("`vec_print`: `vec` must be atomic, not of class `", class(vec)[1], "`.")
@@ -110,6 +110,9 @@ vec_print <- function(vec, maxLen = 10, maxWidth = getOption("width"), order = "
   numColsIter <- numCols
   while (make_output_rows(vec, numColsIter, maxChars) %>% {(length(.) > 1) && (nchar(.[1]) <= maxWidth)}) numColsIter <- numColsIter + 1
   if (length(vec) > numColsIter) numColsIter <- numColsIter - 1
+  
+  # Force R to reset the number of colors available (avoid occasional strange behaviour)
+  crayon::num_colors(TRUE)
   
   # Get the final output rows vector, & format it for printing
   finalOutputRows <- make_output_rows(vec, numColsIter, maxChars) %>% gsub("( \\| )+$", "", .)

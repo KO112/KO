@@ -7,7 +7,7 @@
 \usage{
 make_output_rows(vec, numCols, maxChars)
 
-vec_print(vec, maxLen = 10, maxWidth = getOption("width"),
+vec_print(vec, maxLen = 20, maxWidth = getOption("width"),
   order = "none", printOut = TRUE, color = "#00FF00")
 }
 \arguments{

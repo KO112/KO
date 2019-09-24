@@ -178,7 +178,7 @@ test_that("vecPrint", {
                vec_print(fruits, maxWidth = 100, order = "shortest", printOut = FALSE))
   
   # Test printOut
-  expect_equal((vec_print(fruits, maxWidth = 100, printOut = FALSE)), outputRows)
+  expect_equal((vec_print(fruits, maxWidth = 100, maxLen = 10, printOut = FALSE)), outputRows)
   
   # Test max.print limit
   mp <- options(max.print = 10)
