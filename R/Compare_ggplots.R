@@ -30,8 +30,8 @@ compare_ggplots <- function(plot1, plot2, useTempFiles = TRUE) {
     # Create temp file names, save the plots, compare those files, and remove the temp files
     file1 <- tempfile(pattern = "ggplot_", fileext = ".png")
     file2 <- tempfile(pattern = "ggplot_", fileext = ".png")
-    suppressMessages(ggplot2::ggsave(filename = file1, plot = plot1))
-    suppressMessages(ggplot2::ggsave(filename = file2, plot = plot2))
+    suppressMessages(ggplot2::ggsave(filename = file1, plot = plot1, type = "cairo"))
+    suppressMessages(ggplot2::ggsave(filename = file2, plot = plot2, type = "cairo"))
     are_equal <- identical(digest::digest(file = file1), digest::digest(file = file2))
     file.remove(c(file1, file2))
     return(are_equal)

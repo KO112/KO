@@ -57,8 +57,8 @@ test_that("pad_vector output", {
 # Test plain_text_table output
 test_that("plain_text_table output", {
   expect_equal(plain_text_table(head(mtcars), sep = "+", cat_out = F),
-               readChar("./plain_text_table_sep_test.txt",
-                        file.size("./plain_text_table_sep_test.txt")) %>%
+               readChar("./Test_Data/plain_text_table_sep_test.txt",
+                        file.size("./Test_Data/plain_text_table_sep_test.txt")) %>%
                  gsub("\r", "", .))
   expect_equal(plain_text_table(data.frame(a = 1:2, b = 3:4), cat_out = FALSE),
                "a | b\n- | -\n1 | 3\n2 | 4")
