@@ -12,17 +12,26 @@ To-Do List:
 - Head/tail assignment (`head<-`, `tail<-`)
 - Allow select.matrix to accept variables (e.g. `a <- c("mpg", "cyl"); select(as.matrix(mtcars), a)`)
   - Maybe use `with = F` or just search up if not found, or implement `..a`
-- 
+
+XGBoost Output Analysis:
+  - Feature importance graphs
+  - Feature interaction analysis
+
+Variable EDA:
+  - Distribution based on type
+  - Histogram, plot, smoothed plot
+  - Quantiles/averages
 
 Add-In:
 - Printing selected variable
-- Showing option values
-- Make DLL specifically for activating/moving
+- Showing option values (what does this even mean?)
+- Make DLL specifically for activating/moving tcl/tk window, maybe faster?
+  - Or load once and activate somehow?
 - Add end bracket at next comma
   - Extend to quotes & other characters as well
   - Use general function, parameterize later
 - Pop-up to select column names
-  - Maybe full preview popup, (semi) random sampling of rows?
+  - Maybe full preview popup, (semi-)random sampling of rows?
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
