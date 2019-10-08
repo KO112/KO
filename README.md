@@ -12,6 +12,7 @@ To-Do List:
 - Head/tail assignment (`head<-`, `tail<-`)
 - Allow select.matrix to accept variables (e.g. `a <- c("mpg", "cyl"); select(as.matrix(mtcars), a)`)
   - Maybe use `with = F` or just search up if not found, or implement `..a`
+- Build file/function calling map
 
 XGBoost Output Analysis:
   - Feature importance graphs
@@ -32,6 +33,7 @@ Add-In:
   - Use general function, parameterize later
 - Pop-up to select column names
   - Maybe full preview popup, (semi-)random sampling of rows?
+  - Capitalize previous word (loop through upper/lower/title case)
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
