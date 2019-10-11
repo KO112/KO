@@ -279,7 +279,7 @@ dim.dataDict <- function(x) {
 #' 
 #' @return \code{dimnames}: The dimension names of the original data.frame-like object.
 #' @export
-#' @name dimensionNames
+#' @name dimension_names
 #' 
 #' @examples
 #' dd <- dataDict(mtcars)
@@ -295,7 +295,7 @@ dimnames.dataDict <- function(x) {
 
 #' @return \code{names}: The column names of the original data.frame-like object.
 #' @export
-#' @rdname dimensionNames
+#' @rdname dimension_names
 #' 
 names.dataDict <- function(x) {
   return(colnames(x))
