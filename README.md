@@ -13,6 +13,8 @@ To-Do List:
 - Allow select.matrix to accept variables (e.g. `a <- c("mpg", "cyl"); select(as.matrix(mtcars), a)`)
   - Maybe use `with = F` or just search up if not found, or implement `..a`
 - Build file/function calling map
+- compare_dfs: print message if identical, or all.equal, or no differences
+  - Don't just return empty list
 
 XGBoost Output Analysis:
   - Feature importance graphs

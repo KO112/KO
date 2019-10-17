@@ -66,7 +66,7 @@ compare_dfs <- function(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE, b
     
     # Replace NA's with blanks, if desired & appropriate
     if (blankEqualsNA && is.character(df1_col) && is.character(df2_col)) {
-      df1_col <- replace_missing(df1_col, with = "");
+      df1_col <- replace_missing(df1_col, with = "")
       df2_col <- replace_missing(df2_col, with = "")
     }
     
@@ -74,13 +74,17 @@ compare_dfs <- function(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE, b
     df1_class <- class(df1_col); df2_class <- class(df2_col)
     df1_na <- is.na(df1_col); df2_na <- is.na(df2_col)
     df1_na_count <- sum(df1_na); df2_na_count <- sum(df2_na)
-    colComp <- df1_col == df2_col
     
     # If one of the columns is a date, convert them both to characters
     if (xor(lubridate::is.Date(df1_col), lubridate::is.Date(df2_col))) {
-      df1_col <- trimws(as.character(df1_col));
+      df1_col <- trimws(as.character(df1_col))
       df2_col <- trimws(as.character(df2_col))
+      if (blankEqualsNA) {
+        df1_col <- replace_missing(df1_col, with = "")
+        df2_col <- replace_missing(df2_col, with = "")
+      }
     }
+    colComp <- df1_col == df2_col
     
     # Check if the columns are equal
     if (isTRUE(all.equal(df1_col, df2_col, check.attributes = FALSE))) {
