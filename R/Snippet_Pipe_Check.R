@@ -32,14 +32,14 @@ snippet_pipe_check <- function(pipeStr = "%>% ", afterStr = "", elseStr = "") {
   selStart <- selection$range$start
   
   # Extract the code before the cursor as a string
-  beforeStr <- substring(contents[selStart["row"]], 1, selStart["column"])
+  beforeStr <- substring(contents[selStart["row"]], 1, selStart["column"] - 1)
   
   # If the cursor is touching a word on the border, just return the after string
   if (grepl("^(\\w)+$", beforeStr)) return(afterStr)
   
   # Determine whether the current expressions needs a pipe, & return a pipe if one is needed
   needsPipe <- stringi::stri_extract_last_regex(
-      beforeStr, paste0("(", gsub("^[ ]*|[ ]*$", "", pipeStr), "|<-|=)+[ ]*\\w+$")
+      beforeStr, paste0("(", gsub("^[ ]*|[ ]*$", "", pipeStr), "|<-|=|\\(|\\[)+[ ]*\\w+$")
     ) %>% is.na()
   if (needsPipe) return(paste0(pipeStr, afterStr)) else return(elseStr)
   
