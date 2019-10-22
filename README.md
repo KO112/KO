@@ -36,6 +36,7 @@ Add-In:
 - Pop-up to select column names
   - Maybe full preview popup, (semi-)random sampling of rows?
   - Capitalize previous word (loop through upper/lower/title case)
+- Move left/right until you hit a comma/bracket/etc.
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
