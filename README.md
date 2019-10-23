@@ -37,6 +37,7 @@ Add-In:
   - Maybe full preview popup, (semi-)random sampling of rows?
   - Capitalize previous word (loop through upper/lower/title case)
 - Move left/right until you hit a comma/bracket/etc.
+- Should Shift+Backspace check for pipe too?
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

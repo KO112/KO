@@ -75,7 +75,7 @@ compare_dfs <- function(df1, df2, printColDiffs = 1, tol = 1e-10, trim = TRUE, b
     df1_na <- is.na(df1_col); df2_na <- is.na(df2_col)
     df1_na_count <- sum(df1_na); df2_na_count <- sum(df2_na)
     
-    # If one of the columns is a date, convert them both to characters
+    # If one of the columns is a date, convert them both to characters, trimming whitespace, & filling in missing values if desired
     if (xor(lubridate::is.Date(df1_col), lubridate::is.Date(df2_col))) {
       df1_col <- trimws(as.character(df1_col))
       df2_col <- trimws(as.character(df2_col))

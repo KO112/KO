@@ -39,7 +39,7 @@ snippet_pipe_check <- function(pipeStr = "%>% ", afterStr = "", elseStr = "") {
   
   # Determine whether the current expressions needs a pipe, & return a pipe if one is needed
   needsPipe <- stringi::stri_extract_last_regex(
-      beforeStr, paste0("(", gsub("^[ ]*|[ ]*$", "", pipeStr), "|<-|=|\\(|\\[)+[ ]*\\w+$")
+      beforeStr, paste0("(", gsub("^[ ]*|[ ]*$", "", pipeStr), "|<-|=|\\(|\\[|~|,)+[ ]*\\w+$")
     ) %>% is.na()
   if (needsPipe) return(paste0(pipeStr, afterStr)) else return(elseStr)
   

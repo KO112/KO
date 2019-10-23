@@ -14,7 +14,7 @@ NULL
 #' @return The deleted code, invisibly (character scalar).
 #' @name remove_to_text
 #' 
-remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]", backward = TRUE) {
+remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]|~|=", backward = TRUE) {
   
   # Get the context of the call, as well as the contents/selection/position of the context
   context <- rstudioapi::getActiveDocumentContext()
@@ -43,7 +43,6 @@ remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]", backward = TR
       
       # If the cursor is right after a string matching `elseBackTo`, exclude that string & redo the above
       if ((!any(is.na(codeElsePos))) && (codeElsePos[1, "start"] == selStart["column"] - 1)) {
-        preCodebu <- preCode
         preCode <- substring(contents[selStart["row"]], 1, codeElsePos[1, "start"] - 1)
         codePos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", backTo, ")"))
         codeElsePos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", elseBackTo, ")"))
