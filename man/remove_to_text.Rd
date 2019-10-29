@@ -6,7 +6,8 @@
 \alias{comma_backspace}
 \title{Remove to Text}
 \usage{
-remove_to_text(backTo, elseBackTo = "\\\\(|\\\\)|\\\\[|\\\\]",
+remove_to_text(backTo,
+  elseBackTo = "\\\\(|\\\\)|\\\\[|\\\\]|\\\\{|\\\\}|~|=",
   backward = TRUE)
 
 pipe_backspace()

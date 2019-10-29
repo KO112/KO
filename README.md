@@ -7,7 +7,7 @@ To-Do List:
 - plotly tests for BDP
 - replace_missing: fix for factors (relevel?)
 - Finish compare_df testing (test with dates, one col date one character, messages, etc.)
-- Test colored output
+- Test colored output (info + color_list)
 - Select function to match columns, case/columns insensitive
 - Head/tail assignment (`head<-`, `tail<-`)
 - Allow select.matrix to accept variables (e.g. `a <- c("mpg", "cyl"); select(as.matrix(mtcars), a)`)
@@ -15,6 +15,7 @@ To-Do List:
 - Build file/function calling map
 - compare_dfs: print message if identical, or all.equal, or no differences
   - Don't just return empty list
+- Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
 
 XGBoost Output Analysis:
   - Feature importance graphs

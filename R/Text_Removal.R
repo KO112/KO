@@ -14,7 +14,7 @@ NULL
 #' @return The deleted code, invisibly (character scalar).
 #' @name remove_to_text
 #' 
-remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]|~|=", backward = TRUE) {
+remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]|\\{|\\}|~|=", backward = TRUE) {
   
   # Get the context of the call, as well as the contents/selection/position of the context
   context <- rstudioapi::getActiveDocumentContext()

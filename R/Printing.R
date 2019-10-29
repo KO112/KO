@@ -111,8 +111,8 @@ vec_print <- function(vec, maxLen = 20, maxWidth = getOption("width"), order = "
   while (make_output_rows(vec, numColsIter, maxChars) %>% {(length(.) > 1) && (nchar(.[1]) <= maxWidth)}) numColsIter <- numColsIter + 1
   if (length(vec) > numColsIter) numColsIter <- numColsIter - 1
   
-  # Force R to reset the number of colors available (avoid occasional strange behaviour)
-  crayon::num_colors(TRUE)
+  # Reset the number of colors available if need be
+  if (crayon::num_colors() != 256) crayon::num_colors(forget = TRUE)
   
   # Get the final output rows vector, & format it for printing
   finalOutputRows <- make_output_rows(vec, numColsIter, maxChars) %>% gsub("( \\| )+$", "", .)
