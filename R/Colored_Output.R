@@ -46,7 +46,7 @@ color_list <- function(vec, cols = c("#FF00FF", "#FF8800", "#00FF00"), printOut 
   vecNamesChars <- nchar(names(vecList))
   
   # Reset the number of colors available if need be
-  if (crayon::num_colors() != 256) crayon::num_colors(forget = TRUE) %>% print()
+  if (crayon::num_colors() != 256) crayon::num_colors(forget = TRUE)
   
   # Create the colored indexes, names, padding, and element vectors
   vecIndexes <- crayon::make_style(cols[1])(seq_along(vecList), ":", sep = "")
