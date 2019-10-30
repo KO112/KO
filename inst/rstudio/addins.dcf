@@ -8,11 +8,6 @@ Description: Auto-surrounds an expression the parentheses.
 Binding: auto_surround
 Interactive: false
 
-Name: Comma Backspace
-Description: Deletes code back to the last comma on the current line.
-Binding: comma_backspace
-Interactive: false
-
 Name: Pipe Backspace
 Description: Deletes code back to the last pipe on the current line.
 Binding: pipe_backspace
@@ -21,4 +16,9 @@ Interactive: false
 Name: Run Function
 Description: Runs a function (primarily used for testing add-ins during development).
 Binding: run_fn
+Interactive: false
+
+Name: Smart Backspace
+Description: Deletes code back to the last "group" on the current line.
+Binding: smart_backspace
 Interactive: false

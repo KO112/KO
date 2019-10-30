@@ -8,14 +8,12 @@ NULL
 #' An add-in helper function that deletes the code between the cursor and the desired string.
 #' 
 #' @param backTo The regex pattern to remove text to (character scalar).
-#' @param elseBackTo If \code{backTo} is not found before this regex pattern, only remove up to these (character scalar).
 #' @param backward Whether to remove text before the cursor (default) or text after it (boolean scalar).
 #'
 #' @return The deleted code, invisibly (character scalar).
 #' @name remove_to_text
 #' 
-remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]|\\{|\\}|~|=|<-|->|-|\\+|%>%|\\W", backward = TRUE) {
-# remove_to_text <- function(backTo, elseBackTo = "\\W", backward = TRUE) {
+remove_to_text <- function(backTo, backward = TRUE) {
   
   # Get the context of the call, as well as the contents/selection/position of the context
   context <- rstudioapi::getActiveDocumentContext()
@@ -34,54 +32,26 @@ remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]|\\{|\\}|~|=|<-|
   # Find the code to remove, either before or after the cursor
   if (backward) {
     
-    # Get the text before the cursor, & find the position of the desired strings
+    # Get the text before the cursor
     preCode <- substring(contents[selStart["row"]], 1, selStart["column"] - 1)
-    # codePos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", backTo, ") *"))
-    # codeElsePos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", elseBackTo, ") *"))
-    # 
-    # # If `elseBackTo` is null, just use `codePos`
-    # if (!is.null(elseBackTo)) {
-    #   
-    #   # If the cursor is right after a string matching `elseBackTo`, exclude that string & redo the above
-    #   if ((!any(is.na(codeElsePos))) && (codeElsePos[1, "start"] == selStart["column"] - 1)) {
-    #     preCode <- substring(contents[selStart["row"]], 1, codeElsePos[1, "start"] - 1)
-    #     codePos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", backTo, ") *"))
-    #     codeElsePos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", elseBackTo, ") *"))
-    #   }
-    #   
-    #   # Set the start position of the code to remove
-    #   if (any(is.na(codePos))) {
-    #     codeStartPos <- codeElsePos[1, "start"] + 1
-    #   } else if (any(is.na(codeElsePos))) {
-    #     codeStartPos <- codePos[1, "start"]
-    #   } else {
-    #     codeStartPos <- ifelse(codePos[1, "start"] > codeElsePos[1, "start"], codePos[1, "start"], codeElsePos[1, "start"] + 1)
-    #   }
-    #   
-    # } else {
-    #   
-    #   # Set the start position of the code to remove
-    #   codeStartPos <- codePos[1, "start"]
-    #   
-    # }
-    # 
-    # # Clear to the start of the line if no matches were found
-    # if (is.na(codeStartPos)) codeStartPos <- 0
-    # 
-    # # Set the output range
-    # outputRange <- rstudioapi::document_range(
-    #   rstudioapi::document_position(selStart["row"], codeStartPos),
-    #   rstudioapi::document_position(selEnd["row"], selEnd["column"])
-    # )
+    
+    # Set the end position of the pattern to remove back to
+    if (is.null(backTo)) {
+      endPos <- find_pos(preCode) + 1
+    } else {
+      endPos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", backTo, ") *"))[1, "start"]
+    }
+    
+    # Clear to the start of the line if no matches were found
+    if (is.na(endPos)) endPos <- 0
     
     # Set the output range
     outputRange <- rstudioapi::document_range(
-      rstudioapi::document_position(selStart["row"], find_pos(preCode) + 1),
+      rstudioapi::document_position(selStart["row"], endPos),
       rstudioapi::document_position(selEnd["row"], selEnd["column"])
     )
     
     # Retrieve the code to be deleted
-    # deletedCode <- substring(contents[selStart["row"]], codeStartPos, selEnd["column"])
     deletedCode <- substring(contents[selStart["row"]], find_pos(preCode), selEnd["column"])
     
   } else {
@@ -108,21 +78,21 @@ remove_to_text <- function(backTo, elseBackTo = "\\(|\\)|\\[|\\]|\\{|\\}|~|=|<-|
 #' # Type "mtcars %>% mutate(a = 1) %>% filter(cyl = 2)", & run the add-in function
 #' 
 pipe_backspace <- function() {
-  remove_to_text("%>%", NULL)
+  remove_to_text("%>%")
 }
 
 
-#' Comma Backspace
+#' Smart Backspace
 #' 
-#' An add-in function that deletes the code between the cursor and the last comma.
+#' An add-in function that deletes the code between the cursor and the last group of characters.
 #' 
 #' @rdname remove_to_text
 #' 
 #' @examples
 #' # Type "c(apple, banana, cherry)", & run the add-in function
 #' 
-comma_backspace <- function() {
-  remove_to_text(",")
+smart_backspace <- function() {
+  remove_to_text(NULL)
 }
 
 
@@ -139,30 +109,20 @@ comma_backspace <- function() {
 #' 
 find_pos <- function(txt) {
   
-  # Set the patterns 
+  # Set some search patterns
   noSpaceAfterPattern <- "[]\\[(){}`@$:\"'/\\ ]"
   spaceAfterPattern <- "[!#%&*+,-.;<=>?^|~]"
   
-  # if (substring(txt, nchar(txt)))
-  # lastPos <- stringr::str_locate_all(txt, "\\W+")
-  # lastPos <- stringi::stri_locate_last_regex(txt, "  *")
-  # lastPos <- stringi::stri_locate_last_regex(txt, " *(%>%|\\w*\\W) *")
-  # lastPos <- stringi::stri_locate_last_regex(txt, "\\w*\\W+$")
-  # lastPos <- stringi::stri_locate_last_regex(txt, "\\w*[^\\w ]+$")
-  # lastPos <- stringi::stri_locate_last_regex(txt, "\\w*[^ \\w]+ *$|\\w+")
-  # lastPos <- stringi::stri_locate_last_regex(txt, sprintf("( *\\w*%s+|\\w*%s+| *%%>%%) *$", noSpaceAfterPattern, spaceAfterPattern))
-  
   # Calculate the last position of the patterns
   lastPos1 <- stringi::stri_locate_last_regex(txt, sprintf(" *\\w*%s+ *$| *\\w*%s+ *| *%%>%% *$", noSpaceAfterPattern, spaceAfterPattern))
-  # lastPos2 <- stringi::stri_locate_last_regex(txt, sprintf("(?<=%s)\\w*$|(?<=%s)\\w*$", noSpaceAfterPattern, spaceAfterPattern))
   lastPos2 <- stringi::stri_locate_last_regex(txt, sprintf("(?<=\\W)\\w*$", noSpaceAfterPattern, spaceAfterPattern))
   
-  # Deal with 
+  # Deal with bad matches
   greater <- function(x, y) ifelse(is.na(x), 0, x) > ifelse(is.na(x), 0, y)
   if (greater(lastPos1[1, "start"], lastPos1[1, "end"])) lastPos1[1, "start"] <- 0
   if (greater(lastPos2[1, "start"], lastPos2[1, "end"])) lastPos2[1, "start"] <- 0
   
-  # If no matches were found, clear the whole line, else take the final one
+  # If no matches were found, clear the whole line, else take the final match
   if (is.na(lastPos1[1, "start"]) && is.na(lastPos2[1, "start"])) {
     lastPos <- 0
   } else {
