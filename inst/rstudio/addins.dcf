@@ -18,6 +18,11 @@ Description: Runs a function (primarily used for testing add-ins during developm
 Binding: run_fn
 Interactive: false
 
+Name: Send Selection to Console
+Description: Inserts the currently highlighted code in the console..
+Binding: send_selection_to_console
+Interactive: false
+
 Name: Smart Backspace
 Description: Deletes code back to the last "group" on the current line.
 Binding: smart_backspace

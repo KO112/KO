@@ -57,6 +57,7 @@ Collate:
     'Quasi_Poisson.R'
     'Run_Function.R'
     'Select_Matrix.R'
+    'Send_Selection_to_Console.R'
     'Snippet_Pipe_Check.R'
     'Summarize.R'
     'Text_Removal.R'
