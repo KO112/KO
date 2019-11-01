@@ -72,13 +72,14 @@ remove_to_text <- function(backTo, backward = TRUE) {
 #' 
 #' An add-in function that deletes the code between the cursor and the last pipe.
 #' 
+#' @return The deleted code, invisibly (character scalar).
 #' @rdname remove_to_text
 #' 
 #' @examples
 #' # Type "mtcars %>% mutate(a = 1) %>% filter(cyl = 2)", & run the add-in function
 #' 
 pipe_backspace <- function() {
-  remove_to_text("%>%")
+  return(invisible(remove_to_text("%>%")))
 }
 
 
@@ -86,13 +87,14 @@ pipe_backspace <- function() {
 #' 
 #' An add-in function that deletes the code between the cursor and the last group of characters.
 #' 
+#' @return The deleted code, invisibly (character scalar).
 #' @rdname remove_to_text
 #' 
 #' @examples
 #' # Type "c(apple, banana, cherry)", & run the add-in function
 #' 
 smart_backspace <- function() {
-  remove_to_text(NULL)
+  return(invisible(remove_to_text(NULL)))
 }
 
 
@@ -102,16 +104,16 @@ smart_backspace <- function() {
 #'
 #' @param txt The text to search in (character scalar).
 #'
-#' @return
+#' @return The last position of the desired patterns.
 #'
 #' @examples
-#' find_pos("mtcars %>% select(mpg, disp, cyl)")
+#' KO:::find_pos("mtcars %>% select(mpg, disp, cyl)")
 #' 
 find_pos <- function(txt) {
   
   # Set some search patterns
   noSpaceAfterPattern <- "[]\\[(){}`@$:\"'/\\ ]"
-  spaceAfterPattern <- "[!#%&*+,-.;<=>?^|~]"
+  spaceAfterPattern <- "[!#%&*+,-;<=>?^|~]"
   
   # Calculate the last position of the patterns
   lastPos1 <- stringi::stri_locate_last_regex(txt, sprintf(" *\\w*%s+ *$| *\\w*%s+ *| *%%>%% *$", noSpaceAfterPattern, spaceAfterPattern))

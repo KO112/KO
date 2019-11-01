@@ -9,5 +9,5 @@ globalVariables(c(".KO_fn"))
 #' .KO_fn
 #' 
 run_fn <- function() {
-  if (exists(".KO_fn")) .KO_fn() else rstudioapi::sendToConsole("# .KO_fn <- function() ")
+  if (exists(".KO_fn")) .KO_fn() else rstudioapi::sendToConsole("# .KO_fn <- function() { source(\"./\"); (); }")
 }

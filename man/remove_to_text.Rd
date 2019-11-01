@@ -3,25 +3,25 @@
 \name{remove_to_text}
 \alias{remove_to_text}
 \alias{pipe_backspace}
-\alias{comma_backspace}
+\alias{smart_backspace}
 \title{Remove to Text}
 \usage{
-remove_to_text(backTo,
-  elseBackTo = "\\\\(|\\\\)|\\\\[|\\\\]|\\\\{|\\\\}|~|=",
-  backward = TRUE)
+remove_to_text(backTo, backward = TRUE)
 
 pipe_backspace()
 
-comma_backspace()
+smart_backspace()
 }
 \arguments{
 \item{backTo}{The regex pattern to remove text to (character scalar).}
 
-\item{elseBackTo}{If \code{backTo} is not found before this regex pattern, only remove up to these (character scalar).}
-
 \item{backward}{Whether to remove text before the cursor (default) or text after it (boolean scalar).}
 }
 \value{
+The deleted code, invisibly (character scalar).
+
+The deleted code, invisibly (character scalar).
+
 The deleted code, invisibly (character scalar).
 }
 \description{
@@ -29,7 +29,7 @@ An add-in helper function that deletes the code between the cursor and the desir
 
 An add-in function that deletes the code between the cursor and the last pipe.
 
-An add-in function that deletes the code between the cursor and the last comma.
+An add-in function that deletes the code between the cursor and the last group of characters.
 }
 \examples{
 # Type "mtcars \%>\% mutate(a = 1) \%>\% filter(cyl = 2)", & run the add-in function

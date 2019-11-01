@@ -4,10 +4,7 @@ To-Do List:
 - Add hash to GLM Helper (based on sorted formula?)
 - Create sample data, names from mtcars
 - Filter/select model matrix (e.g. partial column matching, etc.
-- plotly tests for BDP
 - replace_missing: fix for factors (relevel?)
-- Finish compare_df testing (test with dates, one col date one character, messages, etc.)
-- Test colored output (info + color_list)
 - Select function to match columns, case/columns insensitive
 - Head/tail assignment (`head<-`, `tail<-`)
 - Allow select.matrix to accept variables (e.g. `a <- c("mpg", "cyl"); select(as.matrix(mtcars), a)`)
@@ -16,6 +13,7 @@ To-Do List:
 - compare_dfs: print message if identical, or all.equal, or no differences
   - Don't just return empty list
 - Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
+- Send highligted code to console shortcut
 
 XGBoost Output Analysis:
   - Feature importance graphs
@@ -47,3 +45,10 @@ Data Dictionary:
 - Add colHash/colMode, maybe use constructor for all col(...)
 - Progress bar (progress::progress_bar)
 - .DollarNames
+
+
+Tests:
+- plotly tests for BDP
+- Finish compare_df testing (test with dates, one col date one character, messages, etc.)
+- Test colored output (info + color_list)
+- Test all add-in functions (specifically text removal, send to console)
