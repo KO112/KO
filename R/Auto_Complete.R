@@ -165,10 +165,16 @@ tkDropDown <- function(varList, title = "Select a Word") {
   tcltk::tkfocus(listBox)
   tcltk::tclServiceMode(TRUE) # oldMode)
   
-  # 
-  ahkPath <- "C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe"
-  if (file.exists(ahkPath))
-  system(paste0("\"", ahkPath,"\" \"", gsub("\\", "\\\\", title, fixed = TRUE), "\""))
+  # Set paths to look for the AHK script at, & check which ones exist
+  ahkPaths <- c(
+    "C:/Users/tae8766/Documents/GitHub/General/AutoHotKey/Scripts/Activate Window.exe",
+    "C:/Users/KO/Google Drive/Programming/Repos/General/AutoHotKey/Scripts/Activate Window.exe"
+  )
+  ahkPathsCheck <- file.exists(ahkPaths)
+  
+  # If any of the AHK paths are valid, run the script to activate/reposition the popup
+  if (any(ahkPathsCheck))
+    system(paste0("\"", ahkPaths[ahkPathsCheck][1],"\" \"", gsub("\\", "\\\\", title, fixed = TRUE), "\""))
   
   # Wait for the user to take actions
   tcltk::tkwait.window(dlg)
