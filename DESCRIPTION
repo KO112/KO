@@ -45,6 +45,7 @@ Collate:
     'Error_Handling.R'
     'Binned_Data_and_Plots.R'
     'Bounding_and_Rounding.R'
+    'Clean_Code.R'
     'Colored_Output.R'
     'Compare_DF.R'
     'Compare_ggplots.R'

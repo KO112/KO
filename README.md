@@ -13,7 +13,6 @@ To-Do List:
 - compare_dfs: print message if identical, or all.equal, or no differences
   - Don't just return empty list
 - Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
-- Send highligted code to console shortcut
 
 XGBoost Output Analysis:
   - Feature importance graphs
@@ -37,6 +36,10 @@ Add-In:
   - Capitalize previous word (loop through upper/lower/title case)
 - Move left/right until you hit a comma/bracket/etc.
 - Should Shift+Backspace check for pipe too?
+- Clean code formatting (treat comments differently, run on current line if nothing is selected)
+  - Space around operators (==, !=, ~, %>%, ^, +, -, *, /, =, <-, |, &, etc.)
+  - Remove space at end of line
+  - Space after if/else/for
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

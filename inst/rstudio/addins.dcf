@@ -8,6 +8,11 @@ Description: Auto-surrounds an expression the parentheses.
 Binding: auto_surround
 Interactive: false
 
+Name: Clean Selected Code
+Description: Cleans/reformats the currently selected code (or the current line is none is selected).
+Binding: clean_selection
+Interactive: false
+
 Name: Pipe Backspace
 Description: Deletes code back to the last pipe on the current line.
 Binding: pipe_backspace
