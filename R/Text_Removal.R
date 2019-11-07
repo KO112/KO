@@ -3,6 +3,47 @@
 NULL
 
 
+#' Find the Last Position
+#' 
+#' Find the last position of the desired patterns.
+#'
+#' @param txt The text to search in (character scalar).
+#'
+#' @return The last position of the desired patterns.
+#'
+#' @examples
+#' KO:::find_last_pos("mtcars %>% select(mpg, disp, cyl)")
+#' 
+find_last_pos <- function(txt) {
+  
+  # Set some search patterns
+  noSpaceAfterPattern <- "[]\\[(){}`@$:\"'/\\ ]"
+  spaceAfterPattern <- "[!#%&*+,-;<=>?^|~]"
+  
+  # Calculate the last position of the patterns
+  lastPos1 <- stringi::stri_locate_last_regex(txt, sprintf(" *\\w*%s+ *$| *\\w*%s+ *| *%%>%% *$", noSpaceAfterPattern, spaceAfterPattern))
+  lastPos2 <- stringi::stri_locate_last_regex(txt, sprintf("(?<=\\W)\\w*$", noSpaceAfterPattern, spaceAfterPattern))
+  
+  # Deal with bad matches
+  greater <- function(x, y) ifelse(is.na(x), 0, x) > ifelse(is.na(x), 0, y)
+  if (greater(lastPos1[1, "start"], lastPos1[1, "end"])) lastPos1[1, "start"] <- 0
+  if (greater(lastPos2[1, "start"], lastPos2[1, "end"])) lastPos2[1, "start"] <- 0
+  
+  # If no matches were found, clear the whole line, else take the final match
+  if (is.na(lastPos1[1, "start"]) && is.na(lastPos2[1, "start"])) {
+    lastPos <- 0
+  } else {
+    lastPos <- max(lastPos1[1, "start"], lastPos2[1, "start"], na.rm = TRUE) - 1
+  }
+  
+  # Return the last position
+  # cat("orig:\t'", txt, "'\t", nchar(txt), "\t[", paste(lastPos1, collapse = ", "), "]\t[", paste(lastPos2, collapse = ", "),
+  #     "]\t[", lastPos, "]\nnew:\t'" , substr(txt, 1, lastPos), "'\t", sep = "")
+  return(lastPos)
+  
+}
+
+
 #' Remove to Text
 #' 
 #' An add-in helper function that deletes the code between the cursor and the desired string.
@@ -37,7 +78,7 @@ remove_to_text <- function(backTo, backward = TRUE) {
     
     # Set the end position of the pattern to remove back to
     if (is.null(backTo)) {
-      endPos <- find_pos(preCode) + 1
+      endPos <- find_last_pos(preCode) + 1
     } else {
       endPos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", backTo, ") *"))[1, "start"]
     }
@@ -52,7 +93,7 @@ remove_to_text <- function(backTo, backward = TRUE) {
     )
     
     # Retrieve the code to be deleted
-    deletedCode <- substring(contents[selStart["row"]], find_pos(preCode), selEnd["column"])
+    deletedCode <- substring(contents[selStart["row"]], find_last_pos(preCode), selEnd["column"])
     
   } else {
     
@@ -95,45 +136,4 @@ pipe_backspace <- function() {
 #' 
 smart_backspace <- function() {
   return(invisible(remove_to_text(NULL)))
-}
-
-
-#' Find the Last Position
-#' 
-#' Find the last position of the desired patterns.
-#'
-#' @param txt The text to search in (character scalar).
-#'
-#' @return The last position of the desired patterns.
-#'
-#' @examples
-#' KO:::find_pos("mtcars %>% select(mpg, disp, cyl)")
-#' 
-find_pos <- function(txt) {
-  
-  # Set some search patterns
-  noSpaceAfterPattern <- "[]\\[(){}`@$:\"'/\\ ]"
-  spaceAfterPattern <- "[!#%&*+,-;<=>?^|~]"
-  
-  # Calculate the last position of the patterns
-  lastPos1 <- stringi::stri_locate_last_regex(txt, sprintf(" *\\w*%s+ *$| *\\w*%s+ *| *%%>%% *$", noSpaceAfterPattern, spaceAfterPattern))
-  lastPos2 <- stringi::stri_locate_last_regex(txt, sprintf("(?<=\\W)\\w*$", noSpaceAfterPattern, spaceAfterPattern))
-  
-  # Deal with bad matches
-  greater <- function(x, y) ifelse(is.na(x), 0, x) > ifelse(is.na(x), 0, y)
-  if (greater(lastPos1[1, "start"], lastPos1[1, "end"])) lastPos1[1, "start"] <- 0
-  if (greater(lastPos2[1, "start"], lastPos2[1, "end"])) lastPos2[1, "start"] <- 0
-  
-  # If no matches were found, clear the whole line, else take the final match
-  if (is.na(lastPos1[1, "start"]) && is.na(lastPos2[1, "start"])) {
-    lastPos <- 0
-  } else {
-    lastPos <- max(lastPos1[1, "start"], lastPos2[1, "start"], na.rm = TRUE) - 1
-  }
-  
-  # 
-  # cat("orig:\t'", txt, "'\t", nchar(txt), "\t[", paste(lastPos1, collapse = ", "), "]\t[", paste(lastPos2, collapse = ", "),
-  #     "]\t[", lastPos, "]\nnew:\t'" , substr(txt, 1, lastPos), "'\t", sep = "")
-  return(lastPos)
-  
 }
