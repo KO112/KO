@@ -112,11 +112,11 @@ vec_print <- function(vec, maxLen = 20, maxWidth = getOption("width"), order = "
   if (length(vec) > numColsIter) numColsIter <- numColsIter - 1
   
   # Reset the number of colors available if need be
-  if (crayon::num_colors() != 256) crayon::num_colors(forget = TRUE)
+  # if (crayon::num_colors() != 256) crayon::num_colors(forget = TRUE)
   
   # Get the final output rows vector, & format it for printing
   finalOutputRows <- make_output_rows(vec, numColsIter, maxChars) %>% gsub("( \\| )+$", "", .)
-  printVec <- crayon::make_style(color)(finalOutputRows)
+  printVec <- crayon::make_style(color, colors = 256)(finalOutputRows)
   
   # Print out the output, if desired, & return the final output rows vector (invisibly)
   if (printOut) {

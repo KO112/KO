@@ -16,7 +16,7 @@
 #' info("hello world")
 #' 
 info <- function(..., useMsg = TRUE, printOut = TRUE) {
-  colStr <- crayon::make_style("#00FF00")(...)
+  colStr <- crayon::make_style("#00FF00", colors = 256)(...)
   if (printOut) {
     if (useMsg) message(colStr) else cat(colStr, "\n")
   }
@@ -46,13 +46,13 @@ color_list <- function(vec, cols = c("#FF00FF", "#FF8800", "#00FF00"), printOut 
   vecNamesChars <- nchar(names(vecList))
   
   # Reset the number of colors available if need be
-  if (crayon::num_colors() != 256) crayon::num_colors(forget = TRUE)
+  # if (crayon::num_colors() != 256) crayon::num_colors(forget = TRUE)
   
   # Create the colored indexes, names, padding, and element vectors
-  vecIndexes <- crayon::make_style(cols[1])(seq_along(vecList), ":", sep = "")
-  vecNames <- crayon::make_style(cols[2])(names(vecList), ":", sep = "")
+  vecIndexes <- crayon::make_style(cols[1], colors = 256)(seq_along(vecList), ":", sep = "")
+  vecNames <- crayon::make_style(cols[2], colors = 256)(names(vecList), ":", sep = "")
   vecPadding <- strrep(" ", max(vecNamesChars) - vecNamesChars)
-  vecElems <- crayon::make_style(cols[3])(unlist(vecList))
+  vecElems <- crayon::make_style(cols[3], colors = 256)(unlist(vecList))
   
   # Create the output lines, cat the out if desired, & return them insivibly
   outLines <- paste(vecIndexes, "\t", vecNames, vecPadding, "\t", vecElems, collapse = "\n")

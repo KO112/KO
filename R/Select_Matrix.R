@@ -37,7 +37,7 @@ select.matrix <- function(.data, ..., throwError = TRUE) {
   
   # If there are any invalid columns selected, display a message, & show a warning or throw an error
   if (length(invalidCols) > 0) {
-    cat(crayon::make_style("#FFFF00")("`select.matrix`: Invalid columns selected:\n"))
+    cat(crayon::make_style("#FFFF00", colors = 256)("`select.matrix`: Invalid columns selected:\n"))
     vec_print(invalidCols, color = "#FFFF00")
     (if (throwError) stop else warning)("`select.matrix`: Invalid columns selected.")
   }
