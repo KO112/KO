@@ -52,5 +52,7 @@ Data Dictionary:
 Tests:
 - plotly tests for BDP
 - Finish compare_df testing (test with dates, one col date one character, messages, etc.)
-- Test colored output (info + color_list)
-- Test all add-in functions (specifically text removal, send to console)
+- Colored output (info + color_list)
+- set_comp
+- All add-in functions (specifically text removal, send to console, formatting)
+  - Test that lines with spaces removed are the same
