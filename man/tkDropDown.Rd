@@ -4,12 +4,14 @@
 \alias{tkDropDown}
 \title{Create a TCL/TK Drop-Down List}
 \usage{
-tkDropDown(varList, title = "Select a Word")
+tkDropDown(varList, title = "Select a Word", default = 0L)
 }
 \arguments{
 \item{varList}{Variable names to choose from (character vector)/}
 
 \item{title}{Title of the pop-up (character scalar).}
+
+\item{default}{Default selection for the drop-down list (integer scalar).}
 }
 \value{
 The selected variable name.

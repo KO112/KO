@@ -30,6 +30,7 @@ Imports:
     rstudioapi,
     scales,
     stats,
+    stringdist,
     stringi,
     tcltk,
     tibble
@@ -48,6 +49,7 @@ Collate:
     'Clean_Code.R'
     'Colored_Output.R'
     'Compare_DF.R'
+    'Compare_Sets.R'
     'Compare_ggplots.R'
     'Data_Dictionary.R'
     'Evaluation_Functions.R'
@@ -56,6 +58,7 @@ Collate:
     'Missing_Values.R'
     'Printing.R'
     'Quasi_Poisson.R'
+    'Run_Console.R'
     'Run_Function.R'
     'Select_Matrix.R'
     'Send_Selection_to_Console.R'

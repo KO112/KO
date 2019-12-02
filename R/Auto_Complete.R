@@ -43,8 +43,17 @@ auto_complete_var <- function() {
   varMatches <- purrr::map(c(parent.frame(2), .GlobalEnv), ~ grep(matchText, ls(.x), ignore.case = TRUE, value = TRUE)) %>%
     unlist() %>% unique() %>% sort()
   
-  # If there is more than one match, create a drop-down list for the user to choose from
-  if (length(varMatches) > 1) varMatches <- tkDropDown(varMatches)
+  # If there is more than one match, create a drop-down list for the user to choose from (on Windows), else a text prompt
+  if (length(varMatches) > 1) {
+    closestMatch <- which.min(stringdist::stringdist(varText, varMatches))
+    if (Sys.info()["sysname"] == "Windows") {
+      varMatches <- tkDropDown(varMatches, default = pmax(0, closestMatch - 1))
+    } else {
+      response <- paste0(seq_along(varMatches), ". ", varMatches, " ", strrep(intToUtf8(8192), 50), collapse = " ") %>%
+        rstudioapi::showPrompt("Select a Variable", ., closestMatch)
+      varMatches <- varMatches[as.integer(response)]
+    }
+  }
   
   # If only one element was selected, send it to the console, & return the selected element invisibly
   if (length(varMatches) == 1) rstudioapi::insertText(outputRange, varMatches, context$id)
@@ -57,6 +66,7 @@ auto_complete_var <- function() {
 #'
 #' @param varList Variable names to choose from (character vector)/
 #' @param title Title of the pop-up (character scalar).
+#' @param default Default selection for the drop-down list (integer scalar).
 #'
 #' @return The selected variable name.
 #' @export
@@ -67,7 +77,7 @@ auto_complete_var <- function() {
 #'   tkDropDown(letters, "Select a Variable")
 #' }
 #' 
-tkDropDown <- function(varList, title = "Select a Word") {
+tkDropDown <- function(varList, title = "Select a Word", default = 0L) {
   
   # Check that we have version 8.5 or later, set the list object, & set the variable list
   have_ttk <- as.character(tcltk::tcl("info", "tclversion")) >= "8.5"
@@ -161,7 +171,7 @@ tkDropDown <- function(varList, title = "Select a Word") {
   tcltk::tkbind(dlg, "<End>", function() moveSelection(length(varList) - 1L))
   
   # Select the first element, focus the list box, show it modally
-  tcltk::tkselection.set(listBox, 0L)
+  tcltk::tkselection.set(listBox, default) # , 0L)
   tcltk::tkfocus(listBox)
   tcltk::tclServiceMode(TRUE) # oldMode)
   

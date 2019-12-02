@@ -69,9 +69,9 @@ set_comp <- function(set1, set2, compNames = FALSE, printOut = TRUE) {
   
 }
 
-set_comp(1:10, 6:15)
-set_comp(mtcars[, -1], mtcars[, -2])
-set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4))
-set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = FALSE)
-set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = TRUE)
-comp <- set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), printOut = FALSE)
+# set_comp(1:10, 6:15)
+# set_comp(mtcars[, -1], mtcars[, -2])
+# set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4))
+# set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = FALSE)
+# set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = TRUE)
+# comp <- set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), printOut = FALSE)
