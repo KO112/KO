@@ -56,8 +56,8 @@ run_chunk <- function() {
   
   # Get the chunk code
   code <- contents[seq(firstRow + 1, lastRow - 1)]
-  rstudioapi::sendToConsole(code)
-  rstudioapi::setSelectionRanges(rstudioapi::primary_selection(console$selection)$range)
+  rstudioapi::sendToConsole(code, focus = FALSE)
+  rstudioapi::setSelectionRanges(rstudioapi::primary_selection(console$selection)$range, id = console$id)
   return(invisible(code))
   
 }
@@ -76,8 +76,8 @@ run_console <- function() {
   
   # Get the context of the call, run the code, reset the selection, & return the run code
   console <- rstudioapi::getConsoleEditorContext()
-  rstudioapi::sendToConsole(console$contents)
-  rstudioapi::setSelectionRanges(rstudioapi::primary_selection(console$selection)$range)
+  rstudioapi::sendToConsole(console$contents, focus = FALSE)
+  rstudioapi::setSelectionRanges(rstudioapi::primary_selection(console$selection)$range, id = console$id)
   return(invisible(console$contents))
   
 }
@@ -100,8 +100,8 @@ run_selection <- function() {
   selection <- rstudioapi::primary_selection(context$selection)
   
   # Run the selected text, reset the console selection, & return it invisibly
-  rstudioapi::sendToConsole(selection$text)
-  rstudioapi::setSelectionRanges(rstudioapi::primary_selection(console$selection)$range)
+  rstudioapi::sendToConsole(selection$text, focus = FALSE)
+  rstudioapi::setSelectionRanges(rstudioapi::primary_selection(console$selection)$range, id = console$id)
   return(invisible(selection$text))
   
 }
