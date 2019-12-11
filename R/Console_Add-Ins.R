@@ -48,8 +48,8 @@ run_chunk <- function() {
   rowText <- contents[rowNum]
   
   # Find the bounds (first & last row) of the current chunk
-  firstRow <- head(contents, rowNum) %>% grep("^```\\{r", .) %>% tail(1)
-  lastRow <- tail(contents, -firstRow) %>% grep("^```$", .) %>% head(1) + firstRow
+  firstRow <- utils::head(contents, rowNum) %>% grep("^```\\{r", .) %>% utils::tail(1)
+  lastRow <- utils::tail(contents, -firstRow) %>% grep("^```$", .) %>% utils::head(1) + firstRow
   
   # Exit if there was a problem finding the chunk bounds, or of the bounds are invalid
   if ((length(c(firstRow, lastRow)) != 2) || (firstRow >= lastRow)) return(invisible(NULL))
