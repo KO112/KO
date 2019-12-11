@@ -38,7 +38,7 @@ Add-In:
 - Code cleaning
   - RCpp code cleaning function
     - Deal with quotes/comments differently
-  - Print comparison/differences in color
+  - Print comparison/differences in color, similar to Git?
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)

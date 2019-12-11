@@ -28,6 +28,16 @@ Description: Runs the code currently in the console, without clearing it or movi
 Binding: run_console
 Interactive: false
 
+Name: Run Chunk
+Description: Runs the code in the currently selected R Markdown chunk.
+Binding: run_chunk
+Interactive: false
+
+Name: Run Selection
+Description: Executes the code currently selected, without clearing the console or moving the selection.
+Binding: run_selection
+Interactive: false
+
 Name: Send Selection to Console
 Description: Inserts the currently highlighted code in the console..
 Binding: send_selection_to_console
