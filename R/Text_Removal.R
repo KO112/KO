@@ -21,7 +21,7 @@ find_last_pos <- function(txt) {
   spaceAfterPattern <- "[!#%&*+,-;<=>?^|~]"
   
   # Calculate the last position of the patterns
-  lastPos1 <- stringi::stri_locate_last_regex(txt, sprintf(" *\\w*%s+ *$| *\\w*%s+ *| *%%>%% *$", noSpaceAfterPattern, spaceAfterPattern))
+  lastPos1 <- stringi::stri_locate_last_regex(txt, sprintf("[ ]*\\w*%s+[ ]*$|[ ]*\\w*%s+[ ]*|[ ]*%%>%%[ ]*$", noSpaceAfterPattern, spaceAfterPattern))
   lastPos2 <- stringi::stri_locate_last_regex(txt, sprintf("(?<=\\W)\\w*$", noSpaceAfterPattern, spaceAfterPattern))
   
   # Deal with bad matches
@@ -79,7 +79,7 @@ remove_to_text <- function(backTo, backward = TRUE) {
     if (is.null(backTo)) {
       endPos <- find_last_pos(preCode) + 1
     } else {
-      endPos <- stringi::stri_locate_last_regex(preCode, paste0(" *(", backTo, ") *"))[1, "start"]
+      endPos <- stringi::stri_locate_last_regex(preCode, paste0("[ ]*(", backTo, ")[ ]*"))[1, "start"]
     }
     
     # Clear to the start of the line if no matches were found
@@ -92,7 +92,8 @@ remove_to_text <- function(backTo, backward = TRUE) {
     )
     
     # Retrieve the code to be deleted
-    deletedCode <- substring(contents[selStart["row"]], find_last_pos(preCode), selEnd["column"])
+    # deletedCode <- substring(contents[selStart["row"]], find_last_pos(preCode), selEnd["column"])
+    deletedCode <- substring(contents[selStart["row"]], endPos, selEnd["column"])
     
   } else {
     
@@ -103,6 +104,7 @@ remove_to_text <- function(backTo, backward = TRUE) {
   
   # Delete & return the desired code
   rstudioapi::insertText(location = outputRange, text = "", id = context$id)
+  # cat("'", deletedCode, "'\n", sep = "")
   return(invisible(deletedCode))
   
 }
@@ -119,7 +121,9 @@ remove_to_text <- function(backTo, backward = TRUE) {
 #' # Type "mtcars %>% mutate(a = 1) %>% filter(cyl = 2)", & run the add-in function
 #' 
 pipe_backspace <- function() {
-  return(invisible(remove_to_text("%>%")))
+  # return(invisible(remove_to_text("%>%")))
+  # return(invisible(remove_to_text("%(>|T>|$)%")))
+  return(invisible(remove_to_text("%[^ ]+%")))
 }
 
 
