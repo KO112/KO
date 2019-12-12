@@ -37,8 +37,6 @@ find_last_pos <- function(txt) {
   }
   
   # Return the last position
-  # cat("orig:\t'", txt, "'\t", nchar(txt), "\t[", paste(lastPos1, collapse = ", "), "]\t[", paste(lastPos2, collapse = ", "),
-  #     "]\t[", lastPos, "]\nnew:\t'" , substr(txt, 1, lastPos), "'\t", sep = "")
   return(lastPos)
   
 }
@@ -92,7 +90,6 @@ remove_to_text <- function(backTo, backward = TRUE) {
     )
     
     # Retrieve the code to be deleted
-    # deletedCode <- substring(contents[selStart["row"]], find_last_pos(preCode), selEnd["column"])
     deletedCode <- substring(contents[selStart["row"]], endPos, selEnd["column"])
     
   } else {
@@ -104,7 +101,6 @@ remove_to_text <- function(backTo, backward = TRUE) {
   
   # Delete & return the desired code
   rstudioapi::insertText(location = outputRange, text = "", id = context$id)
-  # cat("'", deletedCode, "'\n", sep = "")
   return(invisible(deletedCode))
   
 }
@@ -121,8 +117,6 @@ remove_to_text <- function(backTo, backward = TRUE) {
 #' # Type "mtcars %>% mutate(a = 1) %>% filter(cyl = 2)", & run the add-in function
 #' 
 pipe_backspace <- function() {
-  # return(invisible(remove_to_text("%>%")))
-  # return(invisible(remove_to_text("%(>|T>|$)%")))
   return(invisible(remove_to_text("%[^ ]+%")))
 }
 
