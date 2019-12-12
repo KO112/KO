@@ -1,3 +1,7 @@
+# Include other functions in package
+#' @include Pipes.R
+NULL
+
 # Avoid "undefined variable" notes in package checking
 globalVariables(c(".KO_fn"))
 
@@ -18,7 +22,35 @@ globalVariables(c(".KO_fn"))
 #' .KO_fn()
 #' 
 run_fn <- function() {
-  if (exists(".KO_fn")) .KO_fn() else rstudioapi::sendToConsole("# .KO_fn <- function() { source(\"./\"); (); }")
+  
+  # If the user has set the function, run it, else print out some code to help the user set one
+  if (exists(".KO_fn")) {
+    
+    .KO_fn()
+    
+  } else {
+    
+    # Get the source editor content, extract the selection & the code at/above the cursor,
+    #  find the last function declaration in that, & determine whether to execute the result directly
+    editor <- rstudioapi::getSourceEditorContext()
+    selection <- rstudioapi::primary_selection(editor$selection)
+    code <- utils::head(editor$contents, selection$range$start[["row"]])
+    lastFn <- grep("^\\w+[ ]*<-[ ]*function()", code, ignore.case = T, value = T)
+    execute <- rstudioapi::getConsoleEditorContext()$contents != ""
+    
+    # Send the starter code to the console, executing as a comment if there's anything in the console
+    rstudioapi::sendToConsole(
+      code = sprintf(
+        "%s.KO_fn <- function() { source(\"%s\"); %s(); }"
+        , ifelse(execute, "# ", "")
+        , editor$path
+        , gsub("(\\w+).*", "\\1", lastFn)
+      )
+      , focus = FALSE
+      , execute = execute
+    )
+    
+  }
 }
 
 
