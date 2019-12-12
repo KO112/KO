@@ -58,7 +58,6 @@ remove_to_text <- function(backTo, backward = TRUE) {
   
   # Get the context of the call, as well as the contents/selection/position of the context
   context <- rstudioapi::getActiveDocumentContext()
-  # context <- rstudioapi::getConsoleEditorContext()
   contents <- context$contents
   selection <- rstudioapi::primary_selection(context$selection)
   selStart <- selection$range$start
