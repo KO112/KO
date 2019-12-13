@@ -14,7 +14,6 @@ globalVariables(c(".KO_clipboard"))
 #' 
 #' @return The value of the currently selected expression, invisibly.
 #' @name server-clipboard
-#' @export
 #' 
 #' @examples
 #' # Select an expression that can be evaluated to a value, & run this add-in
@@ -49,7 +48,6 @@ send_value_to_source_editor <- function() {
 #'   where the clipboard is not available programatically.
 #' 
 #' @return The value saved to the clipboard variable, invisibly.
-#' @export
 #' 
 #' @examples
 #' # Select an expression that can be evaluated to a value, & run this add-in
@@ -80,7 +78,6 @@ save_value_to_clipboard_variable <- function() {
 #' 
 #' @return The value read from the clipboard variable, invisibly.
 #' @rdname server-clipboard
-#' @export
 #' 
 #' @examples
 #' # After running `save_value_to_clipboard_variable` on a valid expression, run this add-in
