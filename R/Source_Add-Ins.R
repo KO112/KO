@@ -90,11 +90,12 @@ paste_value_from_clipboard_variable <- function() {
   # Get the context of the call, as well as the selection
   context <- rstudioapi::getActiveDocumentContext()
   selection <- rstudioapi::primary_selection(context$selection)
-  insertPos <- selection$range$end
+  # insertPos <- selection$range$end
   
   # Insert the selected value, & return it invisibly
-  rstudioapi::insertText(insertPos, as.character(.KO_clipboard), context$id)
-  rstudioapi::setSelectionRanges(selection$range, context$id)
+  # rstudioapi::insertText(insertPos, as.character(.KO_clipboard), context$id)
+  rstudioapi::insertText(selection$range, as.character(.KO_clipboard), context$id)
+  # rstudioapi::setSelectionRanges(selection$range, context$id)
   return(invisible(.KO_clipboard))
   
 }
