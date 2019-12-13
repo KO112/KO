@@ -34,7 +34,7 @@ send_value_to_source_editor <- function() {
   insertPos <- editorSelection$range$end
   
   # Insert the selected value, & return it invisibly
-  rstudioapi::insertText(insertPos, as.character(val), editor$id)
+  rstudioapi::insertText(insertPos, as.character(val) %>% paste0(collapse = "\n"), editor$id)
   rstudioapi::setSelectionRanges(editorSelection$range, editor$id)
   return(invisible(val))
   
@@ -94,7 +94,7 @@ paste_value_from_clipboard_variable <- function() {
   
   # Insert the selected value, & return it invisibly
   # rstudioapi::insertText(insertPos, as.character(.KO_clipboard), context$id)
-  rstudioapi::insertText(selection$range, as.character(.KO_clipboard), context$id)
+  rstudioapi::insertText(selection$range, as.character(.KO_clipboard) %>% paste0(collapse = "\n"), context$id)
   # rstudioapi::setSelectionRanges(selection$range, context$id)
   return(invisible(.KO_clipboard))
   
