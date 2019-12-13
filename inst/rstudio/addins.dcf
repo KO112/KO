@@ -39,8 +39,23 @@ Binding: run_selection
 Interactive: false
 
 Name: Send Selection to Console
-Description: Inserts the currently highlighted code in the console..
+Description: Inserts the currently highlighted code in the console.
 Binding: send_selection_to_console
+Interactive: false
+
+Name: Send Value to Source Editor
+Description: Send the value of the currently selected expression to the source editor.
+Binding: send_value_to_source_editor
+Interactive: false
+
+Name: Server Clipboard - Copy
+Description: Save the value of the currently selected expression to a variable.
+Binding: save_value_to_clipboard_variable
+Interactive: false
+
+Name: Server Clipboard - Paste
+Description: Paste the value of the clipboard variable to the active context.
+Binding: paste_value_from_clipboard_variable
 Interactive: false
 
 Name: Smart Backspace

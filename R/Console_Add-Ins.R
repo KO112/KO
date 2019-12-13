@@ -156,7 +156,7 @@ send_selection_to_console <- function() {
   
   # Get the console context, & find the end of the console selection
   console <- rstudioapi::getConsoleEditorContext()
-  insertPos <- console$selection[[1]]$range$end
+  insertPos <- rstudioapi::primary_selection(console$selection)$range$end
   
   # Set the output range to the end of the console selection
   outputRange <- rstudioapi::document_range(

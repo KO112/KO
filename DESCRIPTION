@@ -62,6 +62,7 @@ Collate:
     'Quasi_Poisson.R'
     'Select_Matrix.R'
     'Snippet_Pipe_Check.R'
+    'Source_Add-Ins.R'
     'Summarize.R'
     'Text_Removal.R'
     'Trimming.R'

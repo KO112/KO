@@ -64,7 +64,7 @@ remove_to_text <- function(backTo, backward = TRUE) {
   # If the cursor is at the start of the line, clear the selection, & exit early
   if (selStart["column"] == 1) {
     rstudioapi::insertText(location = selection$range, text = "", id = context$id)
-    return(NULL)
+    return(invisible(NULL))
   }
   
   # Find the code to remove, either before or after the cursor
