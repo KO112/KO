@@ -13,6 +13,9 @@ To-Do List:
 - compare_dfs: print message if identical, or all.equal, or no differences
   - Don't just return empty list
 - Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
+- Clean column names
+  - setnames(colnames(.), stringr::str_replace_all(colnames(.), c("[ ]+" = "_", "[%]" = "Percent", "[()]" = "", "-" = "_", "[$]" = "Dollar", "_+" = "_")))
+  - stringr::str_replace_all(cols, c("\\W" = "_", "[%]" = "Percent", "[$]" = "Dollar", "_+" = "_"))
 
 XGBoost Output Analysis:
   - Feature importance graphs
