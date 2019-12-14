@@ -3,14 +3,14 @@
 \name{clean_col_names}
 \alias{clean_col_names}
 \alias{clean_col_names.data.frame}
-\alias{clean_col_names.data.table}
+\alias{clean_col_names.matrix}
 \title{Clean Column Names}
 \usage{
 clean_col_names(object, ...)
 
 \method{clean_col_names}{data.frame}(object, short = FALSE, ...)
 
-\method{clean_col_names}{data.table}(object, short = FALSE, ...)
+\method{clean_col_names}{matrix}(object, short = FALSE, ...)
 }
 \arguments{
 \item{object}{The object to clean names for.}
@@ -20,9 +20,9 @@ clean_col_names(object, ...)
 \item{short}{Whether to shorten certain cleaned name replacements (logical scalar).}
 }
 \value{
-\code{clean_col_names.data.frame}:
+\code{clean_col_names.data.frame}: the input object, with column names cleaned and modifed by reference.
 
-\code{clean_col_names.data.table}:
+\code{clean_col_names.matrix}: the input object, with column names cleaned and modifed.
 }
 \description{
 Clean the column names of a \code{data.frame} or \code{data.table}.

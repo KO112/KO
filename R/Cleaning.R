@@ -58,7 +58,7 @@ clean_col_names <- function(object, ...) {
 
 #' @param short Whether to shorten certain cleaned name replacements (logical scalar).
 #'
-#' @return \code{clean_col_names.data.frame}: 
+#' @return \code{clean_col_names.data.frame}: the input object, with column names cleaned and modifed by reference.
 #' @rdname clean_col_names
 #' @export
 #' 
@@ -75,14 +75,14 @@ clean_col_names <- function(object, ...) {
 #' 
 clean_col_names.data.frame <- function(object, short = FALSE, ...) {
   
-  # Get the cleaned names, & set them for the `data.frame`
+  # Get the cleaned names, & update them in the object
   cleanNames <- clean_names(colnames(object), short)
-  return(stats::setNames(object, cleanNames))
+  data.table::setnames(object, colnames(object), cleanNames)
   
 }
 
 
-#' @return \code{clean_col_names.data.table}: 
+#' @return \code{clean_col_names.matrix}: the input object, with column names cleaned and modifed.
 #' @rdname clean_col_names
 #' @export
 #'
@@ -95,10 +95,10 @@ clean_col_names.data.frame <- function(object, short = FALSE, ...) {
 #' clean_col_names(DT, TRUE)
 #' colnames(DT)
 #' 
-clean_col_names.data.table <- function(object, short = FALSE, ...) {
+clean_col_names.matrix <- function(object, short = FALSE, ...) {
   
-  # Get the cleaned names, & update them in the `data.table`
+  # Get the cleaned names, & update them in the object
   cleanNames <- clean_names(colnames(object), short)
-  data.table::setnames(object, colnames(object), cleanNames)
+  colnames(object) <- cleanNames
   
 }
