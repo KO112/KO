@@ -100,5 +100,6 @@ clean_col_names.matrix <- function(object, short = FALSE, ...) {
   # Get the cleaned names, & update them in the object
   cleanNames <- clean_names(colnames(object), short)
   colnames(object) <- cleanNames
+  return(object)
   
 }
