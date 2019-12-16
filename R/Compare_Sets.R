@@ -21,10 +21,10 @@
 set_comp <- function(set1, set2, compNames = FALSE, printOut = TRUE) {
   
   # Get the set expressions
-  set1Expr <- deparse(substitute(set1))
-  if (nchar(set1Expr) > 35) set1Expr <- "set 1"
-  set2Expr <- deparse(substitute(set2))
-  if (nchar(set2Expr) > 35) set2Expr <- "set 2"
+  set1Expr <- gsub("[ ]+", " ", paste0(deparse(substitute(set1)), collapse = ""))
+  set2Expr <- gsub("[ ]+", " ", paste0(deparse(substitute(set2)), collapse = ""))
+  if (nchar(set1Expr) > 75) set1Expr <- paste0(substr(set1Expr, 1, 50), "...")
+  if (nchar(set2Expr) > 75) set2Expr <- paste0(substr(set2Expr, 1, 50), "...")
   
   # Check that the classes are compatible
   if (!any(class(set1) %in% class(set2))) stop(
