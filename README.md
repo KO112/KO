@@ -39,6 +39,8 @@ Add-In:
   - RCpp code cleaning function
     - Deal with quotes/comments differently
   - Print comparison/differences in color, similar to Git?
+- For chunk running, run block-by-block
+  - Also create block-run shortcut
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
