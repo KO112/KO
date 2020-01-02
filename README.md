@@ -41,6 +41,8 @@ Add-In:
   - Print comparison/differences in color, similar to Git?
 - For chunk running, run block-by-block
   - Also create block-run shortcut
+  - Run in proper directory for .Rmd files
+  - Run current line if no selection
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
