@@ -43,6 +43,7 @@ Add-In:
   - Also create block-run shortcut
   - Run in proper directory for .Rmd files
   - Run current line if no selection
+  - Check for errors (maybe using `.Last.value`?)
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
