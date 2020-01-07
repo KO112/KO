@@ -44,6 +44,8 @@ Add-In:
   - Run in proper directory for .Rmd files
   - Run current line if no selection
   - Check for errors (maybe using `.Last.value`?)
+  - Trim empty lines at start/end
+- Find functionality with history saving (save in git repo too?)
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
