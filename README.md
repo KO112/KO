@@ -46,6 +46,8 @@ Add-In:
   - Check for errors (maybe using `.Last.value`?)
   - Trim empty lines at start/end
 - Find functionality with history saving (save in git repo too?)
+- Remove current/previous/next enclosure
+  - E.g. remove everything in enclosing quotes/brackets/etc.
 
 Data Dictionary:
 - Make class for single column summary, and a list of them(?)
