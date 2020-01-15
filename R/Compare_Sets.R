@@ -51,8 +51,8 @@ set_comp <- function(set1, set2, compNames = FALSE, printOut = TRUE) {
   diff2 <- dplyr::setdiff(set2, set1)
   
   # Create styling functions
-  headerText <- function(expr1, expr2, sep = "") crayon::make_style("#00FF00", colors = 256)(
-    sep = sep, "Elements in `", expr1, "` but not in `", expr2, "` (comparing ", crayon::bold(ifelse(compNames, "names", "values")), "):"
+  headerText <- function(expr1, expr2, numElem, sep = "") crayon::make_style("#00FF00", colors = 256)(
+    sep = sep, numElem, " elements in `", expr1, "` but not in `", expr2, "` (comparing ", crayon::bold(ifelse(compNames, "names", "values")), "):"
   )
   # headerText <- function(..., sep = "") crayon::underline(..., sep = sep)
   elementText <- function(..., sep = "") crayon::make_style("#00BBFF", colors = 256)(..., sep = sep)
@@ -60,8 +60,8 @@ set_comp <- function(set1, set2, compNames = FALSE, printOut = TRUE) {
   
   # Print out the differences
   if (printOut) {
-    cat(sep = "", headerText(set1Expr, set2Expr), "\n\t", elementText("[", paste0(diff1, collapse = ", "), "]"), "\n")
-    cat(sep = "", headerText(set2Expr, set1Expr), "\n\t", elementText("[", paste0(diff2, collapse = ", "), "]"), "\n")
+    cat(sep = "", headerText(set1Expr, set2Expr, length(diff1)), "\n\t", elementText("[", paste0(diff1, collapse = ", "), "]"), "\n")
+    cat(sep = "", headerText(set2Expr, set1Expr, length(diff2)), "\n\t", elementText("[", paste0(diff2, collapse = ", "), "]"), "\n")
   }
   
   # Return the differences, invisibly
