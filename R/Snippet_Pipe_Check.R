@@ -10,7 +10,7 @@ NULL
 #' @param pipeStr The pipe to insert if needed (character scalar).
 #' @param afterStr Text to insert after the pipe (character scalar).
 #' @param elseStr Text to insert if no pipe is needed (character scalar).
-#'
+#' 
 #' @return The deleted code (character scalar).
 #' 
 #' @examples

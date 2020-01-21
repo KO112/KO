@@ -1,4 +1,4 @@
-To-Do List:
+# To-Do List:
 
 - Check if client can run on own computer, check address of client on server, check if running server from own computer works
 - Add hash to GLM Helper (based on sorted formula?)
@@ -14,16 +14,16 @@ To-Do List:
   - Don't just return empty list
 - Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
 
-XGBoost Output Analysis:
+## XGBoost Output Analysis:
   - Feature importance graphs
   - Feature interaction analysis
 
-Variable EDA:
+## Variable EDA:
   - Distribution based on type
   - Histogram, plot, smoothed plot
   - Quantiles/averages
 
-Add-In:
+## Add-In:
 - Printing selected variable
 - Showing option values (what does this even mean?)
 - Make DLL specifically for activating/moving tcl/tk window, maybe faster?
@@ -49,7 +49,7 @@ Add-In:
 - Remove current/previous/next enclosure
   - E.g. remove everything in enclosing quotes/brackets/etc.
 
-Data Dictionary:
+## Data Dictionary:
 - Make class for single column summary, and a list of them(?)
 - For printing, change from tibble to something easier to read in bulk, maybe multiple columns
 - Test new values in dataDict
@@ -58,7 +58,7 @@ Data Dictionary:
 - .DollarNames
 
 
-Tests:
+# Tests:
 - plotly tests for BDP
 - Finish compare_df testing (test with dates, one col date one character, messages, etc.)
 - Colored output (info + color_list)

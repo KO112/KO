@@ -1,15 +1,15 @@
 #' Set Comparison
 #' 
 #' Compare two sets, printing out the differences if desired.
-#'
+#' 
 #' @param set1 The first set to compare.
 #' @param set2 The second set to compare.
 #' @param compNames Whether to compare the names of the sets, or the sets themselves (logical scalar).
 #' @param printOut Whether to print out the differences (logical scalar).
-#'
+#' 
 #' @return A two-element list of the set differences.
 #' @export
-#'
+#' 
 #' @examples
 #' set_comp(1:10, 6:15)
 #' set_comp(mtcars[, -1], mtcars[, -2])
