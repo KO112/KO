@@ -10,7 +10,7 @@ NULL
 #' @param pipeStr The pipe to insert if needed (character scalar).
 #' @param afterStr Text to insert after the pipe (character scalar).
 #' @param elseStr Text to insert if no pipe is needed (character scalar).
-#'
+#' 
 #' @return The deleted code (character scalar).
 #' 
 #' @examples
@@ -45,7 +45,7 @@ snippet_pipe_check <- function(pipeStr = "%>% ", afterStr = "", elseStr = "") {
   # Determine whether the current expressions needs a pipe, & return a pipe if one is needed
   # The "\\w+$" at the end is needed to match the snippet being evaluated
   needsPipe <- stringi::stri_extract_last_regex(
-      beforeStr, paste0("^[ ]+|[", paste0(noPipeAfter, collapse = ""), "]+\\s*\\w+$")
+      beforeStr, paste0("^[ ]+\\w+$|[", paste0(noPipeAfter, collapse = ""), "]+\\s*\\w+$")
     ) %>% is.na()
   if (needsPipe) return(paste0(pipeStr, afterStr)) else return(elseStr)
   
