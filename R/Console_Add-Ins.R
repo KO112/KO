@@ -31,11 +31,12 @@ run_fn <- function() {
   } else {
     
     # Get the source editor content, extract the selection & the code at/above the cursor,
-    #  find the last function declaration in that, & determine whether to execute the result directly
+    #   find the last function declaration in that, & determine whether to execute the result directly
     editor <- rstudioapi::getSourceEditorContext()
     selection <- rstudioapi::primary_selection(editor$selection)
     code <- utils::head(editor$contents, selection$range$start[["row"]])
-    lastFn <- grep("^\\w+[ ]*<-[ ]*function()", code, ignore.case = T, value = T) %>% utils::tail(1)
+    lastFn <- grep("^\\w+[ ]*<-[ ]*function()", code, ignore.case = T, value = T) %>%
+      {ifelse(length(.) > 0, utils::tail(., 1), "")}
     execute <- rstudioapi::getConsoleEditorContext()$contents != ""
     
     # Send the starter code to the console, executing as a comment if there's anything in the console
