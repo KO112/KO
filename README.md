@@ -15,13 +15,13 @@
 - Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
 
 ## XGBoost Output Analysis:
-  - Feature importance graphs
-  - Feature interaction analysis
+- Feature importance graphs
+- Feature interaction analysis
 
 ## Variable EDA:
-  - Distribution based on type
-  - Histogram, plot, smoothed plot
-  - Quantiles/averages
+- Distribution based on type
+- Histogram, plot, smoothed plot
+- Quantiles/averages
 
 ## Add-In:
 - Printing selected variable
