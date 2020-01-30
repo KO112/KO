@@ -23,7 +23,7 @@
 - Histogram, plot, smoothed plot
 - Quantiles/averages
 
-## Add-In:
+## Add-Ins:
 - Printing selected variable
 - Showing option values (what does this even mean?)
 - Make DLL specifically for activating/moving tcl/tk window, maybe faster?
