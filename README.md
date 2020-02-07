@@ -13,6 +13,8 @@
 - compare_dfs: print message if identical, or all.equal, or no differences
   - Don't just return empty list
 - Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
+- .DollarNames(dataSet, "pattern")
+- knitr::knit_code
 
 ## XGBoost Output Analysis:
 - Feature importance graphs
