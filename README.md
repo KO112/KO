@@ -15,6 +15,8 @@
 - Pretty JSON printing (takes in CSV file, aligns values, adds colors(?))
 - .DollarNames(dataSet, "pattern")
 - knitr::knit_code
+- Create new RMarkdown template
+  - Remove some CSS, maybe improve TOC section
 
 ## XGBoost Output Analysis:
 - Feature importance graphs
