@@ -30,6 +30,7 @@
 ## Add-Ins:
 - Printing selected variable
 - Showing option values (what does this even mean?)
+- Use `menu` instead for selections
 - Make DLL specifically for activating/moving tcl/tk window, maybe faster?
   - Or load once and activate somehow?
 - Add end bracket at next comma
