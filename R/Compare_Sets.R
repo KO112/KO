@@ -88,32 +88,35 @@ print.set_comp <- function(x, ..., indent = 4, color = "#CCCCCC", printSets = FA
   
   # Create styling functions
   vec_print_fn <- function(x) vec_print(x, indent = indent, color = color, ...)
-  green <- function(..., sep = "") cat(crayon::make_style("#00FF00", colors = 256)(..., sep = sep))
+  expr <- function(..., sep = "") crayon::make_style("#00AAFF", colors = 256)(..., sep = sep)
+  green <- function(..., sep = "") crayon::make_style("#00FF00", colors = 256)(..., sep = sep)
+  cgreen <- function(..., sep = "") cat(green(..., sep = sep))
   diffHeaderText <- function(expr1, expr2, numElem, sep = "") {
-    green(sep = sep,
-      bold(numElem), " elements are in `",bold(expr1), "` but not in `", bold(expr2),
-      "` (comparing ", bold(ifelse(x$compNames, "names", "values")), "):\n"
+    cgreen(sep = sep,
+      bold(numElem), " elements are in ", bold("set 1"), " but not in ", bold("set 2"),
+      " (comparing ", bold(ifelse(x$compNames, "names", "values")), "):\n"
     )
   }
   
   # Print out some set information
-  green(
-    "Set 1 has ", bold(x$num1), " unique elements, and set 2 has ", bold(x$num2), ".\n",
-    "The intersection has ", bold(length(x$setInt)), " elements, ",
-    "and the union has ", bold(length(x$setUnion)), " total elements.\n"
+  cgreen(
+    bold("Set 1"), " (", expr(x$set1Expr), ") has ", bold(x$num1), " unique elements, and ",
+    bold("set 2"), " (", expr(x$set2Expr), ") has ", bold(x$num2), ".\n",
+    "The ", bold("intersection"), " has ", bold(length(x$setInt)), " elements, ",
+    "and the ", bold("union"), " has ", bold(length(x$setUnion)), " total elements.\n"
   )
   if (printSets) {
-    green("Set 1:\n"); vec_print_fn(x$set1)
-    green("Set 2:\n"); vec_print_fn(x$set2)
+    cgreen(bold("Set 1:\n")); vec_print_fn(x$set1)
+    cgreen(bold("Set 2:\n")); vec_print_fn(x$set2)
   }
   
   # If desired, print out the intersection & union
   if (printInt) {
-    green(bold(length(x$setInt)), " elements are in both sets.\n")
+    cgreen(bold(length(x$setInt)), " elements are in ", bold("both"), " sets:\n")
     vec_print_fn(x$setInt)
   }
   if (printUnion) {
-    green(bold(length(x$setUnion)), " elements are in the union of the sets.\n")
+    cgreen(bold(length(x$setUnion)), " elements are in the ", bold("union"), " of the sets:\n")
     vec_print_fn(x$setUnion)
   }
   
