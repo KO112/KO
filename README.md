@@ -17,6 +17,8 @@
 - knitr::knit_code
 - Create new RMarkdown template
   - Remove some CSS, maybe improve TOC section
+- Use progress bars
+  - E.g. for `compare_dfs`
 
 ## XGBoost Output Analysis:
 - Feature importance graphs
