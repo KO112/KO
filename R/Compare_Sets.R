@@ -1,11 +1,15 @@
+# Include other functions in package
+#' @importFrom crayon bold
+NULL
+
+
 #' Set Comparison
 #' 
-#' Compare two sets, printing out the differences if desired.
+#' Compare two sets.
 #' 
 #' @param set1 The first set to compare.
 #' @param set2 The second set to compare.
 #' @param compNames Whether to compare the names of the sets, or the sets themselves (logical scalar).
-#' @param printOut Whether to print out the differences (logical scalar).
 #' 
 #' @return A two-element list of the set differences.
 #' @export
@@ -16,9 +20,9 @@
 #' set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4))
 #' set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = FALSE)
 #' set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = TRUE)
-#' comp <- set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), printOut = FALSE)
+#' comp <- set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4))
 #' 
-set_comp <- function(set1, set2, compNames = FALSE, printOut = TRUE) {
+set_comp <- function(set1, set2, compNames = FALSE) {
   
   # Get the set expressions
   set1Expr <- gsub("[ ]+", " ", paste0(deparse(substitute(set1)), collapse = ""))
@@ -46,33 +50,80 @@ set_comp <- function(set1, set2, compNames = FALSE, printOut = TRUE) {
     set2 <- names(set2)
   }
   
-  # Calculate the set differences
-  diff1 <- dplyr::setdiff(set1, set2)
-  diff2 <- dplyr::setdiff(set2, set1)
-  
-  # Create styling functions
-  headerText <- function(expr1, expr2, numElem, sep = "") crayon::make_style("#00FF00", colors = 256)(
-    sep = sep, crayon::bold(numElem), " elements are in `", expr1, "` but not in `", expr2, "` (comparing ", crayon::bold(ifelse(compNames, "names", "values")), "):"
-  )
-  # headerText <- function(..., sep = "") crayon::underline(..., sep = sep)
-  elementText <- function(..., sep = "") crayon::make_style("#00BBFF", colors = 256)(..., sep = sep)
-  # elementText <- function(..., sep = "") paste0(..., sep = sep)
-  
-  # Print out the differences
-  if (printOut) {
-    cat(sep = "", crayon::make_style("#00FF00", colors = 256)(sep = "", "There are ", crayon::bold(length(intersect(set1, set2))), " shared elements."), "\n")
-    cat(sep = "", headerText(set1Expr, set2Expr, length(diff1)), "\n\t", elementText("[", paste0(diff1, collapse = ", "), "]"), "\n")
-    cat(sep = "", headerText(set2Expr, set1Expr, length(diff2)), "\n\t", elementText("[", paste0(diff2, collapse = ", "), "]"), "\n")
-  }
-  
   # Return the differences, invisibly
-  return(invisible(list(diff1 = diff1, diff2 = diff2)))
+  comp <- dplyr::lst(
+    set1 = sort(unique(set1)), set2 = sort(unique(set2)),
+    set1Expr, set2Expr, compNames,
+    num1 = length(set1), num2 = length(set2),
+    setInt = intersect(set1, set2), setUnion = union(set1, set2),
+    setDiff1 = setdiff(set1, set2), setDiff2 = setdiff(set2, set1)
+  )
+  class(comp) <- c("set_comp", class(comp))
+  return(comp)
   
 }
 
-# set_comp(1:10, 6:15)
-# set_comp(mtcars[, -1], mtcars[, -2])
-# set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4))
-# set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = FALSE)
-# set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = TRUE)
-# comp <- set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), printOut = FALSE)
+
+#' @param x A \code{set_comp} object.
+#' @param ... Additional arguments passed to the print function (not used).
+#' @param indent The indent argument to pass to the \code{KO::vec_print} function.
+#' @param color The color argument to pass to the \code{KO::vec_print} function.
+#' @param printSets Whether to print the original sets (logical scalar).
+#' @param printInt Whether to print the intersection of the sets (logical scalar).
+#' @param printUnion Whether to print the union of the sets (logical scalar).
+#' @param printDiffs Whether to print the differences (logical scalar).
+#'
+#' @return The input, invisibly.
+#' @rdname set_comp
+#' @export
+#' 
+#' @examples
+#' set_comp(1:10, 6:15)
+#' print(set_comp(1:10, 6:15))
+#' print(set_comp(1:10, 6:15), indent = 2, color = "#FFFF00")
+#' print(set_comp(1:10, 6:15), printSets = TRUE, printInt = FALSE,
+#'       printUnion = TRUE, printDiffs = FALSE)
+#' 
+print.set_comp <- function(x, ..., indent = 4, color = "#CCCCCC", printSets = FALSE, printInt = TRUE, printUnion = FALSE, printDiffs = TRUE) {
+  
+  # Create styling functions
+  vec_print_fn <- function(x) vec_print(x, indent = indent, color = color, ...)
+  green <- function(..., sep = "") cat(crayon::make_style("#00FF00", colors = 256)(..., sep = sep))
+  diffHeaderText <- function(expr1, expr2, numElem, sep = "") {
+    green(sep = sep,
+      bold(numElem), " elements are in `",bold(expr1), "` but not in `", bold(expr2),
+      "` (comparing ", bold(ifelse(x$compNames, "names", "values")), "):\n"
+    )
+  }
+  
+  # Print out some set information
+  green(
+    "Set 1 has ", bold(x$num1), " unique elements, and set 2 has ", bold(x$num2), ".\n",
+    "The intersection has ", bold(length(x$setInt)), " elements, ",
+    "and the union has ", bold(length(x$setUnion)), " total elements.\n"
+  )
+  if (printSets) {
+    green("Set 1:\n"); vec_print_fn(x$set1)
+    green("Set 2:\n"); vec_print_fn(x$set2)
+  }
+  
+  # If desired, print out the intersection & union
+  if (printInt) {
+    green(bold(length(x$setInt)), " elements are in both sets.\n")
+    vec_print_fn(x$setInt)
+  }
+  if (printUnion) {
+    green(bold(length(x$setUnion)), " elements are in the union of the sets.\n")
+    vec_print_fn(x$setUnion)
+  }
+  
+  # If desired, print out the differences
+  if (printDiffs) {
+    diffHeaderText(x$set1Expr, x$set2Expr, length(x$setDiff1)); vec_print_fn(x$setDiff1)
+    diffHeaderText(x$set2Expr, x$set1Expr, length(x$setDiff2)); vec_print_fn(x$setDiff2)
+  }
+  
+  # Return the input object, invisibly
+  return(invisible(x))
+  
+}

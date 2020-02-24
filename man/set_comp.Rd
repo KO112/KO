@@ -2,9 +2,14 @@
 % Please edit documentation in R/Compare_Sets.R
 \name{set_comp}
 \alias{set_comp}
+\alias{print.set_comp}
 \title{Set Comparison}
 \usage{
-set_comp(set1, set2, compNames = FALSE, printOut = TRUE)
+set_comp(set1, set2, compNames = FALSE)
+
+\method{print}{set_comp}(x, ..., indent = 4, color = "#CCCCCC",
+  printSets = FALSE, printInt = TRUE, printUnion = FALSE,
+  printDiffs = TRUE)
 }
 \arguments{
 \item{set1}{The first set to compare.}
@@ -13,13 +18,29 @@ set_comp(set1, set2, compNames = FALSE, printOut = TRUE)
 
 \item{compNames}{Whether to compare the names of the sets, or the sets themselves (logical scalar).}
 
-\item{printOut}{Whether to print out the differences (logical scalar).}
+\item{x}{A \code{set_comp} object.}
+
+\item{...}{Additional arguments passed to the print function (not used).}
+
+\item{indent}{The indent argument to pass to the \code{KO::vec_print} function.}
+
+\item{color}{The color argument to pass to the \code{KO::vec_print} function.}
+
+\item{printSets}{Whether to print the original sets (logical scalar).}
+
+\item{printInt}{Whether to print the intersection of the sets (logical scalar).}
+
+\item{printUnion}{Whether to print the union of the sets (logical scalar).}
+
+\item{printDiffs}{Whether to print the differences (logical scalar).}
 }
 \value{
 A two-element list of the set differences.
+
+The input, invisibly.
 }
 \description{
-Compare two sets, printing out the differences if desired.
+Compare two sets.
 }
 \examples{
 set_comp(1:10, 6:15)
@@ -27,6 +48,12 @@ set_comp(mtcars[, -1], mtcars[, -2])
 set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4))
 set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = FALSE)
 set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), compNames = TRUE)
-comp <- set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4), printOut = FALSE)
+comp <- set_comp(c(a = 1, b = 2, c = 3), c(a = 1, b = 2, d = 4))
+
+set_comp(1:10, 6:15)
+print(set_comp(1:10, 6:15))
+print(set_comp(1:10, 6:15), indent = 2, color = "#FFFF00")
+print(set_comp(1:10, 6:15), printSets = TRUE, printInt = FALSE,
+      printUnion = TRUE, printDiffs = FALSE)
 
 }

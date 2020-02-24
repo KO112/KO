@@ -7,8 +7,8 @@
 \usage{
 make_output_rows(vec, numCols, maxChars)
 
-vec_print(vec, maxLen = 20, maxWidth = getOption("width"),
-  order = "none", printOut = TRUE, color = "#00FF00")
+vec_print(vec, indent = 0, maxLen = 20, maxWidth = getOption("width")
+  - indent, order = "none", printOut = TRUE, color = "#00FF00")
 }
 \arguments{
 \item{vec}{The (atomic) vector to print out.}
@@ -16,6 +16,9 @@ vec_print(vec, maxLen = 20, maxWidth = getOption("width"),
 \item{numCols}{The number of columns to use in the output (integer scalar).}
 
 \item{maxChars}{The maximum number of characters to print for each element of \code{vec} (integer scalar).}
+
+\item{indent}{Number of spaces to indent the output by (integer scalar),
+or a string to use as the indent (character scalar).}
 
 \item{maxLen}{The maximum length of a string to print out (integer scalar).}
 

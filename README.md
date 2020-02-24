@@ -19,6 +19,7 @@
   - Remove some CSS, maybe improve TOC section
 - Use progress bars
   - E.g. for `compare_dfs`
+- Finish `color_list`
 
 ## XGBoost Output Analysis:
 - Feature importance graphs
@@ -68,7 +69,8 @@
 # Tests:
 - plotly tests for BDP
 - Finish compare_df testing (test with dates, one col date one character, messages, etc.)
-- Colored output (info + color_list)
-- set_comp
+- Printing
+  - `Indent` in vec_print
+- `set_comp`
 - All add-in functions (specifically text removal, send to console, formatting)
   - Test that lines with spaces removed are the same

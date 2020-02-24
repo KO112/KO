@@ -42,13 +42,12 @@ Suggests:
     testthat
 Collate: 
     'Pipes.R'
-    'Error_Handling.R'
     'Auto_Complete.R'
     'Auto_Surround.R'
+    'Error_Handling.R'
     'Binned_Data_and_Plots.R'
     'Bounding_and_Rounding.R'
     'Cleaning.R'
-    'Colored_Output.R'
     'Compare_DF.R'
     'Compare_Sets.R'
     'Compare_ggplots.R'
