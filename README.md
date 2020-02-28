@@ -20,6 +20,7 @@
 - Use progress bars
   - E.g. for `compare_dfs`
 - Finish `color_list`
+- Make compare_dfs print out class differences
 
 ## XGBoost Output Analysis:
 - Feature importance graphs
@@ -74,3 +75,4 @@
 - `set_comp`
 - All add-in functions (specifically text removal, send to console, formatting)
   - Test that lines with spaces removed are the same
+- `vec_to_code`

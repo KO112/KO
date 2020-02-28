@@ -48,6 +48,7 @@ Collate:
     'Binned_Data_and_Plots.R'
     'Bounding_and_Rounding.R'
     'Cleaning.R'
+    'Clipping.R'
     'Compare_DF.R'
     'Compare_Sets.R'
     'Compare_ggplots.R'
