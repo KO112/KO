@@ -39,14 +39,17 @@ auto_complete_var <- function() {
   
   # Create a regex pattern for matching, search for a match, get unique elements, & print them to the console
   matchText <- paste0(strsplit(varText, "")[[1]], collapse = ".*")
-  varMatches <- purrr::map(c(parent.frame(2), .GlobalEnv), ~ grep(matchText, ls(.x), ignore.case = TRUE, value = TRUE)) %>%
+  varMatches <- c(parent.frame(2), .GlobalEnv) %>%
+    purrr::map(~ grep(matchText, ls(.x), ignore.case = TRUE, value = TRUE)) %>%
     unlist() %>% unique() %>% sort()
   
   # If there is more than one match, create a drop-down list for the user to choose from (on Windows), else a text prompt
   if (length(varMatches) > 1) {
     closestMatch <- which.min(stringdist::stringdist(varText, varMatches))
     if (Sys.info()["sysname"] == "Windows") {
-      varMatches <- tkDropDown(varMatches, default = pmax(0, closestMatch - 1))
+      # varMatches <- tkDropDown(varMatches, default = pmax(0, closestMatch - 1))
+      # varMatches <- varMatches[menu(varMatches, graphics = TRUE, title = "Select a Variable")]
+      varMatches <- select.list(varMatches, preselect = varMatches[closestMatch], title = "Select a Variable", graphics = TRUE)
     } else {
       response <- paste0(seq_along(varMatches), ". ", varMatches, " ", strrep(intToUtf8(8192), 50), collapse = " ") %>%
         rstudioapi::showPrompt("Select a Variable", ., closestMatch)

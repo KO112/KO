@@ -91,9 +91,9 @@ print.set_comp <- function(x, ..., indent = 4, color = "#CCCCCC", printSets = FA
   expr <- function(..., sep = "") crayon::make_style("#00AAFF", colors = 256)(..., sep = sep)
   green <- function(..., sep = "") crayon::make_style("#00FF00", colors = 256)(..., sep = sep)
   cgreen <- function(..., sep = "") cat(green(..., sep = sep))
-  diffHeaderText <- function(expr1, expr2, numElem, sep = "") {
+  diffHeaderText <- function(expr1, expr2, setNum, numElem, sep = "") {
     cgreen(sep = sep,
-      bold(numElem), " elements are in ", bold("set 1"), " but not in ", bold("set 2"),
+      bold(numElem), " elements are in ", bold("set", setNum), " but not in ", bold("set", setNum),
       " (comparing ", bold(ifelse(x$compNames, "names", "values")), "):\n"
     )
   }
@@ -122,8 +122,8 @@ print.set_comp <- function(x, ..., indent = 4, color = "#CCCCCC", printSets = FA
   
   # If desired, print out the differences
   if (printDiffs) {
-    diffHeaderText(x$set1Expr, x$set2Expr, length(x$setDiff1)); vec_print_fn(x$setDiff1)
-    diffHeaderText(x$set2Expr, x$set1Expr, length(x$setDiff2)); vec_print_fn(x$setDiff2)
+    diffHeaderText(x$set1Expr, x$set2Expr, 1, length(x$setDiff1)); vec_print_fn(x$setDiff1)
+    diffHeaderText(x$set2Expr, x$set1Expr, 2, length(x$setDiff2)); vec_print_fn(x$setDiff2)
   }
   
   # Return the input object, invisibly

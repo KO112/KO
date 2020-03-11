@@ -16,7 +16,8 @@ NULL
 #' @examples
 #' 
 #' set.seed(112)
-#' s <- replicate(100, sample(letters, floor(runif(1, 8, 13)), replace = TRUE)
+#' s <- replicate(100, sample(letters, floor(runif(1, 8, 13)), replace = TRUE))
+#' s <- sapply(s, paste0, collapse = "")
 #' v <- vec_to_code(s)
 #' cat(v)
 #' purrr::map_int(strsplit(v, "\n")[[1]], nchar)
@@ -25,7 +26,7 @@ vec_to_code <- function(vec, width = 100, indent = 2, tol = 5) {
   
   # Ensure the input is atomic, & quote character vectors
   if (!is.atomic(vec)) stop("The input vector must be atomic.")
-  if (is.character(vec)) vec <- paste0(vec, collapse = "") %>% paste0('"', ., '", ')
+  if (is.character(vec)) vec <- paste0('"', vec, '", ')
   
   # Initialize the current line & line width
   curLine <- 1L
