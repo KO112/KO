@@ -4,8 +4,7 @@
 \alias{table_df}
 \title{Tabulate a Data Frame/Matrix}
 \usage{
-table_df(data, max_distinct = 250, group = TRUE, useNA = "ifany",
-  dnn = NULL)
+table_df(data, max_distinct = 250, group = TRUE, useNA = "ifany", dnn = NULL)
 }
 \arguments{
 \item{data}{A data frame/matrix.}

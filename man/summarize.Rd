@@ -6,11 +6,9 @@
 \alias{summarize_df}
 \title{Summarize a Data Frame/Matrix/Vector}
 \usage{
-summarize_vec(vec, as_vec = FALSE, get_table = FALSE,
-  useNA = "ifany")
+summarize_vec(vec, as_vec = FALSE, get_table = FALSE, useNA = "ifany")
 
-summarize_df(data, as_vec = FALSE, get_table = FALSE,
-  useNA = "ifany")
+summarize_df(data, as_vec = FALSE, get_table = FALSE, useNA = "ifany")
 }
 \arguments{
 \item{vec}{Atomic vector.}

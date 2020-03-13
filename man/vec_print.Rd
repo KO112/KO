@@ -7,8 +7,15 @@
 \usage{
 make_output_rows(vec, numCols, maxChars)
 
-vec_print(vec, indent = 0, maxLen = 20, maxWidth = getOption("width")
-  - indent, order = "none", printOut = TRUE, color = "#00FF00")
+vec_print(
+  vec,
+  indent = 0,
+  maxLen = 20,
+  maxWidth = getOption("width") - indent,
+  order = "none",
+  printOut = TRUE,
+  color = "#00FF00"
+)
 }
 \arguments{
 \item{vec}{The (atomic) vector to print out.}

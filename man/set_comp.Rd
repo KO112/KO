@@ -7,9 +7,16 @@
 \usage{
 set_comp(set1, set2, compNames = FALSE)
 
-\method{print}{set_comp}(x, ..., indent = 4, color = "#CCCCCC",
-  printSets = FALSE, printInt = TRUE, printUnion = FALSE,
-  printDiffs = TRUE)
+\method{print}{set_comp}(
+  x,
+  ...,
+  indent = 4,
+  color = "#CCCCCC",
+  printSets = FALSE,
+  printInt = TRUE,
+  printUnion = FALSE,
+  printDiffs = TRUE
+)
 }
 \arguments{
 \item{set1}{The first set to compare.}

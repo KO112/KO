@@ -4,8 +4,7 @@
 \alias{format_percent}
 \title{Format a numerical vector as percents}
 \usage{
-format_percent(vec, accuracy = 0.01, vec_names = names(vec),
-  silent = FALSE)
+format_percent(vec, accuracy = 0.01, vec_names = names(vec), silent = FALSE)
 }
 \arguments{
 \item{vec}{Vector to format as a percent.}

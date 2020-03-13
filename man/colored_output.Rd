@@ -8,8 +8,7 @@
 \usage{
 info(..., useMsg = TRUE, printOut = TRUE, sep = "")
 
-color_list(vec, cols = c("#FF00FF", "#FF8800", "#00FF00"),
-  printOut = TRUE)
+color_list(vec, cols = c("#FF00FF", "#FF8800", "#00FF00"), printOut = TRUE)
 }
 \arguments{
 \item{...}{Text to print out (can also be named arguments to \code{message}/\code{cat},

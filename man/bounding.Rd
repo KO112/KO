@@ -8,8 +8,7 @@
 \usage{
 bound(num, lower = -Inf, upper = Inf)
 
-divide_round_bound(num, div = 1, lower = -Inf, upper = Inf,
-  type = "round")
+divide_round_bound(num, div = 1, lower = -Inf, upper = Inf, type = "round")
 }
 \arguments{
 \item{num}{Numeric vector to bound.}

@@ -24,9 +24,10 @@ Transform a Vector to Code
 \examples{
 
 set.seed(112)
-s <- replicate(100, sample(letters, floor(runif(1, 8, 13)), replace = TRUE)
+s <- replicate(100, sample(letters, floor(runif(1, 8, 13)), replace = TRUE))
+s <- sapply(s, paste0, collapse = "")
 v <- vec_to_code(s)
 cat(v)
-purrr::map_int(strsplit(v, "\\n")[[1]], nchar)
+purrr::map_int(strsplit(v, "\n")[[1]], nchar)
 
 }
