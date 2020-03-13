@@ -93,7 +93,7 @@ print.set_comp <- function(x, ..., indent = 4, color = "#CCCCCC", printSets = FA
   cgreen <- function(..., sep = "") cat(green(..., sep = sep))
   diffHeaderText <- function(expr1, expr2, setNum, numElem, sep = "") {
     cgreen(sep = sep,
-      bold(numElem), " elements are in ", bold("set", setNum), " but not in ", bold("set", setNum),
+      bold(numElem), " elements are in ", bold("set", setNum[1]), " but not in ", bold("set", setNum[2]),
       " (comparing ", bold(ifelse(x$compNames, "names", "values")), "):\n"
     )
   }
@@ -122,8 +122,8 @@ print.set_comp <- function(x, ..., indent = 4, color = "#CCCCCC", printSets = FA
   
   # If desired, print out the differences
   if (printDiffs) {
-    diffHeaderText(x$set1Expr, x$set2Expr, 1, length(x$setDiff1)); vec_print_fn(x$setDiff1)
-    diffHeaderText(x$set2Expr, x$set1Expr, 2, length(x$setDiff2)); vec_print_fn(x$setDiff2)
+    diffHeaderText(x$set1Expr, x$set2Expr, 1:2, length(x$setDiff1)); vec_print_fn(x$setDiff1)
+    diffHeaderText(x$set2Expr, x$set1Expr, 2:1, length(x$setDiff2)); vec_print_fn(x$setDiff2)
   }
   
   # Return the input object, invisibly
