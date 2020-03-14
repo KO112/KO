@@ -1,6 +1,9 @@
 context("Binned Data and Plots")
 
 
+# Load packages
+library(ggplot2)
+
 # https://rpubs.com/MarkusLoew/226759
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = T)
 # binned_one_way_plot(d[, carat], d[, .(x = x + 0.5, y, z)], d[, price], plotly = F, showWeights = F)

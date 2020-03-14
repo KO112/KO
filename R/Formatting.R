@@ -33,7 +33,11 @@ globalVariables(c("."))
 format_percent <- function(vec, accuracy = 0.01, vec_names = names(vec), silent = FALSE) {
   stop_if(!is.numeric(vec), "Non-numeric vector passed.")
   if (any(is.na(vec)) & !silent) message("NA values were found, and will be printed as \"NA%\"")
-  return(scales::percent(x = vec, accuracy = abs(accuracy)) %>% stats::setNames(., vec_names))
+  return(
+    scales::percent(x = vec, accuracy = abs(accuracy)) %>%
+      stats::setNames(., vec_names) %>%
+      ifelse(is.na(.), "NA%", .)
+  )
 }
 
 

@@ -49,7 +49,7 @@ auto_complete_var <- function() {
     if (Sys.info()["sysname"] == "Windows") {
       # varMatches <- tkDropDown(varMatches, default = pmax(0, closestMatch - 1))
       # varMatches <- varMatches[menu(varMatches, graphics = TRUE, title = "Select a Variable")]
-      varMatches <- select.list(varMatches, preselect = varMatches[closestMatch], title = "Select a Variable", graphics = TRUE)
+      varMatches <- utils::select.list(varMatches, preselect = varMatches[closestMatch], title = "Select a Variable", graphics = TRUE)
     } else {
       response <- paste0(seq_along(varMatches), ". ", varMatches, " ", strrep(intToUtf8(8192), 50), collapse = " ") %>%
         rstudioapi::showPrompt("Select a Variable", ., closestMatch)
