@@ -7,9 +7,9 @@ NULL
 #' 
 #' Decides whether or not to insert a pipe as well during snippet insertion.
 #' 
-#' @param pipeStr The pipe to insert if needed (character scalar).
 #' @param afterStr Text to insert after the pipe (character scalar).
 #' @param elseStr Text to insert if no pipe is needed (character scalar).
+#' @param pipeStr The pipe to insert if needed (character scalar).
 #' 
 #' @return The deleted code (character scalar).
 #' 
@@ -22,7 +22,16 @@ NULL
 #' # Or type "mtcars %>% mu", & run the add-in function
 #' # The output for both will be "mtcars %>% mutate()"
 #' 
-snippet_pipe_check <- function(pipeStr = "%>% ", afterStr = "", elseStr = "") {
+snippet_pipe_check <- function(afterStr = "", elseStr = "", pipeStr = "%>% ") {
+  
+  # If no "else" string was provided, set it based off the "after" string
+  if (missing(elseStr)) {
+    if (grepl("()", afterStr, fixed = TRUE)) {
+      elseStr <- sub("()", "(${0})", afterStr, fixed = TRUE)
+    } else if (grepl("\\($", afterStr)) {
+      elseStr <- sub("\\($", "(${0}, ", afterStr)
+    }
+  }
   
   # Get the context of the call, as well as the contents/selection/position of the context
   context <- rstudioapi::getActiveDocumentContext()
@@ -33,8 +42,8 @@ snippet_pipe_check <- function(pipeStr = "%>% ", afterStr = "", elseStr = "") {
   # Extract the code before the cursor as a string
   beforeStr <- substring(contents[selStart["row"]], 1, selStart["column"] - 1)
   
-  # If the cursor is touching a word on the border, just return the after string
-  if (grepl("^(\\w)+$", beforeStr)) return(afterStr)
+  # If the cursor is touching a word on the border, just return the "else" string
+  if (grepl("^(\\w)+$", beforeStr)) return(elseStr)
   
   # Set a list of characters that we don't want a pipe after
   noPipeAfter <- c(

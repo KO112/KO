@@ -116,11 +116,12 @@ binned_one_way_data <- function(x, yData, weight = rep(1, length(x)), scaleWeigh
 #'                                    diamonds[, price], type = "equal")
 #' binnedPlot4 <- binned_one_way_plot(diamonds[, carat], diamonds[, .(x = x + 0.5, y, z)],
 #'                                    diamonds[, price], bins = 5)
-binned_one_way_plot <- function(x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10,
-                                fontSize = 10, showWeights = TRUE, plotly = FALSE, bgColor = "#CCDDFF",
-                                xlab = "Bins", ylab = "Response", wlab = "Weight",
-                                title = paste("One-Way Plot", if (!missing(xlab)) paste0("of ", xlab),
-                                              if (!missing(ylab)) paste0("by ", ylab))) {
+binned_one_way_plot <- function(
+  x, yData, weight = rep(1, length(x)), scaleWeight = TRUE, type = "quantile", bins = 10,
+  fontSize = 10, showWeights = TRUE, plotly = FALSE, bgColor = "#CCDDFF",
+  xlab = "Bins", ylab = "Response", wlab = "Weight",
+  title = paste("One-Way Plot", if (!missing(xlab)) paste0("of ", xlab), if (!missing(ylab)) paste0("by ", ylab))
+) {
   
   # Calculate the binned one way data, create an index, & melt the table
   binnedData <- binned_one_way_data(x = x, yData = yData, weight = weight,

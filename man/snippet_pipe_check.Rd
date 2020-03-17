@@ -4,14 +4,14 @@
 \alias{snippet_pipe_check}
 \title{Snippet Pipe Check}
 \usage{
-snippet_pipe_check(pipeStr = "\%>\% ", afterStr = "", elseStr = "")
+snippet_pipe_check(afterStr = "", elseStr = "", pipeStr = "\%>\% ")
 }
 \arguments{
-\item{pipeStr}{The pipe to insert if needed (character scalar).}
-
 \item{afterStr}{Text to insert after the pipe (character scalar).}
 
 \item{elseStr}{Text to insert if no pipe is needed (character scalar).}
+
+\item{pipeStr}{The pipe to insert if needed (character scalar).}
 }
 \value{
 The deleted code (character scalar).
