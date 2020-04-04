@@ -124,11 +124,15 @@ binned_one_way_plot <- function(
 ) {
   
   # Calculate the binned one way data, create an index, & melt the table
-  binnedData <- binned_one_way_data(x = x, yData = yData, weight = weight,
-                                    scaleWeight = scaleWeight, type = type, bins = bins)
+  binnedData <- binned_one_way_data(
+    x = x, yData = yData, weight = weight,
+    scaleWeight = scaleWeight, type = type, bins = bins
+  )
   binnedData[, Index__ := .I]
-  meltedBinnedData <- data.table::melt.data.table(binnedData, id.vars = c("Bins__", "Weight__", "Index__"),
-                                                  variable.name = "Variable__", value.name = "Value__")
+  meltedBinnedData <- data.table::melt.data.table(
+    binnedData, id.vars = c("Bins__", "Weight__", "Index__"),
+    variable.name = "Variable__", value.name = "Value__"
+  )
   
   # Return a plotly object if desired, else a ggplot one
   if (plotly) {
@@ -171,7 +175,7 @@ binned_one_way_plot <- function(
         )
       
     }
-      
+    
   } else {
     
     # Create the y data ggplot, with lines & points for each data column
