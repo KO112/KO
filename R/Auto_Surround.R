@@ -1,4 +1,4 @@
-# Include other functions in package
+# Allow convenient use of functions from other packages
 #' @include Pipes.R
 NULL
 
