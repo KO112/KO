@@ -35,7 +35,7 @@ run_fn <- function() {
     editor <- rstudioapi::getSourceEditorContext()
     selection <- rstudioapi::primary_selection(editor$selection)
     code <- utils::head(editor$contents, selection$range$start[["row"]])
-    lastFn <- grep("^\\w+[ ]*<-[ ]*function()", code, ignore.case = T, value = T) %>%
+    lastFn <- grep("^\\w+[ ]*<-[ ]*function", code, ignore.case = TRUE, value = TRUE) %>%
       {ifelse(length(.) > 0, utils::tail(., 1), "")}
     execute <- rstudioapi::getConsoleEditorContext()$contents != ""
     
