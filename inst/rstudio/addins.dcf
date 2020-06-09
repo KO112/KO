@@ -9,14 +9,32 @@ Binding: auto_surround
 Interactive: false
 
 Name: Clean Selected Code
-Description: Cleans/reformats the currently selected code (or the current line is none is selected).
+Description: Cleans/reformats the currently selected code (or the current line if none is selected).
 Binding: clean_selection
 Interactive: false
+
+
+Name: Comma Backspace
+Description: Deletes code back to the last comma on the current line.
+Binding: comma_backspace
+Interactive: false
+
+Name: Comma Delete
+Description: Deletes code forward to the next comma on the current line.
+Binding: comma_delete
+Interactive: false
+
 
 Name: Pipe Backspace
 Description: Deletes code back to the last pipe on the current line.
 Binding: pipe_backspace
 Interactive: false
+
+Name: Pipe Delete
+Description: Deletes code forward to the next pipe on the current line.
+Binding: pipe_delete
+Interactive: false
+
 
 Name: Run Function
 Description: Runs a function (primarily used for testing add-ins during development).
@@ -38,6 +56,7 @@ Description: Executes the code currently selected, without clearing the console 
 Binding: run_selection
 Interactive: false
 
+
 Name: Send Selection to Console
 Description: Inserts the currently highlighted code in the console.
 Binding: send_selection_to_console
@@ -47,6 +66,7 @@ Name: Send Value to Source Editor
 Description: Send the value of the currently selected expression to the source editor.
 Binding: send_value_to_source_editor
 Interactive: false
+
 
 Name: Server Clipboard - Copy
 Description: Save the value of the currently selected expression to a variable.
@@ -58,7 +78,13 @@ Description: Paste the value of the clipboard variable to the active context.
 Binding: paste_value_from_clipboard_variable
 Interactive: false
 
+
 Name: Smart Backspace
 Description: Deletes code back to the last "group" on the current line.
 Binding: smart_backspace
+Interactive: false
+
+Name: Smart Delete
+Description: Deletes code forward to the next "group" on the current line.
+Binding: smart_delete
 Interactive: false

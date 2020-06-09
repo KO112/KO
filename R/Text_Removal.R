@@ -3,6 +3,8 @@
 NULL
 
 
+
+
 #' Find the Last Position
 #' 
 #' Find the last position of the desired patterns.
@@ -42,6 +44,8 @@ find_last_pos <- function(txt) {
 }
 
 
+
+
 #' Remove to Text
 #' 
 #' An add-in helper function that deletes the code between the cursor and the desired string.
@@ -54,24 +58,33 @@ find_last_pos <- function(txt) {
 #' 
 remove_to_text <- function(backTo, backward = TRUE) {
   
+  
   # Get the context of the call, as well as the contents/selection/position of the context
   context <- rstudioapi::getActiveDocumentContext()
   contents <- context$contents
   selection <- rstudioapi::primary_selection(context$selection)
   selStart <- selection$range$start
   selEnd <- selection$range$end
+  contentRow <- contents[selStart["row"]]
   
-  # If the cursor is at the start of the line, clear the selection, & exit early
-  if (selStart["column"] == 1) {
+  
+  # If the cursor is at the start/end of the line, clear the selection, & exit early
+  if ((backward && (selStart["column"] == 1)) || (!backward && (selStart[["column"]] == nchar(contentRow)))) {
     rstudioapi::insertText(location = selection$range, text = "", id = context$id)
     return(invisible(NULL))
   }
   
+  
   # Find the code to remove, either before or after the cursor
-  if (backward) {
+  # if (backward) {
     
     # Get the text before the cursor
-    preCode <- substring(contents[selStart["row"]], 1, selStart["column"] - 1)
+    preCode <- if (backward) {
+      substring(contentRow, 1, selStart["column"] - 1)
+    } else {
+      # backTo <- stringi::stri_reverse(backTo)
+      stringi::stri_reverse(substring(contentRow, selStart["column"]))
+    }
     
     # Set the end position of the pattern to remove back to
     if (is.null(backTo)) {
@@ -82,55 +95,85 @@ remove_to_text <- function(backTo, backward = TRUE) {
     
     # Clear to the start of the line if no matches were found
     if (is.na(endPos)) endPos <- 0
+    if (!backward) endPos <- nchar(contentRow) - endPos + 2
     
     # Set the output range
     outputRange <- rstudioapi::document_range(
-      rstudioapi::document_position(selStart["row"], endPos),
-      rstudioapi::document_position(selEnd["row"], selEnd["column"])
+      rstudioapi::document_position(selStart["row"], if (backward) endPos else selEnd["column"]),
+      rstudioapi::document_position(selEnd["row"], if (backward) selEnd["column"] else endPos)
     )
     
     # Retrieve the code to be deleted
-    deletedCode <- substring(contents[selStart["row"]], endPos, selEnd["column"])
+    deletedCode <- substring(contentRow, endPos, selEnd["column"])
     
-  } else {
-    
-    # Must implement later
-    rstudioapi::sendToConsole("warning(\"`KO:::remove_to_text`: remove forward not implemented yet.\")")
-    
-  }
+  # } else {
+  #   
+  #   # Must implement later
+  #   rstudioapi::sendToConsole("warning(\"`KO:::remove_to_text`: remove forward not implemented yet.\")")
+  #   
+  # }
+  
   
   # Delete & return the desired code
   rstudioapi::insertText(location = outputRange, text = "", id = context$id)
   return(invisible(deletedCode))
   
+  
 }
 
 
-#' Pipe Backspace
+
+
+#' \code{pipe_backspace} (\code{pipe_delete}): an add-in function that deletes the code between the cursor and the last (next) pipe.
 #' 
-#' An add-in function that deletes the code between the cursor and the last pipe.
-#' 
-#' @return The deleted code, invisibly (character scalar).
 #' @rdname remove_to_text
-#' 
 #' @examples
 #' # Type "mtcars %>% mutate(a = 1) %>% filter(cyl = 2)", & run the add-in function
 #' 
 pipe_backspace <- function() {
-  return(invisible(remove_to_text("%[^ ]+%")))
+  remove_to_text(backTo = "%[^ ]+%")
 }
 
 
-#' Smart Backspace
-#' 
-#' An add-in function that deletes the code between the cursor and the last group of characters.
-#' 
-#' @return The deleted code, invisibly (character scalar).
 #' @rdname remove_to_text
+pipe_delete <- function() {
+  remove_to_text(backTo = "%[^ ]+%", backward = FALSE)
+}
+
+
+
+
+#' \code{comma_backspace} (\code{comma_delete}): an add-in function that deletes the code between the cursor and the last (next) comma.
 #' 
+#' @rdname remove_to_text
+#' @examples
+#' # Type "c('apple', 'banana', cherry')", & run the add-in function
+#' 
+comma_backspace <- function() {
+  remove_to_text(backTo = ",")
+}
+
+
+#' @rdname remove_to_text
+comma_delete <- function() {
+  remove_to_text(backTo = ",", backward = FALSE)
+}
+
+
+
+
+#' \code{smart_backspace} (\code{smart_delete}): an add-in function that deletes the code between the cursor and the last (next) group of characters.
+#' 
+#' @rdname remove_to_text
 #' @examples
 #' # Type "c(apple, banana, cherry)", & run the add-in function
 #' 
 smart_backspace <- function() {
-  return(invisible(remove_to_text(NULL)))
+  remove_to_text(backTo = NULL)
+}
+
+
+#' @rdname remove_to_text
+smart_delete <- function() {
+  remove_to_text(backTo = NULL, backward = FALSE)
 }

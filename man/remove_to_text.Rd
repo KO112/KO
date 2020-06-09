@@ -3,14 +3,26 @@
 \name{remove_to_text}
 \alias{remove_to_text}
 \alias{pipe_backspace}
+\alias{pipe_delete}
+\alias{comma_backspace}
+\alias{comma_delete}
 \alias{smart_backspace}
+\alias{smart_delete}
 \title{Remove to Text}
 \usage{
 remove_to_text(backTo, backward = TRUE)
 
 pipe_backspace()
 
+pipe_delete()
+
+comma_backspace()
+
+comma_delete()
+
 smart_backspace()
+
+smart_delete()
 }
 \arguments{
 \item{backTo}{The regex pattern to remove text to (character scalar).}
@@ -19,20 +31,14 @@ smart_backspace()
 }
 \value{
 The deleted code, invisibly (character scalar).
-
-The deleted code, invisibly (character scalar).
-
-The deleted code, invisibly (character scalar).
 }
 \description{
 An add-in helper function that deletes the code between the cursor and the desired string.
-
-An add-in function that deletes the code between the cursor and the last pipe.
-
-An add-in function that deletes the code between the cursor and the last group of characters.
 }
 \examples{
 # Type "mtcars \%>\% mutate(a = 1) \%>\% filter(cyl = 2)", & run the add-in function
+
+# Type "c('apple', 'banana', cherry')", & run the add-in function
 
 # Type "c(apple, banana, cherry)", & run the add-in function
 
