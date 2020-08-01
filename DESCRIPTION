@@ -18,6 +18,7 @@ Imports:
     digest,
     dplyr,
     ggplot2,
+    glue,
     grid,
     Hmisc,
     knitr,
@@ -59,6 +60,7 @@ Collate:
     'Inline_If.R'
     'Missing_Values.R'
     'Multi_Value_Columns.R'
+    'Notify.R'
     'Printing.R'
     'Quasi_Poisson.R'
     'Select_Matrix.R'
