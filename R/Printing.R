@@ -197,7 +197,7 @@ vec_print <- function(vec, indent = 0, maxLen = 20, maxWidth = getOption("width"
   else if (order != "none") message("`vec_print`: \"", order, "\" is not a valid value for `order`. No sorting will be done.")
   
   # Calculate maximum number of characters, & guess the number of columns we need
-  maxChars <- min(maxLen, max(nchar(vec)))
+  maxChars <- min(maxLen, max(0, nchar(vec)))
   numCols <- floor(maxWidth / (maxChars + 4))
   
   # Iterate to find the maximum number of columns that fit
