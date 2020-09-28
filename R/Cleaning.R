@@ -1,37 +1,58 @@
 #' Clean Names
 #' 
-#' Clean names so that quotes (or backquotes) will not be necessary when subsetting the object.\cr
+#' Clean a character vector of the names of an object so that quotes/backquotes
+#'   will not be necessary when subsetting the object.
 #' The names input will be cleaned by replacing all occurrences of:
 #' \itemize{
-#'   \item \code{$} with \code{"Dollar"} (or \code{"Dol"}, if \code{short == TRUE})
-#'   \item \code{\%} with \code{"Percent"} (or \code{"Perc"}, if \code{short == TRUE})
+#'   \item \code{#} with \code{"Number"} (or \code{"Num"}, if \code{short})
+#'   \item \code{$} with \code{"Dollar"} (or \code{"Dol"}, if \code{short})
+#'   \item \code{\%} with \code{"Percent"} (or \code{"Perc"}, if \code{short})
 #'   \item Any other non-word character (i.e. character not in \code{[a-z, A-Z, 0-9, _]}) with \code{"_"}
+#'   \item Multiple consecutive underscores with a single underscore
+#'   \item Starting or ending underscores are removed
 #' }
-#'
+#' 
 #' @param vec A character vector of names to clean.
 #' @param short Whether to shorten certain cleaned name replacements (logical scalar).
-#'
+#' @param number What to replace a \code{#} with.
+#' @param dollar What to replace a \code{$} with.
+#' @param percent What to replace a \code{\%} with.
+#' 
 #' @return A character vector of cleaned names.
 #' @name clean_names
 #' @export
-#'
-#' @examples
-#' clean_names(c("apple", "banana", "ab.cd", "ef_gh", "ij/kl", "a_%_b", "a_$_b", "mn__op"))
-#' clean_names(c("a_%_b", "a_$_b"), short = FALSE)
 #' 
-clean_names <- function(vec, short = FALSE) {
+#' @examples
+#' 
+#' clean_names(c(
+#'   "apple", "banana", "ab.cd", "ef_gh", "ij/kl", "a_%_b", "a_$_b",
+#'   "mn__op", "_A``~@!#-$-%^&*()-_=[]{};:,<.>/?'\"A_"
+#' ))
+#' clean_names(c("a_#_b", "a_$_b", "a_%_b"), short = FALSE)
+#' 
+#' c("A()B" = 1, "_C_-+=D_" = 2) %>% stats::setNames(clean_names(names(.)))
+#' 
+clean_names <- function(
+  vec, short = FALSE,
+  number = ifelse(short, "Num", "Number"),
+  dollar = ifelse(short, "Dol", "Dollar"),
+  percent = ifelse(short, "Perc", "Percent")
+) {
   
   # Clean the names, replacing all potentially problematic characters
   cleanNames <- stringr::str_replace_all(vec, c(
-    "[%]" = ifelse(short, "Perc", "Percent")
-    , "[$]" = ifelse(short, "Dol", "Dollar")
+    "[#]" = number
+    , "[$]" = dollar
+    , "[%]" = percent
     , "\\W" = "_"
     , "_+" = "_"
+    , "^_+|_+$" = ""
   ))
   
   # If any names are duplictates, print a warning, & make the names unique
-  if (any(duplicated(cleanNames))) {
-    warning("Some duplicate names were encountered: ", paste0(cleanNames[duplicated(cleanNames)]))
+  dups <- duplicated(cleanNames)
+  if (any(dups)) {
+    warning("Some duplicate names were encountered: ", paste0(cleanNames[dups]))
     cleanNames <- make.unique(names = cleanNames, sep = "_")
   }
   
